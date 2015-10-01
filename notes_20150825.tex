@@ -1,0 +1,118 @@
+\documentclass[12pt]{article}
+
+\begin{document}
+
+   
+\subsection*{Some notes about the Carkeek grid samples}
+
+\subsubsection*{From meeting with Ole, Ryan, and Jimmy Aug 25, 2015}
+
+\begin{enumerate}
+    \item Three transects are not identical
+    \item Big differences in communities offshore vs. inshore
+    \item Could help quantify spread/occurrence; life history variations?
+\end{enumerate}
+
+
+\subsection*{Models}
+\subsubsection*{Let:}
+$i$	=	taxon\\
+$d$	=	distance from shore\\
+$r$	=	distance along shore\\
+$l$	=	location (unique site in grid)\\
+$Y$	=	who knows? -- True count of DNA sequences in environmental sample?\\
+$X$	=	counts of DNA sequences in a sequenced sample\\
+$\pi$	=	proportions of DNA sequences in a sequenced sample\\
+$\beta_i$	=	taxon-specific fixed effect; $\beta_1$ = 0\\
+$\gamma_{PCR}$	=	error due to PCR variability ($\sigma^2_{PCR}$)\\
+$\omega$	=	error due to environmental sampling \ldots ?\\
+
+
+General relationship between Y and counts of DNA in sequenced sample:
+
+\begin{equation}
+\log Y_{i,d,r} \sim Poisson(X_{i,d,r})
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection*{Reasonable Models}
+
+\begin{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\item All DNA communities are identical
+		\begin{equation}
+		\log X_{i,d,r} = \beta_0 + \beta_i + \omega_{i,d,r} + \gamma_{PCR}
+		\end{equation}
+
+		\begin{equation}
+		\omega_{i,d,r} \sim Normal(0,\tau^2)
+		\end{equation}
+
+		\begin{equation}
+		\gamma_{PCR} \sim Normal(0,\sigma^2_{PCR})
+		\end{equation}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\item Only off-shore distance matters
+
+		\begin{equation}
+		\log X_{i,d,r} = \beta_0 + \beta_i + \omega_{i,d,r} + \gamma_{PCR}
+		\end{equation}
+
+		\begin{equation}
+		\omega_{i,d,r} \sim Normal(0,\tau_d^2)
+		\end{equation}
+
+		\begin{equation}
+		\gamma_{PCR} \sim Normal(0,\sigma^2_{PCR})
+		\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\item Only along-shore distance matters
+
+		\begin{equation}
+		\log X_{i,d,r} = \beta_0 + \beta_i + \omega_{i,d,r} + \gamma_{PCR}
+		\end{equation}
+
+		\begin{equation}
+		\omega_{i,d,r} \sim Normal(0,\tau_r^2)
+		\end{equation}
+
+		\begin{equation}
+		\gamma_{PCR} \sim Normal(0,\sigma^2_{PCR})
+		\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\item something else
+
+		\begin{equation}
+		\log X_{i,d,r} = \beta_0 + \beta_i + \omega_{i,d} + \omega_{i,r} + \gamma_{PCR}
+		\end{equation}
+
+		\begin{equation}
+		\omega_{i,d} \sim Normal(0,\tau_d^2)
+		\end{equation}
+
+		\begin{equation}
+		\omega_{i,r} \sim Normal(0,\tau_r^2)
+		\end{equation}
+
+		\begin{equation}
+		\gamma_{PCR} \sim Normal(0,\sigma^2_{PCR})
+		\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\item Exponential decay
+		\begin{equation}
+		??? = \beta_0 + \beta_1d + \ldots + \beta_n
+		\end{equation}
+
+
+\end{enumerate}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}

@@ -1,0 +1,22 @@
+Dirichlet alpha
+Alpha from uniform distribution reflects our belief that DNA from each taxon is equally abundant?
+Is alpha from exponential distribution more realistic?
+i.e. does the distribution from which alphas are drawn reflect our belief about the underlying biomass?
+
+Are the samples from the dirichlet simulating the drawing of eDNA? or is it after that?
+
+
+
+what are the betas?
+
+little p is convenience
+
+big P is "what is the estimated proportion of species I"
+betas	<- rep(0, ncol(cat_mat))
+
+what is y? (counts_vec)
+jags_data <- list("y", "N_obs", "N_cov", "cat_mat")
+
+
+what is p?
+jags_params <- c("betas", "P")

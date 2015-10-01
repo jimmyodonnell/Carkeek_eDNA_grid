@@ -1,0 +1,23 @@
+model {
+	for(i in 1:N_obs){
+		counts_vec[i] ~ dpois(exp(lambda[i]))
+	}
+	
+	lambda <- cat_mat %*% betas #+ eta
+	
+	### Derived Quantities
+	p[1] <- exp(betas[1])
+	for(i in 2:N_cov){
+		p[i] <- exp(betas[1] + betas[i])
+	}
+	
+	# This can probably just be: P <- p / sum(p)
+	for(i in 1:N_cov){
+		P[i] <- p[i] / sum(p)
+	}
+	
+	### PRIORS
+	for(j in 1:N_cov){
+		betas[j] ~ dnorm(0, 0.001)
+	}
+}

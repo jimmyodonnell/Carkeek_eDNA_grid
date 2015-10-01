@@ -1,0 +1,1164 @@
+plot(sort(rpareto(100, 1, 2)), ylim = c(0, 15))
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rpareto(#
+				100, i, 2#
+			)#
+		)#
+		, ylim = c(0, 15)#
+	)#
+}
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rpareto(#
+				100, 1, i#
+			)#
+		)#
+		, ylim = c(0, 15)#
+	)#
+}#
+# as alpha increases, maximum value drawn tends to decrease
+runif(N_tax,1,100)
+round(runif(N_tax,1,100))
+counts_vec
+counts_mat
+barplot(counts_mat)
+barplot(prop_true_small)
+prop_true_small
+barplot(t(prop_true_small))
+barplot(counts_mat)
+barplot(t(prop_true_small))
+colsums(counts_mat)
+colSums(counts_mat)
+prop_true_small*1e5
+counts_mat
+t(counts_mat)
+t(counts_mat)/rowSums(counts_mat)
+ks.test(t(counts_mat)/rowSums(counts_mat), prop_true_small)
+ks.test((counts_mat)/rowSums(counts_mat), prop_true_small)
+counts_mat
+t(counts_mat)/rowSums(t(counts_mat))
+rowSums(t(counts_mat)/rowSums(t(counts_mat)))
+rowSums(prop_true_small)
+ks.test(t(counts_mat)/rowSums(t(counts_mat)), prop_true_small)
+prop_true_small
+counts_vec
+counts_mat
+counts
+names(counts_mat) <- taxon_names
+counts_mat
+set.seed(407744)#
+counts_mat <- apply(#
+					X = eDNA_counts_small, #
+					MARGIN = 1, #
+					FUN = function(x) #
+						rmultinom(size = N_draws, prob = x, n = 1)#
+				)
+#############################################################################
+# This script simulates some data that resembles eDNA sequence data#
+#############################################################################
+#
+# Original code by Ole Shelton#
+# Hacked up by Jimmy O'Donnell#
+# Comments mostly reflect Jimmy's imperfect understanding of the underlying concepts.#
+#
+library(gtools) # gtools::rdirichlet#
+library(R2jags) # R2jags::jags#
+# Suppose we have an aquarium which contains N_tax taxa#
+N_tax <- 9#
+# Give them names#
+taxon_names <- paste("taxon_", LETTERS[1:N_tax], sep = "")#
+# The distribution of DNA molecules derived from each of the taxa might look like the following#
+# Ole originally called these alpha because they eventually become the alpha parameter of the Dirichlet distribution, which sorta determines how likely each component is to be drawn#
+# I call these "true" because they represent the "true" abundance of DNA from each taxon in the sample.#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# Instead of runif, you might try using rexp or random from the Pareto distribution to more accurately resemble "real" eDNA results#
+set.seed(407744)#
+DNA_truth		<- sort(round(runif(N_tax,1,100)), decreasing = TRUE)#
+names(DNA_truth) <- taxon_names#
+#
+# those same values expressed as proportions#
+DNA_truth_prop <- DNA_truth/sum(DNA_truth)#
+#############################################################################
+# The actual simulation #
+#############################################################################
+#
+# This simulates data that might be expected from high throughput sequencing of PCR amplicons generated from environmental samples: proportional abundance of sequences from each of the taxa/OTUs/dups#
+# draw samples from the Dirichlet distribution, using alpha given by DNA_truth to approximate the sampling of DNA molecules from the environment#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# How many times should we sample?#
+N_samples_small	<-	3#
+set.seed(407744)#
+eDNA_counts_small <- rdirichlet(N_samples_small, DNA_truth)#
+colnames(eDNA_counts_small) <- taxon_names#
+#############
+# OR...#
+#############
+N_samples_big		<- 100000#
+set.seed(407744)#
+eDNA_counts_big <- rdirichlet(N_samples_big, DNA_truth)#
+colnames(eDNA_counts_big) <- taxon_names#
+# Set whichever of these as the plot input:#
+plot_input <- eDNA_counts_big#
+#
+# Create plot layout (this looks complicated to allow it to be flexible to different taxa numbers)#
+plot_cols <- ceiling(sqrt(ncol(plot_input)))#
+plot_rows <- ceiling(ncol(plot_input)/plot_cols)#
+plot_layout <- matrix(data = 1:(plot_cols*plot_rows), nrow = plot_rows, byrow = TRUE)#
+layout(plot_layout)#
+#
+# plot histograms of the frequency of proportions sampled for each taxon.#
+for (i in 1:ncol(plot_input)){#
+  hist(plot_input[, i], main = taxon_names[i], xlab = "proportion")#
+  abline(v = DNA_truth_prop[i], col = "red")#
+}#
+# In a similar way, we can use each of the samples to inform the probabilities of draws from a multinomial distribution. This produces data that is functionally indistinguishable from that presented above.#
+# Using each row of the "true proportion" data frame as probabilities...#
+# essentially: take a draw of 'N_draws' marbles, #
+# and put them into each of some number of bins #
+# with probability of going into each bin given by the "true proportion" row#
+# (repeat n times)#
+#
+N_draws		<-	100000#
+#
+set.seed(407744)#
+counts_mat <- apply(#
+					X = eDNA_counts_small, #
+					MARGIN = 1, #
+					FUN = function(x) #
+						rmultinom(size = N_draws, prob = x, n = 1)#
+				)
+counts_mat
+rownames(counts_mat) <- taxon_names
+counts_mat
+counts <- t(counts_mat)
+counts
+counts_vec <- as.vector(counts)
+counts_vec
+names(counts_vec) <- rep(x = taxon_names, each = N_samples_small)
+counts_vec
+mydata <- counts
+mydata
+dput(mydata)
+counts <- mydata
+colnames(counts)
+names(counts_vec) <- rep(x = colnames(counts), each = nrow(counts))
+counts_vec
+nrow(counts)
+length(counts)
+length(counts_vec)
+library(gtools) # gtools::rdirichlet#
+library(R2jags) # R2jags::jags#
+# Suppose we have an aquarium which contains N_tax taxa#
+N_tax <- 9#
+# Give them names#
+taxon_names <- paste("taxon_", LETTERS[1:N_tax], sep = "")#
+# The distribution of DNA molecules derived from each of the taxa might look like the following#
+# Ole originally called these alpha because they eventually become the alpha parameter of the Dirichlet distribution, which sorta determines how likely each component is to be drawn#
+# I call these "true" because they represent the "true" abundance of DNA from each taxon in the sample.#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# Instead of runif, you might try using rexp or random from the Pareto distribution to more accurately resemble "real" eDNA results#
+set.seed(407744)#
+DNA_truth		<- sort(round(runif(N_tax,1,100)), decreasing = TRUE)#
+names(DNA_truth) <- taxon_names#
+#
+# those same values expressed as proportions#
+DNA_truth_prop <- DNA_truth/sum(DNA_truth)#
+#############################################################################
+# The actual simulation #
+#############################################################################
+#
+# This simulates data that might be expected from high throughput sequencing of PCR amplicons generated from environmental samples: proportional abundance of sequences from each of the taxa/OTUs/dups#
+# draw samples from the Dirichlet distribution, using alpha given by DNA_truth to approximate the sampling of DNA molecules from the environment#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# How many times should we sample?#
+N_samples_small	<-	3#
+set.seed(407744)#
+eDNA_counts_small <- rdirichlet(N_samples_small, DNA_truth)#
+colnames(eDNA_counts_small) <- taxon_names#
+#############
+# OR...#
+#############
+N_samples_big		<- 100000#
+set.seed(407744)#
+eDNA_counts_big <- rdirichlet(N_samples_big, DNA_truth)#
+colnames(eDNA_counts_big) <- taxon_names#
+# Set whichever of these as the plot input:#
+plot_input <- eDNA_counts_big#
+#
+# Create plot layout (this looks complicated to allow it to be flexible to different taxa numbers)#
+plot_cols <- ceiling(sqrt(ncol(plot_input)))#
+plot_rows <- ceiling(ncol(plot_input)/plot_cols)#
+plot_layout <- matrix(data = 1:(plot_cols*plot_rows), nrow = plot_rows, byrow = TRUE)#
+layout(plot_layout)#
+#
+# plot histograms of the frequency of proportions sampled for each taxon.#
+for (i in 1:ncol(plot_input)){#
+  hist(plot_input[, i], main = taxon_names[i], xlab = "proportion")#
+  abline(v = DNA_truth_prop[i], col = "red")#
+}#
+# In a similar way, we can use each of the samples to inform the probabilities of draws from a multinomial distribution. This produces data that is functionally indistinguishable from that presented above.#
+# Using each row of the "true proportion" data frame as probabilities...#
+# essentially: take a draw of 'N_draws' marbles, #
+# and put them into each of some number of bins #
+# with probability of going into each bin given by the "true proportion" row#
+# (repeat n times)#
+#
+N_draws		<-	100000#
+#
+set.seed(407744)#
+counts_mat <- apply(#
+					X = eDNA_counts_small, #
+					MARGIN = 1, #
+					FUN = function(x) #
+						rmultinom(size = N_draws, prob = x, n = 1)#
+				)#
+#
+# assign names#
+rownames(counts_mat) <- taxon_names#
+#
+# transpose#
+counts <- t(counts_mat)#
+#
+mydata <- counts
+counts <- mydata#
+#
+# make into a vector#
+counts_vec <- as.vector(counts)#
+names(counts_vec) <- rep(x = colnames(counts), each = nrow(counts))#
+# want to save the file?
+write.csv(x = counts, file = "counts.csv")
+write.csv(x = counts, file = "counts.csv", row.names = FALSE)
+write.csv(x = counts, file = "counts.csv", row.names = FALSE, quotes = FALSE)
+write.csv(x = counts, file = "counts.csv", row.names = FALSE, quote = FALSE)
+counts <- mydata
+counts_vec <- as.vector(counts)#
+names(counts_vec) <- rep(x = colnames(counts), each = nrow(counts))
+as.matrix(mydata)
+identical(counts, as.matrix(mydata))
+mydata <- as.matrix(read.csv("counts.csv"))
+identical(mydata, counts)
+par(mfrow = c(3,3))#
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rexp(#
+				n = 100, #
+				rate = i#
+				)#
+			)#
+		, #
+		main = paste("rate = ", i, sep = ""), #
+		ylim = c(0,5), #
+		pch = 20, #
+		cex = 0.5#
+	)#
+}
+dpareto <- function(x, xm, alpha) ifelse(x > xm , alpha*xm**alpha/(x**(alpha+1)), 0)#
+ppareto <- function(q, xm, alpha) ifelse(q > xm , 1 - (xm/q)**alpha, 0 )#
+qpareto <- function(p, xm, alpha) ifelse(p < 0 | p > 1, NaN, xm*(1-p)**(-1/alpha))#
+rpareto <- function(n, xm, alpha) qpareto(runif(n), xm, alpha)#
+#
+par(mfrow = c(3,3))#
+#
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rpareto(#
+				100, i, 2#
+			)#
+		)#
+		, ylim = c(0, 15)#
+	)#
+}#
+# xm simply determines the minimum value drawn#
+#
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rpareto(#
+				100, 1, i#
+			)#
+		)#
+		, ylim = c(0, 15)#
+	)#
+}
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rpareto(#
+				100, i, 2#
+			)#
+		)#
+		, ylim = c(0, 15)#
+	)#
+}
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rpareto(#
+				100, i, 2#
+			)#
+		)#
+		, ylim = c(0, 15), #
+		main = paste("xm = ", i, sep = "")#
+	)#
+}
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rpareto(#
+				n = 100, xm = 1, alpha = i#
+			)#
+		)#
+		, ylim = c(0, 15), #
+		main = paste("alph = ", i, sep = "")#
+	)#
+}
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rpareto(#
+				n = 100, xm = 1, alpha = i#
+			)#
+		)#
+		, ylim = c(0, 15), #
+		main = paste("alpha = ", i, sep = "")#
+	)#
+}
+library(gtools) # gtools::rdirichlet#
+library(R2jags) # R2jags::jags#
+# Suppose we have an aquarium which contains N_tax taxa#
+N_tax <- 9#
+# Give them names#
+taxon_names <- paste("taxon_", LETTERS[1:N_tax], sep = "")
+set.seed(407744)#
+DNA_truth		<- sort(round(runif(N_tax,1,100)), decreasing = TRUE)#
+names(DNA_truth) <- taxon_names#
+#
+# those same values expressed as proportions#
+DNA_truth_prop <- DNA_truth/sum(DNA_truth)
+N_samples_small	<-	3#
+set.seed(407744)#
+eDNA_counts_small <- rdirichlet(N_samples_small, DNA_truth)#
+colnames(eDNA_counts_small) <- taxon_names
+N_samples_big		<- 100000#
+set.seed(407744)#
+eDNA_counts_big <- rdirichlet(N_samples_big, DNA_truth)#
+colnames(eDNA_counts_big) <- taxon_names
+plot_input <- eDNA_counts_big
+plot_cols <- ceiling(sqrt(ncol(plot_input)))#
+plot_rows <- ceiling(ncol(plot_input)/plot_cols)#
+plot_layout <- matrix(data = 1:(plot_cols*plot_rows), nrow = plot_rows, byrow = TRUE)#
+layout(plot_layout)
+for (i in 1:ncol(plot_input)){#
+  hist(plot_input[, i], main = taxon_names[i], xlab = "proportion")#
+  abline(v = DNA_truth_prop[i], col = "red")#
+}
+N_draws		<-	100000
+set.seed(407744)#
+counts_mat <- apply(#
+					X = eDNA_counts_small, #
+					MARGIN = 1, #
+					FUN = function(x) #
+						rmultinom(size = N_draws, prob = x, n = 1)#
+				)
+rownames(counts_mat) <- taxon_names
+counts <- t(counts_mat)
+mydata <- counts
+counts <- as.matrix(mydata)
+counts_vec <- as.vector(counts)#
+names(counts_vec) <- rep(x = colnames(counts), each = nrow(counts))
+cat_mat <- matrix(data = 0, nrow = length(counts_vec), ncol = ncol(counts))
+cat_mat[,1]	<- 1
+for(i in 1:length(taxon_names)){#
+	same_taxon <- which(rep(1:length(taxon_names), each = N_samples_small) == i)#
+	cat_mat[same_taxon,i]	<-	1#
+	# Ole's solution is more readable (x <- 1), but you can also make use of the fact that logical vectors (T/F) can be expressed as 1/0 using as.integer#
+	# as.integer(rep(1:length(taxon_names), each = N_samples_small) == i)#
+}#
+colnames(cat_mat)	<-	taxon_names
+cat_mat
+var_mat	<-	matrix(data = 0, nrow = length(counts_vec), ncol = length(taxon_names))#
+#
+for(i in 1:length(taxon_names)){#
+	same_taxon <- which(rep(1:length(taxon_names), each = N_samples_small) == i)#
+	var_mat[same_taxon, i]	<-	1#
+}#
+colnames(var_mat) <- taxon_names
+betas	<- rep(0, ncol(cat_mat))
+N_cov	<-	length(taxon_names)#
+N_obs	<-	length(counts_vec)
+N_cov
+N_obs
+iden_mat <- diag(x = 1, nrow = N_obs)
+jags_data <- list("counts_vec", "N_obs", "N_cov", "cat_mat")#
+#
+# WHAT IS P?#
+jags_params <- c("betas", "P")#
+#
+# I think this is telling where the script lives?#
+model_loc <- c("my_jags_script.txt")#
+#
+# Set the number of iterations to discard before storing them#
+N_burn <- 10000#
+#
+# Set the total number of iterations to conduct (total? or after burnin?)#
+N_iter <- 10000#
+# write the JAGS script:#
+jagsscript <- cat(#
+"model {#
+	for(i in 1:N_obs){#
+		counts_vec[i] ~ dpois(exp(lambda[i]))#
+	}#
+	lambda <- cat_mat %*% betas #+ eta#
+	### Derived Quantities#
+	p[1] <- exp(betas[1])#
+	for(i in 2:N_cov){#
+		p[i] <- exp(betas[1] + betas[i])#
+	}#
+	# This can probably just be: P <- p / sum(p)#
+	for(i in 1:N_cov){#
+		P[i] <- p[i] / sum(p)#
+	}#
+	### PRIORS#
+	for(j in 1:N_cov){#
+		betas[j] ~ dnorm(0, 0.001)#
+	}#
+}", file = model_loc)#
+#
+) # cat doesn't close until I make this parentheses...#
+)
+my_jags_model <- jags(#
+					data = jags_data, #
+					inits = NULL, #
+					parameters.to.save = jags_params, #
+					model.file = model_loc, #
+					n.chains = 3, #
+					n.iter = N_iter + N_burn, #
+					n.burnin = N_burn, #floor(n.iter/2) #
+					n.thin = 1, # max(1, floor((n.iter - n.burnin)/1000))#
+					DIC = TRUE, #
+					working.directory = NULL, #
+					jags.seed = 123, #
+					refresh = N_iter/50, #
+					progress.bar = "text", #
+					digits = 5, #
+					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"), #
+					jags.module = c("glm","dic")#
+)
+attach.jags(my_jags_model, overwrite = TRUE)
+?attach.jags
+#############################################################################
+# This script simulates some data that resembles eDNA sequence data#
+#############################################################################
+#
+# Original code by Ole Shelton#
+# Hacked up by Jimmy O'Donnell#
+# Comments mostly reflect Jimmy's imperfect understanding of the underlying concepts.#
+#
+library(gtools) # gtools::rdirichlet#
+library(R2jags) # R2jags::jags#
+# Suppose we have an aquarium which contains N_tax taxa#
+N_tax <- 9#
+# Give them names#
+taxon_names <- paste("taxon_", LETTERS[1:N_tax], sep = "")#
+# The distribution of DNA molecules derived from each of the taxa might look like the following#
+# Ole originally called these alpha because they eventually become the alpha parameter of the Dirichlet distribution, which sorta determines how likely each component is to be drawn#
+# I call these "true" because they represent the "true" abundance of DNA from each taxon in the sample.#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# Instead of runif, you might try using rexp or random from the Pareto distribution to more accurately resemble "real" eDNA results#
+set.seed(407744)#
+DNA_truth		<- sort(round(runif(N_tax,1,100)), decreasing = TRUE)#
+names(DNA_truth) <- taxon_names#
+#
+# those same values expressed as proportions#
+DNA_truth_prop <- DNA_truth/sum(DNA_truth)#
+#############################################################################
+# The actual simulation #
+#############################################################################
+#
+# This simulates data that might be expected from high throughput sequencing of PCR amplicons generated from environmental samples: proportional abundance of sequences from each of the taxa/OTUs/dups#
+# draw samples from the Dirichlet distribution, using alpha given by DNA_truth to approximate the sampling of DNA molecules from the environment#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# If you were to take N_samples samples, what kind of answer would you expect?#
+N_samples_small	<-	3#
+set.seed(407744)#
+eDNA_counts_small <- rdirichlet(N_samples_small, DNA_truth)#
+colnames(eDNA_counts_small) <- taxon_names#
+#############
+# OR...#
+#############
+N_samples_big		<- 100000#
+set.seed(407744)#
+eDNA_counts_big <- rdirichlet(N_samples_big, DNA_truth)#
+colnames(eDNA_counts_big) <- taxon_names#
+# Set whichever of these as the plot input:#
+plot_input <- eDNA_counts_big#
+#
+# Create plot layout (this looks complicated to allow it to be flexible to different taxa numbers)#
+plot_cols <- ceiling(sqrt(ncol(plot_input)))#
+plot_rows <- ceiling(ncol(plot_input)/plot_cols)#
+plot_layout <- matrix(data = 1:(plot_cols*plot_rows), nrow = plot_rows, byrow = TRUE)#
+layout(plot_layout)#
+#
+# plot histograms of the frequency of proportions sampled for each taxon.#
+for (i in 1:ncol(plot_input)){#
+  hist(plot_input[, i], main = taxon_names[i], xlab = "proportion")#
+  abline(v = DNA_truth_prop[i], col = "red")#
+}#
+# In a similar way, we can use each of the samples to inform the probabilities of draws from a multinomial distribution. This produces data that is functionally indistinguishable from that presented above.#
+# Using each row of the "true proportion" data frame as probabilities...#
+# essentially: take a draw of 'N_draws' marbles, #
+# and put them into each of some number of bins #
+# with probability of going into each bin given by the "true proportion" row#
+# (repeat n times)#
+#
+N_draws		<-	100000#
+#
+set.seed(407744)#
+counts_mat <- apply(#
+					X = eDNA_counts_small, #
+					MARGIN = 1, #
+					FUN = function(x) #
+						rmultinom(size = N_draws, prob = x, n = 1)#
+				)#
+#
+# assign names#
+rownames(counts_mat) <- taxon_names#
+#
+# transpose#
+counts <- t(counts_mat)#
+#
+# want to save the file?#
+write.csv(x = counts, file = "counts.csv", row.names = FALSE, quote = FALSE)
+?plot
+N_tax <- 9
+taxon_names <- paste("taxon_", LETTERS[1:N_tax], sep = "")#
+# The distribution of DNA molecules derived from each of the taxa might look like the following#
+# Ole originally called these alpha because they eventually become the alpha parameter of the Dirichlet distribution, which sorta determines how likely each component is to be drawn#
+# I call these "true" because they represent the "true" abundance of DNA from each taxon in the sample.#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# Instead of runif, you might try using rexp or random from the Pareto distribution to more accurately resemble "real" eDNA results#
+set.seed(407744)#
+DNA_truth		<- sort(round(runif(N_tax,1,100)), decreasing = TRUE)#
+names(DNA_truth) <- taxon_names#
+#
+# those same values expressed as proportions#
+DNA_truth_prop <- DNA_truth/sum(DNA_truth)#
+#############################################################################
+# The actual simulation #
+#############################################################################
+#
+# This simulates data that might be expected from high throughput sequencing of PCR amplicons generated from environmental samples: proportional abundance of sequences from each of the taxa/OTUs/dups#
+# draw samples from the Dirichlet distribution, using alpha given by DNA_truth to approximate the sampling of DNA molecules from the environment#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# If you were to take N_samples samples, what kind of answer would you expect?#
+N_samples_small	<-	3#
+set.seed(407744)#
+eDNA_counts_small <- rdirichlet(N_samples_small, DNA_truth)#
+colnames(eDNA_counts_small) <- taxon_names#
+#############
+# OR...#
+#############
+N_samples_big		<- 100000#
+set.seed(407744)#
+eDNA_counts_big <- rdirichlet(N_samples_big, DNA_truth)#
+colnames(eDNA_counts_big) <- taxon_names#
+# Set whichever of these as the plot input:#
+plot_input <- eDNA_counts_big#
+#
+# Create plot layout (this looks complicated to allow it to be flexible to different taxa numbers)#
+plot_cols <- ceiling(sqrt(ncol(plot_input)))#
+plot_rows <- ceiling(ncol(plot_input)/plot_cols)#
+plot_layout <- matrix(data = 1:(plot_cols*plot_rows), nrow = plot_rows, byrow = TRUE)#
+layout(plot_layout)#
+#
+# plot histograms of the frequency of proportions sampled for each taxon.#
+for (i in 1:ncol(plot_input)){#
+  hist(plot_input[, i], main = taxon_names[i], xlab = "proportion")#
+  abline(v = DNA_truth_prop[i], col = "red")#
+}
+#############################################################################
+# This script simulates some data that resembles eDNA sequence data#
+#############################################################################
+#
+# Original code by Ole Shelton#
+# Hacked up by Jimmy O'Donnell#
+# Comments mostly reflect Jimmy's imperfect understanding of the underlying concepts.#
+#
+library(gtools) # gtools::rdirichlet#
+library(R2jags) # R2jags::jags#
+# Suppose we have an aquarium which contains N_tax taxa#
+N_tax <- 9#
+# Give them names#
+taxon_names <- paste("taxon_", LETTERS[1:N_tax], sep = "")#
+# The distribution of DNA molecules derived from each of the taxa might look like the following#
+# Ole originally called these alpha because they eventually become the alpha parameter of the Dirichlet distribution, which sorta determines how likely each component is to be drawn#
+# I call these "true" because they represent the "true" abundance of DNA from each taxon in the sample.#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# Instead of runif, you might try using rexp or random from the Pareto distribution to more accurately resemble "real" eDNA results#
+set.seed(407744)#
+DNA_truth		<- sort(round(runif(N_tax,1,100)), decreasing = TRUE)#
+names(DNA_truth) <- taxon_names#
+#
+# those same values expressed as proportions#
+DNA_truth_prop <- DNA_truth/sum(DNA_truth)#
+#############################################################################
+# The actual simulation #
+#############################################################################
+#
+# This simulates data that might be expected from high throughput sequencing of PCR amplicons generated from environmental samples: proportional abundance of sequences from each of the taxa/OTUs/dups#
+# draw samples from the Dirichlet distribution, using alpha given by DNA_truth to approximate the sampling of DNA molecules from the environment#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# If you were to take N_samples samples, what kind of answer would you expect?#
+N_samples_small	<-	3#
+set.seed(407744)#
+eDNA_counts_small <- rdirichlet(N_samples_small, DNA_truth)#
+colnames(eDNA_counts_small) <- taxon_names#
+#############
+# OR...#
+#############
+N_samples_big		<- 100000#
+set.seed(407744)#
+eDNA_counts_big <- rdirichlet(N_samples_big, DNA_truth)#
+colnames(eDNA_counts_big) <- taxon_names#
+# Set whichever of these as the plot input:#
+plot_input <- eDNA_counts_big#
+#
+# Create plot layout (this looks complicated to allow it to be flexible to different taxa numbers)#
+plot_cols <- ceiling(sqrt(ncol(plot_input)))#
+plot_rows <- ceiling(ncol(plot_input)/plot_cols)#
+plot_layout <- matrix(data = 1:(plot_cols*plot_rows), nrow = plot_rows, byrow = TRUE)#
+layout(plot_layout)#
+#
+# plot histograms of the frequency of proportions sampled for each taxon.#
+for (i in 1:ncol(plot_input)){#
+  hist(plot_input[, i], main = taxon_names[i], xlab = "proportion")#
+  abline(v = DNA_truth_prop[i], col = "red")#
+}#
+# In a similar way, we can use each of the samples to inform the probabilities of draws from a multinomial distribution. This produces data that is functionally indistinguishable from that presented above.#
+# Using each row of the "true proportion" data frame as probabilities...#
+# essentially: take a draw of 'N_draws' marbles, #
+# and put them into each of some number of bins #
+# with probability of going into each bin given by the "true proportion" row#
+# (repeat n times)#
+#
+N_draws		<-	100000#
+#
+set.seed(407744)#
+counts_mat <- apply(#
+					X = eDNA_counts_small, #
+					MARGIN = 1, #
+					FUN = function(x) #
+						rmultinom(size = N_draws, prob = x, n = 1)#
+				)#
+#
+# assign names#
+rownames(counts_mat) <- taxon_names#
+#
+# transpose#
+counts <- t(counts_mat)#
+#
+# want to save the file?#
+write.csv(x = counts, file = "counts.csv", row.names = FALSE, quote = FALSE)#
+#
+# or to prepare for next step (MCMC),#
+mydata <- counts#
+#
+#############################################################################
+# This marks the end of generating what I think of as typical eDNA sequence data
+N_tax <- 13
+# Give them names#
+taxon_names <- paste("taxon_", LETTERS[1:N_tax], sep = "")#
+# The distribution of DNA molecules derived from each of the taxa might look like the following#
+# Ole originally called these alpha because they eventually become the alpha parameter of the Dirichlet distribution, which sorta determines how likely each component is to be drawn#
+# I call these "true" because they represent the "true" abundance of DNA from each taxon in the sample.#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# Instead of runif, you might try using rexp or random from the Pareto distribution to more accurately resemble "real" eDNA results#
+set.seed(407744)#
+DNA_truth		<- sort(round(runif(N_tax,1,100)), decreasing = TRUE)#
+names(DNA_truth) <- taxon_names#
+#
+# those same values expressed as proportions#
+DNA_truth_prop <- DNA_truth/sum(DNA_truth)#
+#############################################################################
+# The actual simulation #
+#############################################################################
+#
+# This simulates data that might be expected from high throughput sequencing of PCR amplicons generated from environmental samples: proportional abundance of sequences from each of the taxa/OTUs/dups#
+# draw samples from the Dirichlet distribution, using alpha given by DNA_truth to approximate the sampling of DNA molecules from the environment#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# If you were to take N_samples samples, what kind of answer would you expect?#
+N_samples_small	<-	3#
+set.seed(407744)#
+eDNA_counts_small <- rdirichlet(N_samples_small, DNA_truth)#
+colnames(eDNA_counts_small) <- taxon_names#
+#############
+# OR...#
+#############
+N_samples_big		<- 100000#
+set.seed(407744)#
+eDNA_counts_big <- rdirichlet(N_samples_big, DNA_truth)#
+colnames(eDNA_counts_big) <- taxon_names#
+# Set whichever of these as the plot input:#
+plot_input <- eDNA_counts_big#
+#
+# Create plot layout (this looks complicated to allow it to be flexible to different taxa numbers)#
+plot_cols <- ceiling(sqrt(ncol(plot_input)))#
+plot_rows <- ceiling(ncol(plot_input)/plot_cols)#
+plot_layout <- matrix(data = 1:(plot_cols*plot_rows), nrow = plot_rows, byrow = TRUE)#
+layout(plot_layout)#
+#
+# plot histograms of the frequency of proportions sampled for each taxon.#
+for (i in 1:ncol(plot_input)){#
+  hist(plot_input[, i], main = taxon_names[i], xlab = "proportion")#
+  abline(v = DNA_truth_prop[i], col = "red")#
+}
+rm(list = ls())		# clear objects#
+graphics.off() 		# close graphics windows #
+#
+# Generate data#
+x = 0:10;#
+y = 0:10;
+rm(list = ls())		# clear objects#
+graphics.off() 		# close graphics windows #
+#
+# Plot 3#
+par(oma=c(3,3,3,3))
+nf <- layout(matrix(c(2,0,1,3),2,2,byrow=TRUE), widths=c(6,1), heights=c(1,6), TRUE)
+nf
+layout.show(nf)
+par(oma=c(3,3,3,3))
+nf <- layout(matrix(c(2,0,1,3),2,2,byrow=TRUE), widths=c(6,1), heights=c(1,6), TRUE)#
+#
+# If you want to see your layout, this command will create a chart labelling it clearly.#
+layout.show(nf)
+par(mar=c(4,4,1,1))#
+plot(0:10, 0:10, type="n", xlab="X", ylab="Y", col="green")#
+box("figure", col="green")#
+text(5,5,"Plot 1", col="green", cex=2)
+par()
+length_fragment <- 200
+mass_bp <- 650
+avo_num <- 6.022e23
+num_copies <- function(length_fragment, mass_fragment){#
+	# average mass of a single base pair (in Daltons, which is equivalent to g/mol aka molar mass)#
+	# put another way - How much does one mole of base pairs weigh in grams? (650 for double stranded DNA [dsDNA])#
+	mass_bp <- 650#
+#
+	# Avogadro's number#
+	avo_num <- 6.022e23#
+	# unit correction (use 1e9 for nanograms)#
+	unit_correction <- 1e9#
+	copies <- (mass_fragment * avo_num)/(length_fragment * unit_correction * mass_bp)#
+	return(copies)#
+}
+num_copies(length_fragment = 200, mass_fragment = 10)
+num_copies(length_fragment = 20, mass_fragment = 50)
+num_copies(length_fragment = 670, mass_fragment = 150)
+rm(list=ls())#
+### GO GET THE NECESSARY LIBRARIES#
+#
+##### TILAPIA IS OTU 4 #####
+#
+library(gtools)#
+library(R2jags)#
+#
+# Set this to the subdirectory Analysis within the project folder (which should also contain subdirectories called Data and Figures)#
+analysis_dir <- "/Users/threeprime/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Analysis"#
+#
+setwd(analysis_dir)#
+data_dir <- file.path("..", "Data")#
+fig_dir <- file.path("..", "Figures")#
+#
+setwd(data_dir)#
+#------------------------------------------#
+## Read in the clusters data + sort to make long form#
+# this file is a matrix of counts (integers) where#
+# rows = taxa#
+# columns = samples#
+# AND#
+# columns = distance measure from taxon's primer binding site and each of the tags (primer indexes)#
+# for original modeling paper, dim =  9,151; only top 10 OTUs#
+dat		<-	read.csv("abundance_distance_matrix+OLE.csv")#
+dat		<-	dat[dat$X!='OTU_4',] # remove Tilapia#
+#------------------------------------------#
+# Read in the "duplicate table": #
+# this file is a matrix of counts (integers)#
+# rows = unique DNA sequences ("DUP")#
+# columns = samples#
+# dim = (27973,75); 75 samples, 27973 unique sequences#
+dat.total.DNA	<-	read.csv("all_clusters.csv", header=TRUE, row.names = 1)#
+#
+# calculate the total number of sequence counts per sample#
+dat.DNA			<-	colSums(dat.total.DNA)#
+#------------------------------------------#
+# Read in the sequencing metadata#
+# contains primer index data, environmental sample name, etc#
+dat.surv	<-	read.csv("sample_data.csv")#
+#
+# isolate the primer index sequence ("tag") and the sample name#
+dat.surv.trim		<-	dat.surv[,c('Tag_Sequence','Sample')]#
+#
+# exclude the last few samples (in this case, anything beyond row 22 is a positive or negative control sample)#
+dat.surv.trim		<-	dat.surv.trim[1:22,]#
+#
+# add a column for the time the sample was taken (in this case embedded in the sample name)#
+dat.surv.trim$Time	<-	substr(dat.surv.trim$Sample,8,13)#
+#################################################################################
+#
+# isolate the names of the OTUs#
+OTU		<-	as.character(dat$X)#
+#
+# isolate the primer match data (genetic distance between primer sequences and template for each OTU sequence)#
+PRIMER	<-	dat[,77:ncol(dat)]#
+rownames(PRIMER) <- OTU#
+#
+# how many OTUs are there?#
+N.sp	<-	length(OTU)#
+#
+# make a vector of all of the primer index (tag) sequences#
+tags	<-	unique(substr(colnames(dat[,2:76]),1,6))#
+# isolate the sequence counts from each of the top 10 OTUs in each of the samples#
+COUNTS	<-  dat[,2:76]#
+#
+# transpose the counts and make a dataframe#
+COUNTS			<- data.frame(t(COUNTS))#
+#
+# name the columns the OTU names#
+colnames(COUNTS) <- OTU#
+#
+# calculate the total number of sequence counts of the OTUs per sample#
+tot.obs			<- rowSums(COUNTS)#
+#
+# add a column containing the counts of DNA sequences in each sample that do not belong to one of the OTUs#
+COUNTS$Other	<-	dat.DNA[match(rownames(COUNTS),names(dat.DNA))]#
+COUNTS$Other	<- COUNTS$Other - tot.obs#
+#
+### STANDARDIZE THE NUMBER OF OTUs read to 100,000#
+# COUNTS_ORIG <- COUNTS#
+# adjust <- rowSums(COUNTS[,1:length(OTU)]) / 100000#
+# COUNTS <- round(COUNTS / adjust)#
+#
+# ! COUNTS is now a dataframe where rows are samples, and #
+# add a column of the tag sequence#
+COUNTS$Tag	<-	substr(rownames(COUNTS),1,6)#
+#
+# add a column of time the sample was taken#
+COUNTS$Time	<-	dat.surv.trim$Time[match(COUNTS$Tag,as.character(dat.surv.trim$Tag_Sequence))]#
+#
+# exclude rows whose collection time is NA#
+COUNTS		<-	COUNTS[is.na(COUNTS$Time)==F,]#
+#
+# order them by collection time#
+COUNTS		<-	COUNTS[order(COUNTS$Time),]#
+#
+# add a column of zeros#
+COUNTS$t.numb		<-	0#
+# So, moving into the modeling aspect, the pieces of data we need are:#
+# 1. PRIMER = a matrix of distances between primer and template sequence for each OTU (rownames)#
+# 2. COUNTS = a data frame #
+# 3. #
+# 4. #
+# 5. #
+# 6. #
+#################################################################################
+##### Manipulate COVARIATE DATA #
+#
+# Make a matrix containing columns of OTU, index sequence (tag), direction, and genetic distance#
+dat.covar	<- NULL#
+for(i in 1:ncol(PRIMER)){#
+	temp	<-	cbind(#
+				OTU=rownames(PRIMER),#
+				tag=substr(colnames(PRIMER)[i],5,10),#
+				direction=substr(colnames(PRIMER)[i],12,15),#
+				Dist=PRIMER[,i]#
+				)#
+	dat.covar	<-	rbind(dat.covar,temp)#
+}#
+#
+# convert from matrix to data frame#
+dat.covar	<-	data.frame(dat.covar)#
+#
+# make the distance column numeric#
+dat.covar$Dist	<-	as.numeric(as.character(dat.covar$Dist))#
+#
+# split into separate data frames for each direction#
+dat.F	<-	dat.covar[dat.covar$direction=="F",]#
+dat.R	<-	dat.covar[dat.covar$direction=="R",]#
+dat.both	<-	dat.covar[dat.covar$direction=="both",]#
+#
+# Add a column of centralized distance by subtracting the mean#
+dat.F$cent.dist		<-	dat.F$Dist - mean(dat.F$Dist)#
+dat.R$cent.dist		<-	dat.R$Dist - mean(dat.R$Dist)#
+dat.both$cent.dist	<-	dat.both$Dist - mean(dat.both$Dist)#
+#
+# combine into an additional data frame#
+dat.COVAR	<-	data.frame(rbind(dat.F,dat.R,dat.both))#
+##########################################################################################
+#### ----- Define the covariates to use ------------------------------#
+##########################################################################################
+#
+# covariate_colname <- "direction"#
+# COVAR <- unique(dat.COVAR[,"direction"]) # ? as.character()#
+COVAR 	<-	c("F","R","both")#
+##### Turn Data and Covariates into arrays that can be used easily by JAGS#
+N_times	<- length(unique(COUNTS$Time))#
+for(i in 1:N_times){#
+	COUNTS$t.numb[COUNTS$Time == sort(unique(COUNTS$Time))[i]]	<-	i#
+}#
+colnames(COUNTS)[1:length(OTU)]	<-	OTU#
+#
+# JO: I think this is another way of doing this:#
+t_numb <- as.numeric(as.factor(COUNTS$Time))#
+identical(t_numb, COUNTS$t.numb) # it is (as far as I understand the intent of the code)
+COUNTS
+str(COUNTS)
+COVAR
+N.tag	<-	length(unique(COUNTS$Tag[COUNTS$t.numb==1]))
+N.tag
+N.rep	<-	length(COUNTS$Tag[COUNTS$t.numb==1 & COUNTS$Tag == unique(COUNTS$Tag)[1]])
+N.rep
+N.t		<-	N_times
+N.t
+dat.covar
+N.tag
+N.rep
+DATA
+DATA		<- 	array(#
+				data = 0, #
+				dim = c(N.rep,N.sp,N.tag, N.t), #
+				dimnames = list(REP = c("X1","X2","X3"), #
+								OTU = OTU, #
+								Tag = 1:N.tag, #
+								N.t=1:N.t)#
+				)#
+#
+# JO: What is this array for?#
+LABS		<-	array(#
+				data = 0, #
+				dim = c(N.rep,1,N.tag, N.t), #
+				dimnames = list(#
+								REP = c("X1","X2","X3"), #
+								NULL, #
+								Tag = 1:N.tag, #
+								N.t = 1:N.t#
+								)#
+				)#
+#
+# JO: What is this array for?#
+COVAR.mat	<-	array(#
+					data = 0,#
+					dim = c(N.rep,N.sp,N.tag, N.t), #
+					dimnames = list(#
+									REP = c("X1","X2","X3"), #
+									OTU = OTU, #
+									Tag = 1:N.tag, #
+									N.t = 1:N.t#
+								)#
+				)#
+for(i in 1:N.t){#
+		temp.tag 	<- unique(COUNTS$Tag[COUNTS$t.numb==i])#
+	for(j in 1:N.tag){#
+		temp		<- as.matrix(COUNTS[COUNTS$t.numb==i & COUNTS$Tag == temp.tag[j],1:N.sp])#
+		DATA[,,j,i]	<- temp#
+		LABS[,,j,i]	<- temp.tag[j]#
+	}#
+}#
+### THIS MAKES AN ARRAY FOR EACH COVARIATE BASE ON THE OBJECT "COVAR". #
+###  The arrays are named "COVAR.(VARIABLE NAME)"#
+#
+for(m in 1:length(COVAR)){#
+	name.temp	<-	paste("COVAR",COVAR[m],sep=".")#
+	temp		<- dat.COVAR[dat.COVAR$direction == COVAR[m],]#
+#
+	covar		<-	COVAR.mat#
+	for(i in 1:N.rep){#
+		for(j in 1:N.sp){#
+			for(k in 1:N.tag){#
+				for(l in 1:N.t){#
+					covar[i,j,k,l]	<-	temp$cent.dist[temp$OTU == dimnames(covar)$OTU[j] #
+											& temp$tag == LABS[i,1,k,l]]#
+				}#
+			}#
+		}#
+	}#
+	assign(name.temp,covar)#
+}
+DATA		<- 	array(
+DATA
+str(DATA)
+N.rep
+t_numb
+N.rep
+dat
+as.POSIXct(x = "2014-06-14")
+as.POSIXct(x = "2014-06-14 09:10:10")
+dat
+head(dat.total.DNA)
+dat.covar
+tag
+t
+tag
+lsos
+ls
+ls()
+tags
+grep("GCG", "tags")
+grep("GCG", tags)
+tags[grep("GCG", tags)]
+tags[grep("tag", tags)]
+tags[grep("TAG", tags)]
+dat.covar
+dat.COVAR
+COVAR
+COUNTS
+sort(unique(COUNTS$Time))
+N.tag
+as.factor(COUNTS$Tag)
+split(as.factor(COUNTS$Tag), COUNTS$t.numb)
+sapply(split(as.factor(COUNTS$Tag), COUNTS$t.numb)
+split(COUNTS$Tag, COUNTS$t.numb)
+sapply(split(COUNTS$Tag, COUNTS$t.numb), function(x) length(levels(as.factor(x))))
+range(sapply(split(COUNTS$Tag, COUNTS$t.numb), function(x) length(levels(as.factor(x)))))
+unique(range(sapply(split(COUNTS$Tag, COUNTS$t.numb), function(x) length(levels(as.factor(x))))))
+unique(sapply(split(COUNTS$Tag, COUNTS$t.numb), function(x) length(levels(as.factor(x)))))
+unique(#
+	sapply(#
+		X = split(COUNTS$Tag, COUNTS$t.numb), #
+		FUN = function(x) length(levels(as.factor(x)))#
+		)#
+	)
+something
+something <- 1
+if(length(something) > 1)#
+	stop("poop!")
+something <- c(1,2)
+if(length(something) > 1)#
+	stop("poop!")
+N.rep
+tags
+COUNTS
+COUNTS$Tag
+COUNTS$Tag
+table(COUNTS$Tag)
+unique(table(COUNTS$Tag))
+DATA
+str(DATA)
+ncol(PRIMER)
+PRIMER
+colnames(PRIMER)
+dat.covar
+N.t
+unique(COUNTS$Time)
+COUNTS
+DATA
+N.rep
+N.sp
+LABS
+str(LABS)
+COVAR.mat
+str(COVAR.mat)
+identical(str(COVAR.mat), str(DATA)
+)
+identical(str(COVAR.mat), str(DATA))
+DATA		<- 	array(#
+				data = 0, #
+				dim = c(N.rep, N.sp, N.tag, N.t), #
+				dimnames = list(REP = c("X1","X2","X3"), #
+								OTU = OTU, #
+								Tag = 1:N.tag, #
+								N.t = 1:N.t)#
+				)#
+#
+# JO: What is this array for?#
+LABS		<-	array(#
+				data = 0, #
+				dim = c(N.rep,1,N.tag, N.t), #
+				dimnames = list(#
+								REP = c("X1","X2","X3"), #
+								NULL, #
+								Tag = 1:N.tag, #
+								N.t = 1:N.t#
+								)#
+				)#
+#
+# JO: What is this array for?#
+COVAR.mat	<-	array(#
+					data = 0,#
+					dim = c(N.rep,N.sp,N.tag, N.t), #
+					dimnames = list(#
+									REP = c("X1","X2","X3"), #
+									OTU = OTU, #
+									Tag = 1:N.tag, #
+									N.t = 1:N.t#
+								)#
+				)
+DATA
+COVAR.mat
+identical(DATA, COVAR.mat)
+i
+COUNTS$t.numb
+COUNTS$t.numb==i
+j
+j <- 2
+COUNTS$t.numb==i & COUNTS$Tag == temp.tag[j]
+LABS
+for(i in 1:N.t){#
+		temp.tag 	<- unique(COUNTS$Tag[COUNTS$t.numb==i])#
+	for(j in 1:N.tag){#
+		temp		<- as.matrix(COUNTS[COUNTS$t.numb==i & COUNTS$Tag == temp.tag[j],1:N.sp])#
+		DATA[,,j,i]	<- temp#
+		LABS[,,j,i]	<- temp.tag[j]#
+	}#
+}
+LABS
+i
+j
+temp.tag 	<- unique(COUNTS$Tag[COUNTS$t.numb==i])
+temp.tag
+temp		<- as.matrix(COUNTS[COUNTS$t.numb==i & COUNTS$Tag == temp.tag[j],1:N.sp])
+temp
+DATA
+LABS
+temp		<- as.matrix(COUNTS[COUNTS$t.numb==i & COUNTS$Tag == temp.tag[j],1:N.sp])
+temp
+temp.tag
+j
+temp.tag[j]
+name.temp
+for(m in 1:length(COVAR)){#
+	name.temp	<-	paste("COVAR",COVAR[m],sep=".")#
+	temp		<- dat.COVAR[dat.COVAR$direction == COVAR[m],]#
+#
+	covar		<-	COVAR.mat#
+	for(i in 1:N.rep){#
+		for(j in 1:N.sp){#
+			for(k in 1:N.tag){#
+				for(l in 1:N.t){#
+					covar[i,j,k,l]	<-	temp$cent.dist[temp$OTU == dimnames(covar)$OTU[j] #
+											& temp$tag == LABS[i,1,k,l]]#
+				}#
+			}#
+		}#
+	}#
+	assign(name.temp,covar)#
+}
+COVAR
+COVAR
+ls()
+name.temp
+temp
+COVAR.both
+COVAR.mat
+COVAR.mat
+exp()
+exp(1)
+exp(2)
+?dpois
+2 +
+3
+dunif(0,1000)

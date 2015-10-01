@@ -1,0 +1,2040 @@
+counts
+counts_vec <- as.vector(counts)
+counts_vec
+names(counts_vec) <- rep(x = taxon_names, each = N_samples_small)
+counts_vec
+mydata <- counts
+mydata
+dput(mydata)
+counts <- mydata
+colnames(counts)
+names(counts_vec) <- rep(x = colnames(counts), each = nrow(counts))
+counts_vec
+nrow(counts)
+length(counts)
+length(counts_vec)
+library(gtools) # gtools::rdirichlet#
+library(R2jags) # R2jags::jags#
+# Suppose we have an aquarium which contains N_tax taxa#
+N_tax <- 9#
+# Give them names#
+taxon_names <- paste("taxon_", LETTERS[1:N_tax], sep = "")#
+# The distribution of DNA molecules derived from each of the taxa might look like the following#
+# Ole originally called these alpha because they eventually become the alpha parameter of the Dirichlet distribution, which sorta determines how likely each component is to be drawn#
+# I call these "true" because they represent the "true" abundance of DNA from each taxon in the sample.#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# Instead of runif, you might try using rexp or random from the Pareto distribution to more accurately resemble "real" eDNA results#
+set.seed(407744)#
+DNA_truth		<- sort(round(runif(N_tax,1,100)), decreasing = TRUE)#
+names(DNA_truth) <- taxon_names#
+#
+# those same values expressed as proportions#
+DNA_truth_prop <- DNA_truth/sum(DNA_truth)#
+#############################################################################
+# The actual simulation #
+#############################################################################
+#
+# This simulates data that might be expected from high throughput sequencing of PCR amplicons generated from environmental samples: proportional abundance of sequences from each of the taxa/OTUs/dups#
+# draw samples from the Dirichlet distribution, using alpha given by DNA_truth to approximate the sampling of DNA molecules from the environment#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# How many times should we sample?#
+N_samples_small	<-	3#
+set.seed(407744)#
+eDNA_counts_small <- rdirichlet(N_samples_small, DNA_truth)#
+colnames(eDNA_counts_small) <- taxon_names#
+#############
+# OR...#
+#############
+N_samples_big		<- 100000#
+set.seed(407744)#
+eDNA_counts_big <- rdirichlet(N_samples_big, DNA_truth)#
+colnames(eDNA_counts_big) <- taxon_names#
+# Set whichever of these as the plot input:#
+plot_input <- eDNA_counts_big#
+#
+# Create plot layout (this looks complicated to allow it to be flexible to different taxa numbers)#
+plot_cols <- ceiling(sqrt(ncol(plot_input)))#
+plot_rows <- ceiling(ncol(plot_input)/plot_cols)#
+plot_layout <- matrix(data = 1:(plot_cols*plot_rows), nrow = plot_rows, byrow = TRUE)#
+layout(plot_layout)#
+#
+# plot histograms of the frequency of proportions sampled for each taxon.#
+for (i in 1:ncol(plot_input)){#
+  hist(plot_input[, i], main = taxon_names[i], xlab = "proportion")#
+  abline(v = DNA_truth_prop[i], col = "red")#
+}#
+# In a similar way, we can use each of the samples to inform the probabilities of draws from a multinomial distribution. This produces data that is functionally indistinguishable from that presented above.#
+# Using each row of the "true proportion" data frame as probabilities...#
+# essentially: take a draw of 'N_draws' marbles, #
+# and put them into each of some number of bins #
+# with probability of going into each bin given by the "true proportion" row#
+# (repeat n times)#
+#
+N_draws		<-	100000#
+#
+set.seed(407744)#
+counts_mat <- apply(#
+					X = eDNA_counts_small, #
+					MARGIN = 1, #
+					FUN = function(x) #
+						rmultinom(size = N_draws, prob = x, n = 1)#
+				)#
+#
+# assign names#
+rownames(counts_mat) <- taxon_names#
+#
+# transpose#
+counts <- t(counts_mat)#
+#
+mydata <- counts
+counts <- mydata#
+#
+# make into a vector#
+counts_vec <- as.vector(counts)#
+names(counts_vec) <- rep(x = colnames(counts), each = nrow(counts))#
+# want to save the file?
+write.csv(x = counts, file = "counts.csv")
+write.csv(x = counts, file = "counts.csv", row.names = FALSE)
+write.csv(x = counts, file = "counts.csv", row.names = FALSE, quotes = FALSE)
+write.csv(x = counts, file = "counts.csv", row.names = FALSE, quote = FALSE)
+counts <- mydata
+counts_vec <- as.vector(counts)#
+names(counts_vec) <- rep(x = colnames(counts), each = nrow(counts))
+as.matrix(mydata)
+identical(counts, as.matrix(mydata))
+mydata <- as.matrix(read.csv("counts.csv"))
+identical(mydata, counts)
+par(mfrow = c(3,3))#
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rexp(#
+				n = 100, #
+				rate = i#
+				)#
+			)#
+		, #
+		main = paste("rate = ", i, sep = ""), #
+		ylim = c(0,5), #
+		pch = 20, #
+		cex = 0.5#
+	)#
+}
+dpareto <- function(x, xm, alpha) ifelse(x > xm , alpha*xm**alpha/(x**(alpha+1)), 0)#
+ppareto <- function(q, xm, alpha) ifelse(q > xm , 1 - (xm/q)**alpha, 0 )#
+qpareto <- function(p, xm, alpha) ifelse(p < 0 | p > 1, NaN, xm*(1-p)**(-1/alpha))#
+rpareto <- function(n, xm, alpha) qpareto(runif(n), xm, alpha)#
+#
+par(mfrow = c(3,3))#
+#
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rpareto(#
+				100, i, 2#
+			)#
+		)#
+		, ylim = c(0, 15)#
+	)#
+}#
+# xm simply determines the minimum value drawn#
+#
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rpareto(#
+				100, 1, i#
+			)#
+		)#
+		, ylim = c(0, 15)#
+	)#
+}
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rpareto(#
+				100, i, 2#
+			)#
+		)#
+		, ylim = c(0, 15)#
+	)#
+}
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rpareto(#
+				100, i, 2#
+			)#
+		)#
+		, ylim = c(0, 15), #
+		main = paste("xm = ", i, sep = "")#
+	)#
+}
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rpareto(#
+				n = 100, xm = 1, alpha = i#
+			)#
+		)#
+		, ylim = c(0, 15), #
+		main = paste("alph = ", i, sep = "")#
+	)#
+}
+for(i in 1:9){#
+	plot(#
+		sort(#
+			rpareto(#
+				n = 100, xm = 1, alpha = i#
+			)#
+		)#
+		, ylim = c(0, 15), #
+		main = paste("alpha = ", i, sep = "")#
+	)#
+}
+library(gtools) # gtools::rdirichlet#
+library(R2jags) # R2jags::jags#
+# Suppose we have an aquarium which contains N_tax taxa#
+N_tax <- 9#
+# Give them names#
+taxon_names <- paste("taxon_", LETTERS[1:N_tax], sep = "")
+set.seed(407744)#
+DNA_truth		<- sort(round(runif(N_tax,1,100)), decreasing = TRUE)#
+names(DNA_truth) <- taxon_names#
+#
+# those same values expressed as proportions#
+DNA_truth_prop <- DNA_truth/sum(DNA_truth)
+N_samples_small	<-	3#
+set.seed(407744)#
+eDNA_counts_small <- rdirichlet(N_samples_small, DNA_truth)#
+colnames(eDNA_counts_small) <- taxon_names
+N_samples_big		<- 100000#
+set.seed(407744)#
+eDNA_counts_big <- rdirichlet(N_samples_big, DNA_truth)#
+colnames(eDNA_counts_big) <- taxon_names
+plot_input <- eDNA_counts_big
+plot_cols <- ceiling(sqrt(ncol(plot_input)))#
+plot_rows <- ceiling(ncol(plot_input)/plot_cols)#
+plot_layout <- matrix(data = 1:(plot_cols*plot_rows), nrow = plot_rows, byrow = TRUE)#
+layout(plot_layout)
+for (i in 1:ncol(plot_input)){#
+  hist(plot_input[, i], main = taxon_names[i], xlab = "proportion")#
+  abline(v = DNA_truth_prop[i], col = "red")#
+}
+N_draws		<-	100000
+set.seed(407744)#
+counts_mat <- apply(#
+					X = eDNA_counts_small, #
+					MARGIN = 1, #
+					FUN = function(x) #
+						rmultinom(size = N_draws, prob = x, n = 1)#
+				)
+rownames(counts_mat) <- taxon_names
+counts <- t(counts_mat)
+mydata <- counts
+counts <- as.matrix(mydata)
+counts_vec <- as.vector(counts)#
+names(counts_vec) <- rep(x = colnames(counts), each = nrow(counts))
+cat_mat <- matrix(data = 0, nrow = length(counts_vec), ncol = ncol(counts))
+cat_mat[,1]	<- 1
+for(i in 1:length(taxon_names)){#
+	same_taxon <- which(rep(1:length(taxon_names), each = N_samples_small) == i)#
+	cat_mat[same_taxon,i]	<-	1#
+	# Ole's solution is more readable (x <- 1), but you can also make use of the fact that logical vectors (T/F) can be expressed as 1/0 using as.integer#
+	# as.integer(rep(1:length(taxon_names), each = N_samples_small) == i)#
+}#
+colnames(cat_mat)	<-	taxon_names
+cat_mat
+var_mat	<-	matrix(data = 0, nrow = length(counts_vec), ncol = length(taxon_names))#
+#
+for(i in 1:length(taxon_names)){#
+	same_taxon <- which(rep(1:length(taxon_names), each = N_samples_small) == i)#
+	var_mat[same_taxon, i]	<-	1#
+}#
+colnames(var_mat) <- taxon_names
+betas	<- rep(0, ncol(cat_mat))
+N_cov	<-	length(taxon_names)#
+N_obs	<-	length(counts_vec)
+N_cov
+N_obs
+iden_mat <- diag(x = 1, nrow = N_obs)
+jags_data <- list("counts_vec", "N_obs", "N_cov", "cat_mat")#
+#
+# WHAT IS P?#
+jags_params <- c("betas", "P")#
+#
+# I think this is telling where the script lives?#
+model_loc <- c("my_jags_script.txt")#
+#
+# Set the number of iterations to discard before storing them#
+N_burn <- 10000#
+#
+# Set the total number of iterations to conduct (total? or after burnin?)#
+N_iter <- 10000#
+# write the JAGS script:#
+jagsscript <- cat(#
+"model {#
+	for(i in 1:N_obs){#
+		counts_vec[i] ~ dpois(exp(lambda[i]))#
+	}#
+	lambda <- cat_mat %*% betas #+ eta#
+	### Derived Quantities#
+	p[1] <- exp(betas[1])#
+	for(i in 2:N_cov){#
+		p[i] <- exp(betas[1] + betas[i])#
+	}#
+	# This can probably just be: P <- p / sum(p)#
+	for(i in 1:N_cov){#
+		P[i] <- p[i] / sum(p)#
+	}#
+	### PRIORS#
+	for(j in 1:N_cov){#
+		betas[j] ~ dnorm(0, 0.001)#
+	}#
+}", file = model_loc)#
+#
+) # cat doesn't close until I make this parentheses...#
+)
+my_jags_model <- jags(#
+					data = jags_data, #
+					inits = NULL, #
+					parameters.to.save = jags_params, #
+					model.file = model_loc, #
+					n.chains = 3, #
+					n.iter = N_iter + N_burn, #
+					n.burnin = N_burn, #floor(n.iter/2) #
+					n.thin = 1, # max(1, floor((n.iter - n.burnin)/1000))#
+					DIC = TRUE, #
+					working.directory = NULL, #
+					jags.seed = 123, #
+					refresh = N_iter/50, #
+					progress.bar = "text", #
+					digits = 5, #
+					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"), #
+					jags.module = c("glm","dic")#
+)
+attach.jags(my_jags_model, overwrite = TRUE)
+?attach.jags
+#############################################################################
+# This script simulates some data that resembles eDNA sequence data#
+#############################################################################
+#
+# Original code by Ole Shelton#
+# Hacked up by Jimmy O'Donnell#
+# Comments mostly reflect Jimmy's imperfect understanding of the underlying concepts.#
+#
+library(gtools) # gtools::rdirichlet#
+library(R2jags) # R2jags::jags#
+# Suppose we have an aquarium which contains N_tax taxa#
+N_tax <- 9#
+# Give them names#
+taxon_names <- paste("taxon_", LETTERS[1:N_tax], sep = "")#
+# The distribution of DNA molecules derived from each of the taxa might look like the following#
+# Ole originally called these alpha because they eventually become the alpha parameter of the Dirichlet distribution, which sorta determines how likely each component is to be drawn#
+# I call these "true" because they represent the "true" abundance of DNA from each taxon in the sample.#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# Instead of runif, you might try using rexp or random from the Pareto distribution to more accurately resemble "real" eDNA results#
+set.seed(407744)#
+DNA_truth		<- sort(round(runif(N_tax,1,100)), decreasing = TRUE)#
+names(DNA_truth) <- taxon_names#
+#
+# those same values expressed as proportions#
+DNA_truth_prop <- DNA_truth/sum(DNA_truth)#
+#############################################################################
+# The actual simulation #
+#############################################################################
+#
+# This simulates data that might be expected from high throughput sequencing of PCR amplicons generated from environmental samples: proportional abundance of sequences from each of the taxa/OTUs/dups#
+# draw samples from the Dirichlet distribution, using alpha given by DNA_truth to approximate the sampling of DNA molecules from the environment#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# If you were to take N_samples samples, what kind of answer would you expect?#
+N_samples_small	<-	3#
+set.seed(407744)#
+eDNA_counts_small <- rdirichlet(N_samples_small, DNA_truth)#
+colnames(eDNA_counts_small) <- taxon_names#
+#############
+# OR...#
+#############
+N_samples_big		<- 100000#
+set.seed(407744)#
+eDNA_counts_big <- rdirichlet(N_samples_big, DNA_truth)#
+colnames(eDNA_counts_big) <- taxon_names#
+# Set whichever of these as the plot input:#
+plot_input <- eDNA_counts_big#
+#
+# Create plot layout (this looks complicated to allow it to be flexible to different taxa numbers)#
+plot_cols <- ceiling(sqrt(ncol(plot_input)))#
+plot_rows <- ceiling(ncol(plot_input)/plot_cols)#
+plot_layout <- matrix(data = 1:(plot_cols*plot_rows), nrow = plot_rows, byrow = TRUE)#
+layout(plot_layout)#
+#
+# plot histograms of the frequency of proportions sampled for each taxon.#
+for (i in 1:ncol(plot_input)){#
+  hist(plot_input[, i], main = taxon_names[i], xlab = "proportion")#
+  abline(v = DNA_truth_prop[i], col = "red")#
+}#
+# In a similar way, we can use each of the samples to inform the probabilities of draws from a multinomial distribution. This produces data that is functionally indistinguishable from that presented above.#
+# Using each row of the "true proportion" data frame as probabilities...#
+# essentially: take a draw of 'N_draws' marbles, #
+# and put them into each of some number of bins #
+# with probability of going into each bin given by the "true proportion" row#
+# (repeat n times)#
+#
+N_draws		<-	100000#
+#
+set.seed(407744)#
+counts_mat <- apply(#
+					X = eDNA_counts_small, #
+					MARGIN = 1, #
+					FUN = function(x) #
+						rmultinom(size = N_draws, prob = x, n = 1)#
+				)#
+#
+# assign names#
+rownames(counts_mat) <- taxon_names#
+#
+# transpose#
+counts <- t(counts_mat)#
+#
+# want to save the file?#
+write.csv(x = counts, file = "counts.csv", row.names = FALSE, quote = FALSE)
+?plot
+N_tax <- 9
+taxon_names <- paste("taxon_", LETTERS[1:N_tax], sep = "")#
+# The distribution of DNA molecules derived from each of the taxa might look like the following#
+# Ole originally called these alpha because they eventually become the alpha parameter of the Dirichlet distribution, which sorta determines how likely each component is to be drawn#
+# I call these "true" because they represent the "true" abundance of DNA from each taxon in the sample.#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# Instead of runif, you might try using rexp or random from the Pareto distribution to more accurately resemble "real" eDNA results#
+set.seed(407744)#
+DNA_truth		<- sort(round(runif(N_tax,1,100)), decreasing = TRUE)#
+names(DNA_truth) <- taxon_names#
+#
+# those same values expressed as proportions#
+DNA_truth_prop <- DNA_truth/sum(DNA_truth)#
+#############################################################################
+# The actual simulation #
+#############################################################################
+#
+# This simulates data that might be expected from high throughput sequencing of PCR amplicons generated from environmental samples: proportional abundance of sequences from each of the taxa/OTUs/dups#
+# draw samples from the Dirichlet distribution, using alpha given by DNA_truth to approximate the sampling of DNA molecules from the environment#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# If you were to take N_samples samples, what kind of answer would you expect?#
+N_samples_small	<-	3#
+set.seed(407744)#
+eDNA_counts_small <- rdirichlet(N_samples_small, DNA_truth)#
+colnames(eDNA_counts_small) <- taxon_names#
+#############
+# OR...#
+#############
+N_samples_big		<- 100000#
+set.seed(407744)#
+eDNA_counts_big <- rdirichlet(N_samples_big, DNA_truth)#
+colnames(eDNA_counts_big) <- taxon_names#
+# Set whichever of these as the plot input:#
+plot_input <- eDNA_counts_big#
+#
+# Create plot layout (this looks complicated to allow it to be flexible to different taxa numbers)#
+plot_cols <- ceiling(sqrt(ncol(plot_input)))#
+plot_rows <- ceiling(ncol(plot_input)/plot_cols)#
+plot_layout <- matrix(data = 1:(plot_cols*plot_rows), nrow = plot_rows, byrow = TRUE)#
+layout(plot_layout)#
+#
+# plot histograms of the frequency of proportions sampled for each taxon.#
+for (i in 1:ncol(plot_input)){#
+  hist(plot_input[, i], main = taxon_names[i], xlab = "proportion")#
+  abline(v = DNA_truth_prop[i], col = "red")#
+}
+#############################################################################
+# This script simulates some data that resembles eDNA sequence data#
+#############################################################################
+#
+# Original code by Ole Shelton#
+# Hacked up by Jimmy O'Donnell#
+# Comments mostly reflect Jimmy's imperfect understanding of the underlying concepts.#
+#
+library(gtools) # gtools::rdirichlet#
+library(R2jags) # R2jags::jags#
+# Suppose we have an aquarium which contains N_tax taxa#
+N_tax <- 9#
+# Give them names#
+taxon_names <- paste("taxon_", LETTERS[1:N_tax], sep = "")#
+# The distribution of DNA molecules derived from each of the taxa might look like the following#
+# Ole originally called these alpha because they eventually become the alpha parameter of the Dirichlet distribution, which sorta determines how likely each component is to be drawn#
+# I call these "true" because they represent the "true" abundance of DNA from each taxon in the sample.#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# Instead of runif, you might try using rexp or random from the Pareto distribution to more accurately resemble "real" eDNA results#
+set.seed(407744)#
+DNA_truth		<- sort(round(runif(N_tax,1,100)), decreasing = TRUE)#
+names(DNA_truth) <- taxon_names#
+#
+# those same values expressed as proportions#
+DNA_truth_prop <- DNA_truth/sum(DNA_truth)#
+#############################################################################
+# The actual simulation #
+#############################################################################
+#
+# This simulates data that might be expected from high throughput sequencing of PCR amplicons generated from environmental samples: proportional abundance of sequences from each of the taxa/OTUs/dups#
+# draw samples from the Dirichlet distribution, using alpha given by DNA_truth to approximate the sampling of DNA molecules from the environment#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# If you were to take N_samples samples, what kind of answer would you expect?#
+N_samples_small	<-	3#
+set.seed(407744)#
+eDNA_counts_small <- rdirichlet(N_samples_small, DNA_truth)#
+colnames(eDNA_counts_small) <- taxon_names#
+#############
+# OR...#
+#############
+N_samples_big		<- 100000#
+set.seed(407744)#
+eDNA_counts_big <- rdirichlet(N_samples_big, DNA_truth)#
+colnames(eDNA_counts_big) <- taxon_names#
+# Set whichever of these as the plot input:#
+plot_input <- eDNA_counts_big#
+#
+# Create plot layout (this looks complicated to allow it to be flexible to different taxa numbers)#
+plot_cols <- ceiling(sqrt(ncol(plot_input)))#
+plot_rows <- ceiling(ncol(plot_input)/plot_cols)#
+plot_layout <- matrix(data = 1:(plot_cols*plot_rows), nrow = plot_rows, byrow = TRUE)#
+layout(plot_layout)#
+#
+# plot histograms of the frequency of proportions sampled for each taxon.#
+for (i in 1:ncol(plot_input)){#
+  hist(plot_input[, i], main = taxon_names[i], xlab = "proportion")#
+  abline(v = DNA_truth_prop[i], col = "red")#
+}#
+# In a similar way, we can use each of the samples to inform the probabilities of draws from a multinomial distribution. This produces data that is functionally indistinguishable from that presented above.#
+# Using each row of the "true proportion" data frame as probabilities...#
+# essentially: take a draw of 'N_draws' marbles, #
+# and put them into each of some number of bins #
+# with probability of going into each bin given by the "true proportion" row#
+# (repeat n times)#
+#
+N_draws		<-	100000#
+#
+set.seed(407744)#
+counts_mat <- apply(#
+					X = eDNA_counts_small, #
+					MARGIN = 1, #
+					FUN = function(x) #
+						rmultinom(size = N_draws, prob = x, n = 1)#
+				)#
+#
+# assign names#
+rownames(counts_mat) <- taxon_names#
+#
+# transpose#
+counts <- t(counts_mat)#
+#
+# want to save the file?#
+write.csv(x = counts, file = "counts.csv", row.names = FALSE, quote = FALSE)#
+#
+# or to prepare for next step (MCMC),#
+mydata <- counts#
+#
+#############################################################################
+# This marks the end of generating what I think of as typical eDNA sequence data
+N_tax <- 13
+# Give them names#
+taxon_names <- paste("taxon_", LETTERS[1:N_tax], sep = "")#
+# The distribution of DNA molecules derived from each of the taxa might look like the following#
+# Ole originally called these alpha because they eventually become the alpha parameter of the Dirichlet distribution, which sorta determines how likely each component is to be drawn#
+# I call these "true" because they represent the "true" abundance of DNA from each taxon in the sample.#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# Instead of runif, you might try using rexp or random from the Pareto distribution to more accurately resemble "real" eDNA results#
+set.seed(407744)#
+DNA_truth		<- sort(round(runif(N_tax,1,100)), decreasing = TRUE)#
+names(DNA_truth) <- taxon_names#
+#
+# those same values expressed as proportions#
+DNA_truth_prop <- DNA_truth/sum(DNA_truth)#
+#############################################################################
+# The actual simulation #
+#############################################################################
+#
+# This simulates data that might be expected from high throughput sequencing of PCR amplicons generated from environmental samples: proportional abundance of sequences from each of the taxa/OTUs/dups#
+# draw samples from the Dirichlet distribution, using alpha given by DNA_truth to approximate the sampling of DNA molecules from the environment#
+# Set seed to be able to reproduce draws from a probability distribution (gets reset each time one of these functions is used)#
+# If you were to take N_samples samples, what kind of answer would you expect?#
+N_samples_small	<-	3#
+set.seed(407744)#
+eDNA_counts_small <- rdirichlet(N_samples_small, DNA_truth)#
+colnames(eDNA_counts_small) <- taxon_names#
+#############
+# OR...#
+#############
+N_samples_big		<- 100000#
+set.seed(407744)#
+eDNA_counts_big <- rdirichlet(N_samples_big, DNA_truth)#
+colnames(eDNA_counts_big) <- taxon_names#
+# Set whichever of these as the plot input:#
+plot_input <- eDNA_counts_big#
+#
+# Create plot layout (this looks complicated to allow it to be flexible to different taxa numbers)#
+plot_cols <- ceiling(sqrt(ncol(plot_input)))#
+plot_rows <- ceiling(ncol(plot_input)/plot_cols)#
+plot_layout <- matrix(data = 1:(plot_cols*plot_rows), nrow = plot_rows, byrow = TRUE)#
+layout(plot_layout)#
+#
+# plot histograms of the frequency of proportions sampled for each taxon.#
+for (i in 1:ncol(plot_input)){#
+  hist(plot_input[, i], main = taxon_names[i], xlab = "proportion")#
+  abline(v = DNA_truth_prop[i], col = "red")#
+}
+rm(list = ls())		# clear objects#
+graphics.off() 		# close graphics windows #
+#
+# Generate data#
+x = 0:10;#
+y = 0:10;
+rm(list = ls())		# clear objects#
+graphics.off() 		# close graphics windows #
+#
+# Plot 3#
+par(oma=c(3,3,3,3))
+nf <- layout(matrix(c(2,0,1,3),2,2,byrow=TRUE), widths=c(6,1), heights=c(1,6), TRUE)
+nf
+layout.show(nf)
+par(oma=c(3,3,3,3))
+nf <- layout(matrix(c(2,0,1,3),2,2,byrow=TRUE), widths=c(6,1), heights=c(1,6), TRUE)#
+#
+# If you want to see your layout, this command will create a chart labelling it clearly.#
+layout.show(nf)
+par(mar=c(4,4,1,1))#
+plot(0:10, 0:10, type="n", xlab="X", ylab="Y", col="green")#
+box("figure", col="green")#
+text(5,5,"Plot 1", col="green", cex=2)
+par()
+length_fragment <- 200
+mass_bp <- 650
+avo_num <- 6.022e23
+num_copies <- function(length_fragment, mass_fragment){#
+	# average mass of a single base pair (in Daltons, which is equivalent to g/mol aka molar mass)#
+	# put another way - How much does one mole of base pairs weigh in grams? (650 for double stranded DNA [dsDNA])#
+	mass_bp <- 650#
+#
+	# Avogadro's number#
+	avo_num <- 6.022e23#
+	# unit correction (use 1e9 for nanograms)#
+	unit_correction <- 1e9#
+	copies <- (mass_fragment * avo_num)/(length_fragment * unit_correction * mass_bp)#
+	return(copies)#
+}
+num_copies(length_fragment = 200, mass_fragment = 10)
+num_copies(length_fragment = 20, mass_fragment = 50)
+num_copies(length_fragment = 670, mass_fragment = 150)
+dnorm(10)
+?dnorm
+?dgamma
+XX<-seq(0.001,10,length.out=1e5)
+plot(dgamms(XX,0.01,0.01))
+plot(dgamma(XX,0.01,0.01))
+plot(dgamma(XX,0.01,0.01)~XX)
+plot(dgamma(XX,0.01,0.01)~sqrt(XX))
+plot(dgamma(XX,0.0001,0.0001)~sqrt(XX))
+plot(dgamma(XX,0.000001,0.000001)~sqrt(XX))
+p
+P
+counts <- as.matrix(read.csv("/Users/threeprime/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Data/my_counts.csv", row.names = 1))
+counts
+library(R2jags)
+taxa <- colnames(counts)
+taxa
+pcr <- rownames(counts)
+pcr
+N_taxa <- length(taxa)
+N_taxa
+N_pcr <- length(pcr)
+N_pcr
+model_loc <- c("jags_model_single_location.txt")
+model_loc
+jagsscript <- cat(#
+"#
+model {#
+#
+    ## MODEL STRUCTURE#
+    for(i in 1:N_taxa){#
+        for(j in 1:N_pcr){#
+#
+            # Likelihood function#
+            counts[i,j] ~ dpois(exp(lambda[i,j]))#
+#
+            # GLM#
+            lambda[i,j] <- beta_0 + beta[i] + eta[i,j]#
+            # alt:#
+            # fixed[i,j] <- beta_0 + beta[i]#
+            # lambda[i,j] <- fixed[i] + eta[i,j]#
+            # note that precision = 1/variance and variance = sd^2#
+            # mu = mean, tau = precision#
+            eta[i,j] ~ dnorm(mu = 0, tau = 1/sigma2)#
+#
+        }#
+    }#
+#
+    ## PRIORS#
+    # in JAGS gamma, shape = r and rate = mu (lambda?)#
+    sigma2 ~ dgamma(r = 0.01, mu = 0.01)#
+#
+    # the general intercept (mean of counts of all taxa for all PCR replicates)#
+    beta_0 ~ dnorm(mu = 0, tau = 1/1000)#
+#
+    # beta[1] must be zero, because for taxa[1]#
+    beta[1] <- 0#
+#
+    for(i in 2:N_taxa){#
+        # mu = mean, tau = precision#
+        beta[i] ~ dnorm(mu = 0, tau = 1/1000)#
+    }#
+#
+    ## DERIVED QUANTITIES#
+    # i.e. estimated proportion of taxa[i]#
+#
+    # multinomial poisson transformation#
+    for(i in 1:N_taxa){#
+        p[i] <- exp(beta_0 + beta[i])#
+    }#
+#
+    for(i in 1:N_taxa){#
+        P[i] <- p[i] / sum(p)#
+    }#
+#
+}#
+",#
+file = model_loc)
+jags_data <- list(#
+                "counts",#
+                "N_taxa",#
+                "N_pcr"#
+)
+jags_data
+jags_params <- c(#
+                "beta",#
+                "sigma2",#
+                "P",#
+                "beta_0"#
+)
+N_burn <- 10#
+#
+N_iter <- 10#
+#
+N_chain <- 1
+my_jags_model <- jags(#
+					data = jags_data,#
+					inits = NULL,#
+					parameters.to.save = jags_params,#
+					model.file = model_loc,#
+					n.chains = N_chain,#
+					n.iter = N_iter + N_burn,#
+					n.burnin = N_burn, #floor(n.iter/2)#
+					n.thin = 1, # max(1, floor((n.iter - n.burnin)/1000))#
+					DIC = TRUE,#
+					working.directory = NULL,#
+					jags.seed = 123,#
+					refresh = N_iter/50,#
+					progress.bar = "text",#
+					digits = 5,#
+					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),#
+					jags.module = c("glm","dic")#
+)
+jagsscript <- cat(#
+"#
+model {#
+#
+    ## MODEL STRUCTURE#
+    for(i in 1:N_taxa){#
+        for(j in 1:N_pcr){#
+#
+            # Likelihood function#
+            counts[i,j] ~ dpois(exp(lambda[i,j]))#
+#
+            # GLM#
+            lambda[i,j] <- beta_0 + beta[i] + eta[i,j]#
+            # alt:#
+            # fixed[i,j] <- beta_0 + beta[i]#
+            # lambda[i,j] <- fixed[i] + eta[i,j]#
+            # note that precision = 1/variance and variance = sd^2#
+            # mu = mean, tau = precision#
+            eta[i,j] ~ dnorm(0, 1/sigma2)#
+#
+        }#
+    }#
+#
+    ## PRIORS#
+    # in JAGS gamma, shape = r and rate = mu (lambda?)#
+    sigma2 ~ dgamma(r = 0.01, mu = 0.01)#
+#
+    # the general intercept (mean of counts of all taxa for all PCR replicates)#
+    beta_0 ~ dnorm(mu = 0, tau = 1/1000)#
+#
+    # beta[1] must be zero, because for taxa[1]#
+    beta[1] <- 0#
+#
+    for(i in 2:N_taxa){#
+        # mu = mean, tau = precision#
+        beta[i] ~ dnorm(mu = 0, tau = 1/1000)#
+    }#
+#
+    ## DERIVED QUANTITIES#
+    # i.e. estimated proportion of taxa[i]#
+#
+    # multinomial poisson transformation#
+    for(i in 1:N_taxa){#
+        p[i] <- exp(beta_0 + beta[i])#
+    }#
+#
+    for(i in 1:N_taxa){#
+        P[i] <- p[i] / sum(p)#
+    }#
+#
+}#
+",#
+file = model_loc)
+my_jags_model <- jags(#
+					data = jags_data,#
+					inits = NULL,#
+					parameters.to.save = jags_params,#
+					model.file = model_loc,#
+					n.chains = N_chain,#
+					n.iter = N_iter + N_burn,#
+					n.burnin = N_burn, #floor(n.iter/2)#
+					n.thin = 1, # max(1, floor((n.iter - n.burnin)/1000))#
+					DIC = TRUE,#
+					working.directory = NULL,#
+					jags.seed = 123,#
+					refresh = N_iter/50,#
+					progress.bar = "text",#
+					digits = 5,#
+					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),#
+					jags.module = c("glm","dic")#
+)
+jagsscript <- cat(#
+"#
+model {#
+#
+    ## MODEL STRUCTURE#
+    for(i in 1:N_taxa){#
+        for(j in 1:N_pcr){#
+#
+            # Likelihood function#
+            counts[i,j] ~ dpois(exp(lambda[i,j]))#
+#
+            # GLM#
+            lambda[i,j] <- beta_0 + beta[i] + eta[i,j]#
+            # alt:#
+            # fixed[i,j] <- beta_0 + beta[i]#
+            # lambda[i,j] <- fixed[i] + eta[i,j]#
+            # note that precision = 1/variance and variance = sd^2#
+            # mu = mean, tau = precision#
+            eta[i,j] ~ dnorm(0, 1/sigma2)#
+#
+        }#
+    }#
+#
+    ## PRIORS#
+    # in JAGS gamma, shape = r and rate = mu (lambda?)#
+    sigma2 ~ dgamma(0.01, 0.01)#
+#
+    # the general intercept (mean of counts of all taxa for all PCR replicates)#
+    beta_0 ~ dnorm(0, 1/1000)#
+#
+    # beta[1] must be zero, because for taxa[1]#
+    beta[1] <- 0#
+#
+    for(i in 2:N_taxa){#
+        # mu = mean, tau = precision#
+        beta[i] ~ dnorm(0, 1/1000)#
+    }#
+#
+    ## DERIVED QUANTITIES#
+    # i.e. estimated proportion of taxa[i]#
+#
+    # multinomial poisson transformation#
+    for(i in 1:N_taxa){#
+        p[i] <- exp(beta_0 + beta[i])#
+    }#
+#
+    for(i in 1:N_taxa){#
+        P[i] <- p[i] / sum(p)#
+    }#
+#
+}#
+",#
+file = model_loc)
+my_jags_model <- jags(#
+					data = jags_data,#
+					inits = NULL,#
+					parameters.to.save = jags_params,#
+					model.file = model_loc,#
+					n.chains = N_chain,#
+					n.iter = N_iter + N_burn,#
+					n.burnin = N_burn, #floor(n.iter/2)#
+					n.thin = 1, # max(1, floor((n.iter - n.burnin)/1000))#
+					DIC = TRUE,#
+					working.directory = NULL,#
+					jags.seed = 123,#
+					refresh = N_iter/50,#
+					progress.bar = "text",#
+					digits = 5,#
+					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),#
+					jags.module = c("glm","dic")#
+)
+N_taxa
+N_pcr
+strcounts
+str(counts)
+class(counts)
+counts
+jagsscript <- cat(#
+"#
+model {#
+#
+    ## MODEL STRUCTURE#
+    for(j in 1:N_pcr){#
+    	for(i in 1:N_taxa){#
+#
+            # Likelihood function#
+            counts[i,j] ~ dpois(exp(lambda[i,j]))#
+#
+            # GLM#
+            lambda[i,j] <- beta_0 + beta[i] + eta[i,j]#
+            # alt:#
+            # fixed[i,j] <- beta_0 + beta[i]#
+            # lambda[i,j] <- fixed[i] + eta[i,j]#
+            # note that precision = 1/variance and variance = sd^2#
+            # mu = mean, tau = precision#
+            eta[i,j] ~ dnorm(0, 1/sigma2)#
+#
+        }#
+    }#
+#
+    ## PRIORS#
+    # in JAGS gamma, shape = r and rate = mu (lambda?)#
+    sigma2 ~ dgamma(0.01, 0.01)#
+#
+    # the general intercept (mean of counts of all taxa for all PCR replicates)#
+    beta_0 ~ dnorm(0, 1/1000)#
+#
+    # beta[1] must be zero, because for taxa[1]#
+    beta[1] <- 0#
+#
+    for(i in 2:N_taxa){#
+        # mu = mean, tau = precision#
+        beta[i] ~ dnorm(0, 1/1000)#
+    }#
+#
+    ## DERIVED QUANTITIES#
+    # i.e. estimated proportion of taxa[i]#
+#
+    # multinomial poisson transformation#
+    for(i in 1:N_taxa){#
+        p[i] <- exp(beta_0 + beta[i])#
+    }#
+#
+    for(i in 1:N_taxa){#
+        P[i] <- p[i] / sum(p)#
+    }#
+#
+}#
+",#
+file = model_loc)
+my_jags_model <- jags(#
+					data = jags_data,#
+					inits = NULL,#
+					parameters.to.save = jags_params,#
+					model.file = model_loc,#
+					n.chains = N_chain,#
+					n.iter = N_iter + N_burn,#
+					n.burnin = N_burn, #floor(n.iter/2)#
+					n.thin = 1, # max(1, floor((n.iter - n.burnin)/1000))#
+					DIC = TRUE,#
+					working.directory = NULL,#
+					jags.seed = 123,#
+					refresh = N_iter/50,#
+					progress.bar = "text",#
+					digits = 5,#
+					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),#
+					jags.module = c("glm","dic")#
+)
+counts <- t(counts)
+counts
+jagsscript <- cat(#
+"#
+model {#
+#
+    ## MODEL STRUCTURE#
+    for(j in 1:N_pcr){#
+    	for(i in 1:N_taxa){#
+#
+            # Likelihood function#
+            counts[i,j] ~ dpois(exp(lambda[i,j]))#
+#
+            # GLM#
+            lambda[i,j] <- beta_0 + beta[i] + eta[i,j]#
+            # alt:#
+            # fixed[i,j] <- beta_0 + beta[i]#
+            # lambda[i,j] <- fixed[i] + eta[i,j]#
+            # note that precision = 1/variance and variance = sd^2#
+            # mu = mean, tau = precision#
+            eta[i,j] ~ dnorm(0, 1/sigma2)#
+#
+        }#
+    }#
+#
+    ## PRIORS#
+    # in JAGS gamma, shape = r and rate = mu (lambda?)#
+    sigma2 ~ dgamma(0.01, 0.01)#
+#
+    # the general intercept (mean of counts of all taxa for all PCR replicates)#
+    beta_0 ~ dnorm(0, 1/1000)#
+#
+    # beta[1] must be zero, because for taxa[1]#
+    beta[1] <- 0#
+#
+    for(i in 2:N_taxa){#
+        # mu = mean, tau = precision#
+        beta[i] ~ dnorm(0, 1/1000)#
+    }#
+#
+    ## DERIVED QUANTITIES#
+    # i.e. estimated proportion of taxa[i]#
+#
+    # multinomial poisson transformation#
+    for(i in 1:N_taxa){#
+        p[i] <- exp(beta_0 + beta[i])#
+    }#
+#
+    for(i in 1:N_taxa){#
+        P[i] <- p[i] / sum(p)#
+    }#
+#
+}#
+",#
+file = model_loc)
+my_jags_model <- jags(#
+					data = jags_data,#
+					inits = NULL,#
+					parameters.to.save = jags_params,#
+					model.file = model_loc,#
+					n.chains = N_chain,#
+					n.iter = N_iter + N_burn,#
+					n.burnin = N_burn, #floor(n.iter/2)#
+					n.thin = 1, # max(1, floor((n.iter - n.burnin)/1000))#
+					DIC = TRUE,#
+					working.directory = NULL,#
+					jags.seed = 123,#
+					refresh = N_iter/50,#
+					progress.bar = "text",#
+					digits = 5,#
+					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),#
+					jags.module = c("glm","dic")#
+)
+A<-my_jags_model
+summary(A)
+A$BUGSoutput$summary
+#!/usr/bin/env Rscript#
+#
+library(R2jags)#
+#
+# This is code to estimate some model parameters for proportional abundance of DNA in a sample given reads in the file from a sequencer#
+# Let:#
+# i = taxon i (1:I); Carkeek grid dataset I = ? (limit to 10 for tests)#
+# j = PCR replicate j (1:J); Carkeek grid dataset J = 4#
+# k = location k (1:K); Carkeek grid dataset K = 24#
+# Requires as input#
+# counts of sequences (Z, length = ...)#
+counts <- as.matrix(read.csv("/Users/threeprime/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Data/my_counts.csv", row.names = 1))#
+counts <- t(counts)#
+#
+# of each taxon (length = I)#
+taxa <- rownames(counts)#
+# from each PCR replicate (length = J)#
+pcr <- colnames(counts)#
+# at each site (length = K)#
+# sites <-#
+#
+N_taxa <- length(taxa)#
+N_pcr <- length(pcr)#
+#
+# lambda = mean of the Poisson dist that describes variation in counts#
+# beta = intercept#
+# eta = random effect for i,j,k#
+# sigma2 = variance of normal distribution describing eta (attributable to PCR)#
+#
+# epsilon = random effect for i,k#
+# tau2 = variance of normal distribution describing epsilon (attributable to location - k)#
+#
+# gamma =#
+# phi#
+#
+# pi =#
+#
+model_loc <- c("jags_model_single_location.txt")#
+jagsscript <- cat(#
+"#
+model {#
+#
+    ## MODEL STRUCTURE#
+    for(j in 1:N_pcr){#
+    	for(i in 1:N_taxa){#
+#
+            # Likelihood function#
+            counts[i,j] ~ dpois(exp(lambda[i,j]))#
+#
+            # GLM#
+            lambda[i,j] <- beta_0 + beta[i] + eta[i,j]#
+            # alt:#
+            # fixed[i,j] <- beta_0 + beta[i]#
+            # lambda[i,j] <- fixed[i] + eta[i,j]#
+            # note that precision = 1/variance and variance = sd^2#
+            # mu = mean, tau = precision#
+            eta[i,j] ~ dnorm(0, 1/sigma2)#
+#
+        }#
+    }#
+#
+    ## PRIORS#
+    # in JAGS gamma, shape = r and rate = mu (lambda?)#
+    sigma2 ~ dgamma(0.01, 0.01)#
+#
+    # the general intercept (mean of counts of all taxa for all PCR replicates)#
+    beta_0 ~ dnorm(0, 1/1000)#
+#
+    # beta[1] must be zero, because for taxa[1]#
+    beta[1] <- 0#
+#
+    for(i in 2:N_taxa){#
+        # mu = mean, tau = precision#
+        beta[i] ~ dnorm(0, 1/1000)#
+    }#
+#
+    ## DERIVED QUANTITIES#
+    # i.e. estimated proportion of taxa[i]#
+#
+    # multinomial poisson transformation#
+    for(i in 1:N_taxa){#
+        p[i] <- exp(beta_0 + beta[i])#
+    }#
+#
+    for(i in 1:N_taxa){#
+        P[i] <- p[i] / sum(p)#
+    }#
+#
+}#
+",#
+file = model_loc)#
+jags_data <- list(#
+                "counts",#
+                "N_taxa",#
+                "N_pcr"#
+)#
+#
+jags_params <- c(#
+                "beta",#
+                "sigma2",#
+                "P",#
+                "beta_0"#
+)#
+N_burn <- 1000#
+#
+N_iter <- 1000#
+#
+N_chain <- 1#
+#
+my_jags_model <- jags(#
+					data = jags_data,#
+					inits = NULL,#
+					parameters.to.save = jags_params,#
+					model.file = model_loc,#
+					n.chains = N_chain,#
+					n.iter = N_iter + N_burn,#
+					n.burnin = N_burn, #floor(n.iter/2)#
+					n.thin = 1, # max(1, floor((n.iter - n.burnin)/1000))#
+					DIC = TRUE,#
+					working.directory = NULL,#
+					jags.seed = 123,#
+					refresh = N_iter/50,#
+					progress.bar = "text",#
+					digits = 5,#
+					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),#
+					jags.module = c("glm","dic")#
+)#
+#
+attach.jags(my_jags_model, overwrite = TRUE)
+A<-my_jags_model
+A$BUGSoutput$summary
+counts <- as.matrix(read.csv("/Users/threeprime/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Data/grid_10otus.csv", row.names = 1))
+counts
+counts <- counts[,1:4]
+counts
+# of each taxon (length = I)#
+taxa <- rownames(counts)#
+# from each PCR replicate (length = J)#
+pcr <- colnames(counts)#
+# at each site (length = K)#
+# sites <-#
+#
+N_taxa <- length(taxa)#
+N_pcr <- length(pcr)
+model_loc <- c("jags_model_single_location.txt")#
+jagsscript <- cat(#
+"#
+model {#
+#
+    ## MODEL STRUCTURE#
+    for(j in 1:N_pcr){#
+    	for(i in 1:N_taxa){#
+#
+            # Likelihood function#
+            counts[i,j] ~ dpois(exp(lambda[i,j]))#
+#
+            # GLM#
+            lambda[i,j] <- beta_0 + beta[i] + eta[i,j]#
+            # alt:#
+            # fixed[i,j] <- beta_0 + beta[i]#
+            # lambda[i,j] <- fixed[i] + eta[i,j]#
+            # note that precision = 1/variance and variance = sd^2#
+            # mu = mean, tau = precision#
+            eta[i,j] ~ dnorm(0, 1/sigma2)#
+#
+        }#
+    }#
+#
+    ## PRIORS#
+    # in JAGS gamma, shape = r and rate = mu (lambda?)#
+    sigma2 ~ dgamma(0.01, 0.01)#
+#
+    # the general intercept (mean of counts of all taxa for all PCR replicates)#
+    beta_0 ~ dnorm(0, 1/1000)#
+#
+    # beta[1] must be zero, because for taxa[1]#
+    beta[1] <- 0#
+#
+    for(i in 2:N_taxa){#
+        # mu = mean, tau = precision#
+        beta[i] ~ dnorm(0, 1/1000)#
+    }#
+#
+    ## DERIVED QUANTITIES#
+    # i.e. estimated proportion of taxa[i]#
+#
+    # multinomial poisson transformation#
+    for(i in 1:N_taxa){#
+        p[i] <- exp(beta_0 + beta[i])#
+    }#
+#
+    for(i in 1:N_taxa){#
+        P[i] <- p[i] / sum(p)#
+    }#
+#
+}#
+",#
+file = model_loc)
+jags_data <- list(#
+                "counts",#
+                "N_taxa",#
+                "N_pcr"#
+)#
+#
+jags_params <- c(#
+                "beta",#
+                "sigma2",#
+                "P",#
+                "beta_0"#
+)#
+N_burn <- 1000#
+#
+N_iter <- 1000#
+#
+N_chain <- 1#
+#
+my_jags <- jags(#
+				data = jags_data,#
+				inits = NULL,#
+				parameters.to.save = jags_params,#
+				model.file = model_loc,#
+				n.chains = N_chain,#
+				n.iter = N_iter + N_burn,#
+				n.burnin = N_burn, #floor(n.iter/2)#
+				n.thin = 1, # max(1, floor((n.iter - n.burnin)/1000))#
+				DIC = TRUE,#
+				working.directory = NULL,#
+				jags.seed = 123,#
+				refresh = N_iter/50,#
+				progress.bar = "text",#
+				digits = 5,					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),#
+				jags.module = c("glm","dic")#
+)
+my_jags
+my_jags$BUGSoutput$summary
+sqrt(3.04)
+sqrt(0.03)
+exp(1.15+0.17)
+exp(1.15-0.17)
+N_burn <- 1000#
+#
+N_iter <- 1000#
+#
+N_chain <- 3#
+#
+my_jags <- jags(#
+				data = jags_data,#
+				inits = NULL,#
+				parameters.to.save = jags_params,#
+				model.file = model_loc,#
+				n.chains = N_chain,#
+				n.iter = N_iter + N_burn,#
+				n.burnin = N_burn, #floor(n.iter/2)#
+				n.thin = 1, # max(1, floor((n.iter - n.burnin)/1000))#
+				DIC = TRUE,#
+				working.directory = NULL,#
+				jags.seed = 123,#
+				refresh = N_iter/50,#
+				progress.bar = "text",#
+				digits = 5,					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),#
+				jags.module = c("glm","dic")#
+)#
+#
+attach.jags(my_jags, overwrite = TRUE)
+my_jags$BUGSoutput$summary
+#!/usr/bin/env Rscript#
+#
+library(R2jags)#
+#
+# This is code to estimate some model parameters for proportional abundance of DNA in a sample given reads in the file from a sequencer#
+# Let:#
+# i = taxon i (1:I); Carkeek grid dataset I = ? (limit to 10 for tests)#
+# j = PCR replicate j (1:J); Carkeek grid dataset J = 4#
+# k = location k (1:K); Carkeek grid dataset K = 24#
+# Requires as input#
+# counts of sequences (Z, length = ...)#
+counts <- as.matrix(read.csv("/Users/threeprime/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Data/grid_10otus.csv", row.names = 1))#
+#
+# counts <- t(counts)#
+counts <- counts[,1:4]#
+#
+# of each taxon (length = I)#
+taxa <- rownames(counts)#
+# from each PCR replicate (length = J)#
+pcr <- colnames(counts)#
+# at each site (length = K)#
+# sites <-#
+#
+N_taxa <- length(taxa)#
+N_pcr <- length(pcr)#
+#
+# lambda = mean of the Poisson dist that describes variation in counts#
+# beta = intercept#
+# eta = random effect for i,j,k#
+# sigma2 = variance of normal distribution describing eta (attributable to PCR)#
+#
+# epsilon = random effect for i,k#
+# tau2 = variance of normal distribution describing epsilon (attributable to location - k)#
+#
+# gamma =#
+# phi#
+#
+# pi =#
+#
+model_loc <- c("jags_model_single_location.txt")#
+jagsscript <- cat(#
+"#
+model {#
+#
+    ## MODEL STRUCTURE#
+    for(j in 1:N_pcr){#
+    	for(i in 1:N_taxa){#
+#
+            # Likelihood function#
+            counts[i,j] ~ dpois(exp(lambda[i,j]))#
+#
+            # GLM#
+            lambda[i,j] <- beta_0 + beta[i] + eta[i,j]#
+            # alt:#
+            # fixed[i,j] <- beta_0 + beta[i]#
+            # lambda[i,j] <- fixed[i] + eta[i,j]#
+            # note that precision = 1/variance and variance = sd^2#
+            # mu = mean, tau = precision#
+            eta[i,j] ~ dnorm(0, 1/sigma2[i])#
+#
+        }#
+    }#
+#
+    ## PRIORS#
+    # in JAGS gamma, shape = r and rate = mu (lambda?)#
+    for(i in 1:N_taxa)#
+    		sigma2[i] ~ dgamma(0.01, 0.01)#
+	}#
+    # the general intercept (mean of counts of all taxa for all PCR replicates)#
+    beta_0 ~ dnorm(0, 1/1000)#
+#
+    # beta[1] must be zero, because for taxa[1]#
+    beta[1] <- 0#
+#
+    for(i in 2:N_taxa){#
+        # mu = mean, tau = precision#
+        beta[i] ~ dnorm(0, 1/1000)#
+    }#
+#
+    ## DERIVED QUANTITIES#
+    # i.e. estimated proportion of taxa[i]#
+#
+    # multinomial poisson transformation#
+    for(i in 1:N_taxa){#
+        p[i] <- exp(beta_0 + beta[i])#
+    }#
+#
+    for(i in 1:N_taxa){#
+        P[i] <- p[i] / sum(p)#
+    }#
+#
+}#
+",#
+file = model_loc)#
+jags_data <- list(#
+                "counts",#
+                "N_taxa",#
+                "N_pcr"#
+)#
+#
+jags_params <- c(#
+                "beta",#
+                "sigma2",#
+                "P",#
+                "beta_0"#
+)#
+N_burn <- 1000#
+#
+N_iter <- 1000#
+#
+N_chain <- 3#
+#
+my_jags <- jags(#
+				data = jags_data,#
+				inits = NULL,#
+				parameters.to.save = jags_params,#
+				model.file = model_loc,#
+				n.chains = N_chain,#
+				n.iter = N_iter + N_burn,#
+				n.burnin = N_burn, #floor(n.iter/2)#
+				n.thin = 1, # max(1, floor((n.iter - n.burnin)/1000))#
+				DIC = TRUE,#
+				working.directory = NULL,#
+				jags.seed = 123,#
+				refresh = N_iter/50,#
+				progress.bar = "text",#
+				digits = 5,					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),#
+				jags.module = c("glm","dic")#
+)#
+#
+attach.jags(my_jags, overwrite = TRUE)
+#!/usr/bin/env Rscript#
+#
+library(R2jags)#
+#
+# This is code to estimate some model parameters for proportional abundance of DNA in a sample given reads in the file from a sequencer#
+# Let:#
+# i = taxon i (1:I); Carkeek grid dataset I = ? (limit to 10 for tests)#
+# j = PCR replicate j (1:J); Carkeek grid dataset J = 4#
+# k = location k (1:K); Carkeek grid dataset K = 24#
+# Requires as input#
+# counts of sequences (Z, length = ...)#
+counts <- as.matrix(read.csv("/Users/threeprime/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Data/grid_10otus.csv", row.names = 1))#
+#
+# counts <- t(counts)#
+counts <- counts[,1:4]#
+#
+# of each taxon (length = I)#
+taxa <- rownames(counts)#
+# from each PCR replicate (length = J)#
+pcr <- colnames(counts)#
+# at each site (length = K)#
+# sites <-#
+#
+N_taxa <- length(taxa)#
+N_pcr <- length(pcr)#
+#
+# lambda = mean of the Poisson dist that describes variation in counts#
+# beta = intercept#
+# eta = random effect for i,j,k#
+# sigma2 = variance of normal distribution describing eta (attributable to PCR)#
+#
+# epsilon = random effect for i,k#
+# tau2 = variance of normal distribution describing epsilon (attributable to location - k)#
+#
+# gamma =#
+# phi#
+#
+# pi =#
+#
+model_loc <- c("jags_model_single_location.txt")#
+jagsscript <- cat(#
+"#
+model {#
+#
+    ## MODEL STRUCTURE#
+    for(j in 1:N_pcr){#
+    	for(i in 1:N_taxa){#
+#
+            # Likelihood function#
+            counts[i,j] ~ dpois(exp(lambda[i,j]))#
+#
+            # GLM#
+            lambda[i,j] <- beta_0 + beta[i] + eta[i,j]#
+            # alt:#
+            # fixed[i,j] <- beta_0 + beta[i]#
+            # lambda[i,j] <- fixed[i] + eta[i,j]#
+            # note that precision = 1/variance and variance = sd^2#
+            # mu = mean, tau = precision#
+            eta[i,j] ~ dnorm(0, 1/sigma2[i])#
+#
+        }#
+    }#
+#
+    ## PRIORS#
+    # in JAGS gamma, shape = r and rate = mu (lambda?)#
+    for(i in 1:N_taxa){#
+    		sigma2[i] ~ dgamma(0.01, 0.01)#
+	}#
+    # the general intercept (mean of counts of all taxa for all PCR replicates)#
+    beta_0 ~ dnorm(0, 1/1000)#
+#
+    # beta[1] must be zero, because for taxa[1]#
+    beta[1] <- 0#
+#
+    for(i in 2:N_taxa){#
+        # mu = mean, tau = precision#
+        beta[i] ~ dnorm(0, 1/1000)#
+    }#
+#
+    ## DERIVED QUANTITIES#
+    # i.e. estimated proportion of taxa[i]#
+#
+    # multinomial poisson transformation#
+    for(i in 1:N_taxa){#
+        p[i] <- exp(beta_0 + beta[i])#
+    }#
+#
+    for(i in 1:N_taxa){#
+        P[i] <- p[i] / sum(p)#
+    }#
+#
+}#
+",#
+file = model_loc)#
+jags_data <- list(#
+                "counts",#
+                "N_taxa",#
+                "N_pcr"#
+)#
+#
+jags_params <- c(#
+                "beta",#
+                "sigma2",#
+                "P",#
+                "beta_0"#
+)#
+N_burn <- 1000#
+#
+N_iter <- 1000#
+#
+N_chain <- 3#
+#
+my_jags <- jags(#
+				data = jags_data,#
+				inits = NULL,#
+				parameters.to.save = jags_params,#
+				model.file = model_loc,#
+				n.chains = N_chain,#
+				n.iter = N_iter + N_burn,#
+				n.burnin = N_burn, #floor(n.iter/2)#
+				n.thin = 1, # max(1, floor((n.iter - n.burnin)/1000))#
+				DIC = TRUE,#
+				working.directory = NULL,#
+				jags.seed = 123,#
+				refresh = N_iter/50,#
+				progress.bar = "text",#
+				digits = 5,					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),#
+				jags.module = c("glm","dic")#
+)#
+#
+attach.jags(my_jags, overwrite = TRUE)
+my_jags$BUGSoutput$summary
+#!/usr/bin/env Rscript#
+#
+library(R2jags)#
+#
+# This is code to estimate some model parameters for proportional abundance of DNA in a sample given reads in the file from a sequencer#
+# Let:#
+# i = taxon i (1:I); Carkeek grid dataset I = ? (limit to 10 for tests)#
+# j = PCR replicate j (1:J); Carkeek grid dataset J = 4#
+# k = location k (1:K); Carkeek grid dataset K = 24#
+# Requires as input#
+# counts of sequences (Z, length = ...)#
+counts <- as.matrix(read.csv("/Users/threeprime/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Data/grid_10otus.csv", row.names = 1))#
+#
+# counts <- t(counts)#
+counts <- counts[,1:4]#
+#
+# of each taxon (length = I)#
+taxa <- rownames(counts)#
+# from each PCR replicate (length = J)#
+pcr <- colnames(counts)#
+# at each site (length = K)#
+# sites <-#
+#
+N_taxa <- length(taxa)#
+N_pcr <- length(pcr)#
+#
+# lambda = mean of the Poisson dist that describes variation in counts#
+# beta = intercept#
+# eta = random effect for i,j,k#
+# sigma2 = variance of normal distribution describing eta (attributable to PCR)#
+#
+# epsilon = random effect for i,k#
+# tau2 = variance of normal distribution describing epsilon (attributable to location - k)#
+#
+# gamma =#
+# phi#
+#
+# pi =#
+#
+model_loc <- c("jags_model_single_location.txt")#
+jagsscript <- cat(#
+# "#
+model {#
+#
+    ## MODEL STRUCTURE#
+    for(j in 1:N_pcr){#
+    	for(i in 1:N_taxa){#
+#
+            # Likelihood function#
+            counts[i,j] ~ dpois(exp(lambda[i,j]))#
+#
+            # GLM#
+            lambda[i,j] <- beta_0 + beta[i] + eta[i,j]#
+            # alt:#
+            # fixed[i,j] <- beta_0 + beta[i]#
+            # lambda[i,j] <- fixed[i] + eta[i,j]#
+            # note that precision = 1/variance and variance = sd^2#
+            # mu = mean, tau = precision#
+            eta[i,j] ~ dnorm(0, 1/sigma2)#
+#
+        }#
+    }#
+#
+    ## PRIORS#
+    # to allow variance attributable to PCR to vary among species#
+    # for(i in 1:N_taxa){#
+	    # in JAGS gamma, shape = r and rate = mu (lambda?)#
+    	sigma2 ~ dgamma(0.01, 0.01)#
+	# }#
+    # the general intercept (mean of counts of all taxa for all PCR replicates)#
+    beta_0 ~ dnorm(0, 1/1000)#
+#
+    # beta[1] must be zero, because for taxa[1]#
+    beta[1] <- 0#
+#
+    for(i in 2:N_taxa){#
+        # mu = mean, tau = precision#
+        beta[i] ~ dnorm(0, 1/1000)#
+    }#
+#
+    ## DERIVED QUANTITIES#
+    # i.e. estimated proportion of taxa[i]#
+#
+    # multinomial poisson transformation#
+    for(i in 1:N_taxa){#
+        p[i] <- exp(beta_0 + beta[i])#
+    }#
+#
+    for(i in 1:N_taxa){#
+        P[i] <- p[i] / sum(p)#
+    }#
+#
+}#
+# ",#
+file = model_loc)#
+jags_data <- list(#
+                "counts",#
+                "N_taxa",#
+                "N_pcr"#
+)#
+#
+jags_params <- c(#
+                "beta",#
+                "sigma2",#
+                "P",#
+                "beta_0"#
+)#
+N_burn <- 1000#
+#
+N_iter <- 1000#
+#
+N_chain <- 3#
+#
+my_jags <- jags(#
+				data = jags_data,#
+				inits = NULL,#
+				parameters.to.save = jags_params,#
+				model.file = model_loc,#
+				n.chains = N_chain,#
+				n.iter = N_iter + N_burn,#
+				n.burnin = N_burn, #floor(n.iter/2)#
+				n.thin = 1, # max(1, floor((n.iter - n.burnin)/1000))#
+				DIC = TRUE,#
+				working.directory = NULL,#
+				jags.seed = 123,#
+				refresh = N_iter/50,#
+				progress.bar = "text",#
+				digits = 5,					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),#
+				jags.module = c("glm","dic")#
+)#
+#
+attach.jags(my_jags, overwrite = TRUE)
+#!/usr/bin/env Rscript#
+#
+library(R2jags)#
+#
+# This is code to estimate some model parameters for proportional abundance of DNA in a sample given reads in the file from a sequencer#
+# Let:#
+# i = taxon i (1:I); Carkeek grid dataset I = ? (limit to 10 for tests)#
+# j = PCR replicate j (1:J); Carkeek grid dataset J = 4#
+# k = location k (1:K); Carkeek grid dataset K = 24#
+# Requires as input#
+# counts of sequences (Z, length = ...)#
+counts <- as.matrix(read.csv("/Users/threeprime/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Data/grid_10otus.csv", row.names = 1))#
+#
+# counts <- t(counts)#
+counts <- counts[,1:4]#
+#
+# of each taxon (length = I)#
+taxa <- rownames(counts)#
+# from each PCR replicate (length = J)#
+pcr <- colnames(counts)#
+# at each site (length = K)#
+# sites <-#
+#
+N_taxa <- length(taxa)#
+N_pcr <- length(pcr)#
+#
+# lambda = mean of the Poisson dist that describes variation in counts#
+# beta = intercept#
+# eta = random effect for i,j,k#
+# sigma2 = variance of normal distribution describing eta (attributable to PCR)#
+#
+# epsilon = random effect for i,k#
+# tau2 = variance of normal distribution describing epsilon (attributable to location - k)#
+#
+# gamma =#
+# phi#
+#
+# pi =#
+#
+model_loc <- c("jags_model_single_location.txt")#
+jagsscript <- cat(#
+"#
+model {#
+#
+    ## MODEL STRUCTURE#
+    for(j in 1:N_pcr){#
+    	for(i in 1:N_taxa){#
+#
+            # Likelihood function#
+            counts[i,j] ~ dpois(exp(lambda[i,j]))#
+#
+            # GLM#
+            lambda[i,j] <- beta_0 + beta[i] + eta[i,j]#
+            # alt:#
+            # fixed[i,j] <- beta_0 + beta[i]#
+            # lambda[i,j] <- fixed[i] + eta[i,j]#
+            # note that precision = 1/variance and variance = sd^2#
+            # mu = mean, tau = precision#
+            eta[i,j] ~ dnorm(0, 1/sigma2)#
+#
+        }#
+    }#
+#
+    ## PRIORS#
+    # to allow variance attributable to PCR to vary among species#
+    # for(i in 1:N_taxa){#
+	    # in JAGS gamma, shape = r and rate = mu (lambda?)#
+    	sigma2 ~ dgamma(0.01, 0.01)#
+	# }#
+    # the general intercept (mean of counts of all taxa for all PCR replicates)#
+    beta_0 ~ dnorm(0, 1/1000)#
+#
+    # beta[1] must be zero, because for taxa[1]#
+    beta[1] <- 0#
+#
+    for(i in 2:N_taxa){#
+        # mu = mean, tau = precision#
+        beta[i] ~ dnorm(0, 1/1000)#
+    }#
+#
+    ## DERIVED QUANTITIES#
+    # i.e. estimated proportion of taxa[i]#
+#
+    # multinomial poisson transformation#
+    for(i in 1:N_taxa){#
+        p[i] <- exp(beta_0 + beta[i])#
+    }#
+#
+    for(i in 1:N_taxa){#
+        P[i] <- p[i] / sum(p)#
+    }#
+#
+}#
+",#
+file = model_loc)#
+jags_data <- list(#
+                "counts",#
+                "N_taxa",#
+                "N_pcr"#
+)#
+#
+jags_params <- c(#
+                "beta",#
+                "sigma2",#
+                "P",#
+                "beta_0"#
+)#
+N_burn <- 1000#
+#
+N_iter <- 1000#
+#
+N_chain <- 3#
+#
+my_jags <- jags(#
+				data = jags_data,#
+				inits = NULL,#
+				parameters.to.save = jags_params,#
+				model.file = model_loc,#
+				n.chains = N_chain,#
+				n.iter = N_iter + N_burn,#
+				n.burnin = N_burn, #floor(n.iter/2)#
+				n.thin = 1, # max(1, floor((n.iter - n.burnin)/1000))#
+				DIC = TRUE,#
+				working.directory = NULL,#
+				jags.seed = 123,#
+				refresh = N_iter/50,#
+				progress.bar = "text",#
+				digits = 5,					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),#
+				jags.module = c("glm","dic")#
+)#
+#
+attach.jags(my_jags, overwrite = TRUE)
+counts <- as.matrix(read.csv("/Users/threeprime/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Data/grid_10otus.csv", row.names = 1))
+counts <- counts[,1:12]
+4378*12
+df <- data.frame(#
+  x=rnorm(25),#
+  y=rnorm(25),#
+  g=rep(factor(LETTERS[1:5]), 5)#
+)
+df
+split(df, df$g)
+read.csv("~/temp.txt", header = FALSE)
+read.csv("~/temp.txt", header = FALSE, row.names = 1)
+mydat <- read.csv("~/temp.txt", header = FALSE, row.names = 1)
+mydat[1,]
+identical(mydat[1,], mydat[2,])
+match(mydat[1,], mydat[2,])
+mydat[1,]
+class(mydat[2,])
+mydat[1]
+mydat[1,]
+mydat[1,][]
+mydat[][1,]]
+mydat[[1,]]
+mydat[1,]
+as.character(mydat[1,])
+mydat[1,]
+mydat <- read.csv("~/temp.txt", header = FALSE, row.names = 1, stringsAsFactors = FALSE)
+match(mydat[1,], mydat[2,])
+identical(mydat[1,], mydat[2,])
+setdiff(mydat[1,], mydat[2,])
+mydat[1,]
+class(mydat[2,])
+as.vector(mydat[1,])
+as.character(mydat[1,])
+as.character(mydat[3,])
+as.character(mydat[2,])
+identical(#
+	as.character(mydat[1,]),#
+	as.character(mydat[2,])#
+)
+library(gtools)#
+library(R2jags)
+setwd("/Users/threeprime/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Analysis/general_framework/Data/")
+setwd("/Users/threeprime/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Analysis/general_framework/Data")
+dat		<-	read.csv("abundance_distance_matrix+OLE.csv")
+dat		<-	dat[dat$X!='OTU_4',] # remove Tilapia # no need once tables are separated appropriately
+dat.total.DNA	<-	read.csv("all_clusters.csv", header=TRUE, row.names = 1)
+dat.DNA			<-	colSums(dat.total.DNA)
+dat.surv	<-	read.csv("sample_data.csv")
+# isolate the primer index sequence ("tag") and the sample name#
+dat.surv.trim		<-	dat.surv[,c('Tag_Sequence','Sample')]#
+#
+# exclude the last few samples (in this case, anything beyond row 22 is a positive or negative control sample)#
+dat.surv.trim		<-	dat.surv.trim[1:22,]#
+#
+# add a column for the time the sample was taken (in this case embedded in the sample name)#
+dat.surv.trim$Time	<-	substr(dat.surv.trim$Sample,8,13)
+# isolate the names of the OTUs#
+OTU		<-	as.character(dat$X)#
+#
+# isolate the primer match data (genetic distance between primer sequences and template for each OTU sequence)#
+PRIMER	<-	dat[,77:ncol(dat)]#
+rownames(PRIMER) <- OTU#
+#
+# how many OTUs are there?#
+N.sp	<-	length(OTU)#
+#
+# make a vector of all of the primer index (tag) sequences#
+tags	<-	unique(substr(colnames(dat[,2:76]),1,6))#
+# isolate the sequence counts from each of the top 10 OTUs in each of the samples#
+COUNTS	<-  dat[,2:76]#
+#
+# transpose the counts and make a dataframe#
+COUNTS			<- data.frame(t(COUNTS))#
+#
+# name the columns the OTU names#
+colnames(COUNTS) <- OTU#
+#
+# calculate the total number of sequence counts of the OTUs per sample#
+tot.obs			<- rowSums(COUNTS)#
+#
+# add a column containing the counts of DNA sequences in each sample that do not belong to one of the OTUs#
+COUNTS$Other	<-	dat.DNA[match(rownames(COUNTS),names(dat.DNA))]#
+COUNTS$Other	<- COUNTS$Other - tot.obs#
+#
+### STANDARDIZE THE NUMBER OF OTUs read to 100,000#
+# COUNTS_ORIG <- COUNTS#
+# adjust <- rowSums(COUNTS[,1:length(OTU)]) / 100000#
+# COUNTS <- round(COUNTS / adjust)#
+#
+# ! COUNTS is now a dataframe where rows are samples, and#
+# add a column of the tag sequence#
+COUNTS$Tag	<-	substr(rownames(COUNTS),1,6)#
+#
+# add a column of time the sample was taken#
+COUNTS$Time	<-	dat.surv.trim$Time[match(COUNTS$Tag,as.character(dat.surv.trim$Tag_Sequence))]#
+#
+# exclude rows whose collection time is NA#
+COUNTS		<-	COUNTS[is.na(COUNTS$Time)==F,]#
+#
+# order them by collection time#
+COUNTS		<-	COUNTS[order(COUNTS$Time),]#
+#
+# add a column of zeros#
+COUNTS$t.numb		<-	0
+COUNTS
+# Make a matrix containing columns of OTU name, index sequence (tag), direction, genetic distance, and centralized distance#
+dat.covar	<- NULL#
+for(i in 1:ncol(PRIMER)){#
+	temp	<-	cbind(#
+				OTU=rownames(PRIMER),#
+				tag=substr(colnames(PRIMER)[i],5,10),#
+				direction=substr(colnames(PRIMER)[i],12,15),#
+				Dist=PRIMER[,i]#
+				)#
+#
+	dat.covar	<-	rbind(dat.covar,temp)#
+}
+dat.covar	<-	data.frame(dat.covar)
+dat.covar$Dist	<-	as.numeric(as.character(dat.covar$Dist))
+dat.F	<-	dat.covar[dat.covar$direction=="F",]#
+dat.R	<-	dat.covar[dat.covar$direction=="R",]#
+dat.both	<-	dat.covar[dat.covar$direction=="both",]
+dat.F$cent.dist		<-	dat.F$Dist - mean(dat.F$Dist)#
+dat.R$cent.dist		<-	dat.R$Dist - mean(dat.R$Dist)#
+dat.both$cent.dist	<-	dat.both$Dist - mean(dat.both$Dist)#
+#
+# combine into an additional data frame#
+dat.COVAR	<-	data.frame(rbind(dat.F,dat.R,dat.both))
+dat.COVAR
+COVAR 	<-	c("F","R","both")
+COVAR
+N.t	<- length(unique(COUNTS$Time))
+N.t
+for(i in 1:N.t){#
+	COUNTS$t.numb[COUNTS$Time == sort(unique(COUNTS$Time))[i]]	<-	i#
+}
+COUNTS
+colnames(COUNTS)[1:length(OTU)]	<-	OTU
+t_numb <- as.numeric(as.factor(COUNTS$Time))
+t_numb
+identical(t_numb, COUNTS$t.numb) # it is (as far as I understand the intent of the code)
+N.tag	<-	length(unique(COUNTS$Tag[COUNTS$t.numb==1]))
+N.tag
+N.rep	<-	length(COUNTS$Tag[COUNTS$t.numb==1 & COUNTS$Tag == unique(COUNTS$Tag)[1]])
+N.rep
+DATA		<- 	array(#
+				data = 0,#
+				dim = c(N.rep, N.sp, N.tag, N.t),#
+				dimnames = list(#
+								REP = c("X1","X2","X3"),#
+								OTU = OTU,#
+								Tag = 1:N.tag,#
+								N.t = 1:N.t)#
+				)
+DATA
+# JO: What is this array for?#
+LABS		<-	array(#
+				data = 0,#
+				dim = c(N.rep,1,N.tag, N.t),#
+				dimnames = list(#
+								REP = c("X1","X2","X3"),#
+								NULL,#
+								Tag = 1:N.tag,#
+								N.t = 1:N.t#
+								)#
+				)#
+#
+# JO: What is this array for?#
+# At this point, this array is identical to the array "DATA"#
+COVAR.mat	<-	array(#
+					data = 0,#
+					dim = c(N.rep,N.sp,N.tag, N.t),#
+					dimnames = list(#
+									REP = c("X1","X2","X3"),#
+									OTU = OTU,#
+									Tag = 1:N.tag,#
+									N.t = 1:N.t#
+								)#
+				)#
+# Fill in the arrays#
+for(i in 1:N.t){#
+		temp.tag 	<- unique(COUNTS$Tag[COUNTS$t.numb==i])#
+	for(j in 1:N.tag){#
+		temp		<- as.matrix(COUNTS[COUNTS$t.numb==i & COUNTS$Tag == temp.tag[j],1:N.sp])#
+		DATA[,,j,i]	<- temp#
+		LABS[,,j,i]	<- temp.tag[j]#
+	}#
+}
+DATA[ , , , 2]
+DATA[ , , , 3]
+DATA[ , , , 4]
+DATA[ , , , 11]
+DATA[ , , , 12]
+DATA[ , , , 11]
+DATA[ , , 2, 11]
+DATA[ , , 1, 11]
+DATA[ , , 3, 11]
+DATA[ , , 2, 11]
+DATA[ , 1, 2, 11]
+DATA[ , 2, 2, 11]
+DATA[ , 2, 2, 11]
+DATA[ , 1, 2, 11]
+DATA[ , 3, 2, 11]
+DATA[ , 4, 2, 11]
+DATA[ 1, , 2, 11]
+DATA[ 2, , 2, 11]
+DATA[ 3, , 2, 11]
+DATA[ 4, , 2, 11]
+DATA[ 3, , 2, 11]
+DATA[ 2, , 2, 11]
+DATA[ 1, , 2, 11]
+DATA[ 1, 8, 2, 11]
+DATA[ 1, 9, 2, 11]
+DATA[ 1, 10, 2, 11]
