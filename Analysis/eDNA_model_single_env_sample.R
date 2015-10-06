@@ -73,24 +73,24 @@ counts_by_site <- split(x = counts_table, f = site_by_rowname)
 # create an array for JAGS called "counts"
 # where counts[j,i,k] is the counts in pcr replicate j of taxon i at site k
 counts <- array(
-  data = unlist(counts_by_site), 
-  dim = c(length(pcr), length(taxa), length(sites)), 
+  data = unlist(counts_by_site),
+  dim = c(length(pcr), length(taxa), length(sites)),
   dimnames = list(
-    pcr = pcr, 
-    taxa = taxa, 
+    pcr = pcr,
+    taxa = taxa,
     sites = sites
   )
 )
 
 # this really should be a function like this...
 # JAGSarray3D <- function(table, split_vector){
-#   
+#
 # }
 
 # thus, you should be able to reference stuff like so:
-counts[        ,         , sites[2] ]
 counts[ pcr[4] ,         ,          ]
 counts[        , taxa[8] ,          ]
+counts[        ,         , sites[2] ]
 
 # lambda = mean of the Poisson dist that describes variation in counts
 # beta = intercept
@@ -101,75 +101,80 @@ counts[        , taxa[8] ,          ]
 # tau2 = variance of normal distribution describing epsilon (attributable to location - k)
 
 # gamma = coefficient of something, I think -- maybe the covariate matrix?
-# phi = 
+# phi =
 
 # pi = proportional abundance of each taxon
 
-counts <- counts_table
+# counts <- counts_table
 
 model_loc <- c("jags_model_multi_location.txt")
 
+jags.model()
 jagsscript <- cat(
-  "
+"
   model {
-  
+
   ## MODEL STRUCTURE
-  for(j in 1:N_pcr){
-  for(i in 1:N_taxa){
-  
-  # Likelihood function
-  counts[i,j] ~ dpois(exp(lambda[i,j]))
-  
-  # GLM
-  lambda[i,j] <- beta_0 + beta[i] + eta[i,j]
-  # alt:
-  # fixed[i,j] <- beta_0 + beta[i]
-  # lambda[i,j] <- fixed[i] + eta[i,j]
-  
-  
-  
-  # note that precision = 1/variance and variance = sd^2
-  # mu = mean, tau = precision
-  eta[i,j] ~ dnorm(0, 1/sigma2)
-  
+  for(k in 1:N_sites){
+    for(i in 1:N_taxa){
+      for(j in 1:N_pcr){
+
+      # Likelihood function
+      counts[j,i,k] ~ dpois(exp(lambda[j,i,k]))
+
+      # GLM
+      lambda[j,i,k] <- beta_0 + beta[i] + eta[j,i,k] + epsilon[j,i,k]
+      # alt:
+      # fixed[i,j] <- beta_0 + beta[i]
+      # lambda[i,j] <- fixed[i] + eta[i,j]
+
+      # note that precision = 1/variance and variance = sd^2
+      # mu = mean, tau = precision
+      eta[j,i,k] ~ dnorm(0, 1/sigma2)
+
+      epsilson[j,i,k] ~ dnorm(0, 1/tau2)
+
+      }
+    }
   }
-  }
-  
+
   ## PRIORS
-  
-  # to allow variance attributable to PCR to vary among species
-  # for(i in 1:N_taxa){
-  
-  # in JAGS gamma, shape = r and rate = mu (lambda?)
-  sigma2 ~ dgamma(0.01, 0.01)
-  # }
-  
+
   # the general intercept (mean of counts of all taxa for all PCR replicates)
   beta_0 ~ dnorm(0, 1/1000)
-  
+
   # beta[1] must be zero, because for taxa[1]
   beta[1] <- 0
-  
+
   for(i in 2:N_taxa){
   # mu = mean, tau = precision
   beta[i] ~ dnorm(0, 1/1000)
   }
-  
+
+  # to allow variance attributable to PCR to vary among species
+  # for(i in 1:N_taxa){
+  # in JAGS gamma, shape = r and rate = mu (lambda?)
+  sigma2 ~ dgamma(0.01, 0.01)
+  # }
+
+  tau2 ~ dgamma(0.01, 0.01)
+
   ## DERIVED QUANTITIES
   # i.e. estimated proportion of taxa[i]
-  
+
   # multinomial poisson transformation
   for(i in 1:N_taxa){
-  p[i] <- exp(beta_0 + beta[i])
+    p[i] <- exp(beta_0 + beta[i])
   }
-  
+
   for(i in 1:N_taxa){
-  P[i] <- p[i] / sum(p)
+    P[i] <- p[i] / sum(p)
   }
-  
+
   }
   ",
-  file = model_loc)
+  file = model_loc
+)
 
 
 jags_data <- list(
@@ -181,6 +186,7 @@ jags_data <- list(
 jags_params <- c(
   "beta",
   "sigma2",
+  "tau2",
   "P",
   "beta_0"
 )
@@ -206,7 +212,8 @@ my_jags <- jags(
   jags.seed = 123,
   refresh = N_iter/50,
   progress.bar = "text",
-  digits = 5,					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),
+  digits = 5,
+  RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),
   jags.module = c("glm","dic")
 )
 
