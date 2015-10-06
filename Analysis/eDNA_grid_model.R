@@ -1,9 +1,13 @@
 #!/usr/bin/env Rscript
 
-library(R2jags)
-
 # This is code to estimate some model parameters for proportional abundance of DNA in a sample given reads in the file from a sequencer
 
+library(R2jags)
+
+setwd("~/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Analysis")
+
+data_dir <- file.path("..", "Data")
+fig_dir <- file.path("..", "Figures")
 
 # Let:
 # i = taxon i (1:I); Carkeek grid dataset I = ? (limit to 10 for tests)
@@ -16,13 +20,15 @@ library(R2jags)
 # 2. metadata file
 
 # a table of counts of sequences (Z, length = ...)
-counts_table <- read.csv("/Users/threeprime/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Data/OTUs_top10_4000m.csv", row.names = 1)
+counts_file_path <- file.path(data_dir, "OTUs_top10_4000m.csv")
+counts_table <- read.csv(file = counts_file_path, row.names = 1)
 # rows/rownames = samples, columns/colnames = taxa, cells = integer counts
 # if table is incorrectly oriented, transpose it:
 # counts_table <- as.data.frame(t(counts_table))
 
 # load metadata
-metadata <- read.csv("/Users/threeprime/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Data/metadata_spatial.csv", stringsAsFactors = FALSE)
+metadata_file_path <- file.path(data_dir, "metadata_spatial.csv")
+metadata <- read.csv(file = metadata_file_path, stringsAsFactors = FALSE)
 
 # what is the name of the column containing the sample id (SEQUENCING samples)
 colname_sampleid <- "sample_id"
@@ -88,31 +94,24 @@ counts <- array(
 # }
 
 # thus, you should be able to reference stuff like so:
-counts[        ,         , sites[2] ]
 counts[ pcr[4] ,         ,          ]
 counts[        , taxa[8] ,          ]
-
-
-
+counts[        ,         , sites[2] ]
 
 # lambda = mean of the Poisson dist that describes variation in counts
 # beta = intercept
-# eta = random effect for i,j
+# eta = random effect for i,j,k
 # sigma2 = variance of normal distribution describing eta (attributable to PCR)
 
 # epsilon = random effect for i,k
-# tau2 = variance of normal distribution describing epsilon (attributable to species-specific site effects- k)
-
-# gamma = coefficient of something, I think -- maybe the covariate matrix?
-# phi = 
+# tau2 = variance of normal distribution describing epsilon (attributable to location - k)
 
 # pi = proportional abundance of each taxon
 
-
-model_loc <- c("eDNA_grid_model_JAGS.txt")
+model_loc <- "eDNA_grid_model.jags"
 
 jagsscript <- cat(
-"
+# "
 model {
   
     ## MODEL STRUCTURE
@@ -124,21 +123,20 @@ model {
             counts[j,i,k] ~ dpois(exp(lambda[j,i,k]))
 
             # GLM
-            lambda[j,i,k] <- beta_0 + beta[i] + eta[j,i] + epsilon[i,k]
+            lambda[j,i,k] <- beta_0 + beta[i] + eta[j,i,k] + epsilon[j,i,k]
             # single site: lambda[i,j] <- beta_0 + beta[i] + eta[j,i]
             # alt format:
             # fixed[j,i] <- beta_0 + beta[i]
             # lambda[j,i] <- fixed[i] + eta[j,i]
 
-
-
             # random effect for i,j
             # note that precision = 1/variance and variance = sd^2
             # mu = mean, tau = precision
-            eta[j,i] ~ dnorm(0, 1/sigma2)
-            
+            eta[j,i,k] ~ dnorm(0, 1/sigma2)
+            # eta[j,i] ~ dnorm(0, 1/sigma2) # single site (k)
+           
             # random effect for i,k
-            epsilon[i,k] ~ dnorm(0, 1/tau2)
+            epsilson[j,i,k] ~ dnorm(0, 1/tau2)
 
         }
       }
@@ -147,14 +145,6 @@ model {
     ## PRIORS
     # *NOTE: in JAGS gamma, shape = r and rate = mu (lambda?)
   
-    # to allow variance attributable to PCR to vary among species,
-    # can make this species-specific by adding [i] and looping
-    # for(i in 1:N_taxa){
-   	sigma2 ~ dgamma(0.01, 0.01)
-
-   	# in JAGS gamma, shape = r and rate = mu (lambda?)
-   	tau2 ~ dgamma(0.01, 0.01)
-   	
     # the general intercept (mean of counts of all taxa for all PCR replicates)
     beta_0 ~ dnorm(0, 1/1000)
 
@@ -166,11 +156,19 @@ model {
         beta[i] ~ dnorm(0, 1/1000)
     }
 
+    # to allow variance attributable to PCR to vary among species,
+    # can make this species-specific by adding [i] and looping
+    # for(i in 1:N_taxa){
+    # in JAGS gamma, shape = r and rate = mu (lambda?)
+   	sigma2 ~ dgamma(0.01, 0.01)
 
-    ## DERIVED QUANTITIES
-    # i.e. estimated proportion of taxa[i]
+   	# in JAGS gamma, shape = r and rate = mu (lambda?)
+   	tau2 ~ dgamma(0.01, 0.01)
+   	
+   ## DERIVED QUANTITIES
 
     # multinomial poisson transformation
+    # i.e. estimated proportion of taxa[i]
     for(i in 1:N_taxa){
         p[i] <- exp(beta_0 + beta[i])
     }
@@ -180,7 +178,7 @@ model {
     }
 
 }
-",
+# ",
 file = model_loc)
 
 jags_data <- list(
@@ -216,7 +214,8 @@ my_jags <- jags(
 				jags.seed = 123,
 				refresh = N_iter/50,
 				progress.bar = "text",
-				digits = 5,					RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),
+				digits = 5, 
+				RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),
 				jags.module = c("glm","dic")
 )
 

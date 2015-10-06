@@ -1,9 +1,13 @@
 #!/usr/bin/env Rscript
 
-library(R2jags)
-
 # This is code to estimate some model parameters for proportional abundance of DNA in a sample given reads in the file from a sequencer
 
+library(R2jags)
+
+setwd("~/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Analysis")
+
+data_dir <- file.path("..", "Data")
+fig_dir <- file.path("..", "Figures")
 
 # Let:
 # i = taxon i (1:I); Carkeek grid dataset I = ? (limit to 10 for tests)
@@ -16,7 +20,8 @@ library(R2jags)
 # 2. metadata file
 
 # a table of counts of sequences (Z, length = ...)
-counts_table <- read.csv("/Users/threeprime/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Data/OTUs_top10_4000m.csv", row.names = 1)
+counts_file_path <- file.path(data_dir, "OTUs_top10_4000m.csv")
+counts_table <- read.csv(file = counts_file_path, row.names = 1)
 # rows/rownames = samples, columns/colnames = taxa, cells = integer counts
 # if table is incorrectly oriented, transpose it:
 # counts_table <- as.data.frame(t(counts_table))
@@ -100,16 +105,10 @@ counts[        ,         , sites[2] ]
 # epsilon = random effect for i,k
 # tau2 = variance of normal distribution describing epsilon (attributable to location - k)
 
-# gamma = coefficient of something, I think -- maybe the covariate matrix?
-# phi =
-
 # pi = proportional abundance of each taxon
 
-# counts <- counts_table
+model_loc <- "eDNA_model_single_env_sample.txt"
 
-model_loc <- c("jags_model_multi_location.txt")
-
-jags.model()
 jagsscript <- cat(
 "
   model {
@@ -124,14 +123,18 @@ jagsscript <- cat(
 
       # GLM
       lambda[j,i,k] <- beta_0 + beta[i] + eta[j,i,k] + epsilon[j,i,k]
-      # alt:
+      # single site: lambda[i,j] <- beta_0 + beta[i] + eta[j,i]
+      # alt format:
       # fixed[i,j] <- beta_0 + beta[i]
       # lambda[i,j] <- fixed[i] + eta[i,j]
 
+      # random effect for i,j
       # note that precision = 1/variance and variance = sd^2
       # mu = mean, tau = precision
       eta[j,i,k] ~ dnorm(0, 1/sigma2)
+      # eta[j,i] ~ dnorm(0, 1/sigma2) # single site (k)
 
+      # random effect for i,k
       epsilson[j,i,k] ~ dnorm(0, 1/tau2)
 
       }
@@ -139,6 +142,7 @@ jagsscript <- cat(
   }
 
   ## PRIORS
+  # *NOTE: in JAGS gamma, shape = r and rate = mu (lambda?)
 
   # the general intercept (mean of counts of all taxa for all PCR replicates)
   beta_0 ~ dnorm(0, 1/1000)
@@ -147,22 +151,24 @@ jagsscript <- cat(
   beta[1] <- 0
 
   for(i in 2:N_taxa){
-  # mu = mean, tau = precision
-  beta[i] ~ dnorm(0, 1/1000)
+    # mu = mean, tau = precision
+    beta[i] ~ dnorm(0, 1/1000)
   }
 
   # to allow variance attributable to PCR to vary among species
+  # can make this species-specific by adding [i] and looping
   # for(i in 1:N_taxa){
   # in JAGS gamma, shape = r and rate = mu (lambda?)
   sigma2 ~ dgamma(0.01, 0.01)
   # }
 
+  # in JAGS gamma, shape = r and rate = mu (lambda?)
   tau2 ~ dgamma(0.01, 0.01)
 
   ## DERIVED QUANTITIES
-  # i.e. estimated proportion of taxa[i]
 
   # multinomial poisson transformation
+  # i.e. estimated proportion of taxa[i]
   for(i in 1:N_taxa){
     p[i] <- exp(beta_0 + beta[i])
   }
@@ -176,11 +182,11 @@ jagsscript <- cat(
   file = model_loc
 )
 
-
 jags_data <- list(
   "counts",
   "N_taxa",
-  "N_pcr"
+  "N_pcr",
+  "N_sites"
 )
 
 jags_params <- c(
