@@ -136,7 +136,7 @@ model {
             # eta[j,i] ~ dnorm(0, 1/sigma2) # single site (k)
            
             # random effect for i,k
-            epsilson[j,i,k] ~ dnorm(0, 1/tau2)
+            epsilon[j,i,k] ~ dnorm(0, 1/tau2)
 
         }
       }
