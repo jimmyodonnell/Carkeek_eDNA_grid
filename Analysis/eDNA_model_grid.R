@@ -110,8 +110,8 @@ counts[        ,         , sites[2] ]
 
 model_loc <- "eDNA_model_grid.jags"
 
-jagsscript <- cat(
-"
+# jagsscript <- cat("
+jagsscript <- "
 model {
   
     ## MODEL STRUCTURE
@@ -178,8 +178,9 @@ model {
     }
 
 }
-",
-file = model_loc)
+"
+# ,
+# file = model_loc)
 
 jags_data <- list(
                 "counts",
@@ -196,15 +197,16 @@ jags_params <- c(
                 "beta_0"
 )
 
-N_burn <- 1000
-N_iter <- 1000
+N_burn <- 0
+N_iter <- 100000
 N_chain <- 3
 
 my_jags <- jags(
 				data = jags_data,
 				inits = NULL,
 				parameters.to.save = jags_params,
-				model.file = model_loc,
+				model.file = textConnection(jagsscript), 
+				# model.file = model_loc,
 				n.chains = N_chain,
 				n.iter = N_iter + N_burn,
 				n.burnin = N_burn, #floor(n.iter/2)
