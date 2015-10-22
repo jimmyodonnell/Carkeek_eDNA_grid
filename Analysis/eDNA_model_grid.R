@@ -221,10 +221,20 @@ my_jags <- jags(
 				jags.module = c("glm","dic")
 )
 
-
-
-
-
-
-
 attach.jags(my_jags, overwrite = TRUE)
+
+someoutput <- my_jags$BUGSoutput$summary
+
+class(someoutput)
+
+str(my_jags$BUGSoutput)
+
+dim(my_jags$BUGSoutput$sims.list[[1]]) # matrix of dim 300000 (N_iter*N_chain) by 10 (N_taxa)
+
+# so, to plot the estimated proportion of taxon 1 from all samples:
+boxplot(my_jags$BUGSoutput$sims.list[[1]][,1])
+
+# or, plot the estimates of P for all species:
+boxplot(my_jags$BUGSoutput$sims.list[[1]])
+
+dim()
