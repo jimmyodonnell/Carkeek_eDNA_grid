@@ -197,10 +197,12 @@ jags_params <- c(
                 "beta_0"
 )
 
+# Set MCMC parameters
 N_burn <- 0
 N_iter <- 100000
 N_chain <- 3
 
+# run the MCMC
 my_jags <- jags(
 				data = jags_data,
 				inits = NULL,
@@ -221,10 +223,16 @@ my_jags <- jags(
 				jags.module = c("glm","dic")
 )
 
-
-
-
-
-
-
+# Attach the jags output
 attach.jags(my_jags, overwrite = TRUE)
+
+# general plot
+plot(my_jags)
+
+str(my_jags)
+
+names(my_jags) # "model" "BUGSoutput" "parameters.to.save" "model.file" "n.iter" "DIC"
+
+names(my_jags$BUGSoutput)
+
+
