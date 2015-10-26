@@ -79,18 +79,18 @@ counts_by_site <- split(x = counts_table, f = site_by_rowname)
 # create an array for JAGS called "counts"
 # where counts[j,i,k] is the counts in pcr replicate j of taxon i at site k
 counts <- array(
-				data = unlist(counts_by_site), 
-				dim = c(length(pcr), length(taxa), length(sites)), 
+				data = unlist(counts_by_site),
+				dim = c(length(pcr), length(taxa), length(sites)),
 				dimnames = list(
-				  pcr = pcr, 
-				  taxa = taxa, 
+				  pcr = pcr,
+				  taxa = taxa,
 				  sites = sites
 				)
 )
 
 # this really should be a function like this...
 # JAGSarray3D <- function(table, split_vector){
-#   
+#
 # }
 
 # thus, you should be able to reference stuff like so:
@@ -113,12 +113,12 @@ model_loc <- "eDNA_model_grid.jags"
 # jagsscript <- cat("
 jagsscript <- "
 model {
-  
+
     ## MODEL STRUCTURE
   for(k in 1:N_sites){
     	for(i in 1:N_taxa){
     	  for(j in 1:N_pcr){
-    	    
+
             # Likelihood function
             counts[j,i,k] ~ dpois(exp(lambda[j,i,k]))
 
@@ -134,7 +134,7 @@ model {
             # mu = mean, tau = precision
             eta[j,i,k] ~ dnorm(0, 1/sigma2)
             # eta[j,i] ~ dnorm(0, 1/sigma2) # single site (k)
-           
+
             # random effect for i,k
             epsilon[j,i,k] ~ dnorm(0, 1/tau2)
 
@@ -144,7 +144,7 @@ model {
 
     ## PRIORS
     # *NOTE: in JAGS gamma, shape = r and rate = mu (lambda?)
-  
+
     # the general intercept (mean of counts of all taxa for all PCR replicates)
     beta_0 ~ dnorm(0, 1/1000)
 
@@ -164,7 +164,7 @@ model {
 
    	# in JAGS gamma, shape = r and rate = mu (lambda?)
    	tau2 ~ dgamma(0.01, 0.01)
-   	
+
    ## DERIVED QUANTITIES
 
     # multinomial poisson transformation
@@ -185,14 +185,14 @@ model {
 jags_data <- list(
                 "counts",
                 "N_taxa",
-                "N_pcr", 
+                "N_pcr",
                 "N_sites"
 )
 
 jags_params <- c(
                 "beta",
                 "sigma2",
-                "tau2", 
+                "tau2",
                 "P",
                 "beta_0"
 )
@@ -207,7 +207,7 @@ my_jags <- jags(
 				data = jags_data,
 				inits = NULL,
 				parameters.to.save = jags_params,
-				model.file = textConnection(jagsscript), 
+				model.file = textConnection(jagsscript),
 				# model.file = model_loc,
 				n.chains = N_chain,
 				n.iter = N_iter + N_burn,
@@ -218,7 +218,7 @@ my_jags <- jags(
 				jags.seed = 123,
 				refresh = N_iter/50,
 				progress.bar = "text",
-				digits = 5, 
+				digits = 5,
 				RNGname = c("Wichmann-Hill", "Marsaglia-Multicarry", "Super-Duper", "Mersenne-Twister"),
 				jags.module = c("glm","dic")
 )
@@ -235,4 +235,18 @@ names(my_jags) # "model" "BUGSoutput" "parameters.to.save" "model.file" "n.iter"
 
 names(my_jags$BUGSoutput)
 
+someoutput <- my_jags$BUGSoutput$summary
 
+class(someoutput)
+
+str(my_jags$BUGSoutput)
+
+dim(my_jags$BUGSoutput$sims.list[[1]]) # matrix of dim 300000 (N_iter*N_chain) by 10 (N_taxa)
+
+# so, to plot the estimated proportion of taxon 1 from all samples:
+boxplot(my_jags$BUGSoutput$sims.list[[1]][,1])
+
+# or, plot the estimates of P for all species:
+boxplot(my_jags$BUGSoutput$sims.list[[1]])
+
+dim()
