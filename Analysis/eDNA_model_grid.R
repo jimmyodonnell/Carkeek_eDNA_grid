@@ -178,7 +178,9 @@ model {
     }
 
 }
-"
+# "
+
+
 # ,
 # file = model_loc)
 
@@ -226,6 +228,9 @@ my_jags <- jags(
 # Attach the jags output
 attach.jags(my_jags, overwrite = TRUE)
 
+# if you want to save:
+# save(my_jags, file = "jagsoutput.RData")
+
 # general plot
 plot(my_jags)
 
@@ -247,6 +252,18 @@ dim(my_jags$BUGSoutput$sims.list[[1]]) # matrix of dim 300000 (N_iter*N_chain) b
 boxplot(my_jags$BUGSoutput$sims.list[[1]][,1])
 
 # or, plot the estimates of P for all species:
-boxplot(my_jags$BUGSoutput$sims.list[[1]])
 
+pdf(file = file.path(fig_dir, "P_boxplot.pdf"))
+boxplot(
+	x = my_jags$BUGSoutput$sims.list[[1]], 
+	main = "Posterior estimates of P", 
+	xlab = "Taxa", 
+	xaxt = "n", 
+	# names = taxa, 
+	las = 1, 
+	ylim = c(0,1), 
+	# cex.axis = 0.5
+	)
+axis(side = 1, at = 1:length(taxa), labels = taxa, cex.axis = 0.7)
+dev.off()
 dim()
