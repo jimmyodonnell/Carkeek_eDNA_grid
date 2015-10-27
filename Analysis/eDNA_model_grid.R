@@ -178,7 +178,8 @@ model {
     }
 
 }
-# "
+"
+"
 
 
 # ,
@@ -234,17 +235,104 @@ attach.jags(my_jags, overwrite = TRUE)
 # general plot
 plot(my_jags)
 
-str(my_jags)
+# F this S. Keep getting the error "Error in coda.samples(my_jags, jags_params, N_iter = 1000) : attempt to apply non-function"
+# coda.samples(my_jags, jags_params, N_iter = 1000)
+# jags.samples(my_jags, jags_params, N_iter = 1000)
 
+str(my_jags)
 names(my_jags) # "model" "BUGSoutput" "parameters.to.save" "model.file" "n.iter" "DIC"
 
+str(my_jags$BUGSoutput)
 names(my_jags$BUGSoutput)
 
-someoutput <- my_jags$BUGSoutput$summary
+# simulations list
+names(my_jags$BUGSoutput$sims.list)
 
-class(someoutput)
+# simulations array
+str(my_jags$BUGSoutput$sims.array)
 
-str(my_jags$BUGSoutput)
+
+dim(my_jags$BUGSoutput$sims.array)
+dimnames(my_jags$BUGSoutput$sims.array)
+dimnames(my_jags$BUGSoutput$sims.array)[[3]] # parameter names
+
+dim(my_jags$BUGSoutput$sims.array[,,])
+
+
+
+
+mcmc_summary <- my_jags$BUGSoutput$summary
+
+
+
+
+
+
+
+
+################################################################################################
+# PLOT TRACES
+################################################################################################
+
+mcmc_array <- my_jags$BUGSoutput$sims.array
+
+dim(mcmc_array)
+
+mcmc_iter <- dim(mcmc_array)[1]
+mcmc_chains <- dim(mcmc_array)[3]
+mcmc_params <- dimnames(mcmc_array)[[3]]
+thin_factor <- 10
+
+trace_layout <- layout(
+
+		mat = matrix(
+					data = 1:length(mcmc_params), 
+					nrow = 6, 
+					byrow = TRUE
+					)
+	)
+
+layout.show(trace_layout)
+
+for(param in mcmc_params){
+
+	mcmc_samples <- mcmc_array[,,param]
+
+	plot(
+		x= 0, 
+		pch = '', 
+		xlim = c(0, nrow(mcmc_samples)/thin_factor), 
+		ylim = c(min(mcmc_samples), max(mcmc_samples)), 
+		xlab = "MCMC iteration", 
+		ylab = "value", 
+		main = param
+		)
+		
+	for(i in 1:ncol(mcmc_samples)){
+	
+		thinned_chain <- seq(from = 1, to = nrow(mcmc_samples), by = thin_factor)
+
+		points(
+			x = mcmc_samples[thinned_chain,i], 
+			type = "l", 
+			col = rgb(0,0,0, alpha = 0.3)
+			)
+
+	}
+
+}
+
+
+# OTHER PLOTS
+names(my_jags$BUGSoutput$sims.list)
+
+dim(my_jags$BUGSoutput$sims.list$deviance) # N_iter*N_chain by 1
+
+
+boxplot(
+	x = my_jags$BUGSoutput$sims.list$deviance,
+	main = "Deviance"
+	)
 
 dim(my_jags$BUGSoutput$sims.list[[1]]) # matrix of dim 300000 (N_iter*N_chain) by 10 (N_taxa)
 
