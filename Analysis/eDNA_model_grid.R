@@ -110,6 +110,8 @@ counts[        ,         , sites[2] ]
 
 model_loc <- "eDNA_model_grid.jags"
 
+
+# Epsilon: i,k ; delta i,k ;
 # jagsscript <- cat("
 jagsscript <- "
 model {
@@ -129,18 +131,27 @@ model {
             # fixed[j,i] <- beta_0 + beta[i]
             # lambda[j,i] <- fixed[i] + eta[j,i]
 
-            # random effect for i,j
+
+            # random effect for PCR (for i,j)
             # note that precision = 1/variance and variance = sd^2
             # mu = mean, tau = precision
             eta[j,i,k] ~ dnorm(0, 1/sigma2)
             # eta[j,i] ~ dnorm(0, 1/sigma2) # single site (k)
 
-            # random effect for i,k
-            epsilon[j,i,k] ~ dnorm(0, 1/tau2)
 
         }
       }
     }
+    
+    for(k in 1:N_sites){
+	    for(i in 1:N_taxa){
+    	  for(j in 1:N_pcr){
+          # random effect for i,k
+          epsilon[j,i,k] ~ dnorm(0, 1/tau2[i])
+        }	    		
+	    } 
+    }
+    	
 
     ## PRIORS
     # *NOTE: in JAGS gamma, shape = r and rate = mu (lambda?)
@@ -163,7 +174,9 @@ model {
    	sigma2 ~ dgamma(0.01, 0.01)
 
    	# in JAGS gamma, shape = r and rate = mu (lambda?)
-   	tau2 ~ dgamma(0.01, 0.01)
+   	for(i in 1:N_taxa){
+   		tau2[i] ~ dgamma(0.01, 0.01)   		
+   	}
 
    ## DERIVED QUANTITIES
 
@@ -179,7 +192,7 @@ model {
 
 }
 "
-"
+# "
 
 
 # ,
@@ -227,7 +240,7 @@ my_jags <- jags(
 )
 
 # Attach the jags output
-attach.jags(my_jags, overwrite = TRUE)
+# attach.jags(my_jags, overwrite = TRUE)
 
 # if you want to save:
 # save(my_jags, file = "jagsoutput.RData")
@@ -284,7 +297,6 @@ mcmc_params <- dimnames(mcmc_array)[[3]]
 thin_factor <- 10
 
 trace_layout <- layout(
-
 		mat = matrix(
 					data = 1:length(mcmc_params), 
 					nrow = 6, 
