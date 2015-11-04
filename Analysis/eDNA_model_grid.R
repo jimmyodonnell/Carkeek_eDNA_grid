@@ -125,7 +125,7 @@ model {
             counts[j,i,k] ~ dpois(exp(lambda[j,i,k]))
 
             # GLM
-            lambda[j,i,k] <- beta_0 + beta[i] + eta[j,i,k] + epsilon[j,i,k]
+            lambda[j,i,k] <- beta_0 + beta[i] + eta[j,i,k] + epsilon[i,k]
             # single site: lambda[i,j] <- beta_0 + beta[i] + eta[j,i]
             # alt format:
             # fixed[j,i] <- beta_0 + beta[i]
@@ -145,10 +145,8 @@ model {
     
     for(k in 1:N_sites){
 	    for(i in 1:N_taxa){
-    	  for(j in 1:N_pcr){
           # random effect for i,k
-          epsilon[j,i,k] ~ dnorm(0, 1/tau2[i])
-        }	    		
+          epsilon[i,k] ~ dnorm(0, 1/tau2[i])
 	    } 
     }
     	
@@ -215,7 +213,7 @@ jags_params <- c(
 
 # Set MCMC parameters
 N_burn <- 0
-N_iter <- 100000
+N_iter <- 1000000
 N_chain <- 3
 
 # run the MCMC
@@ -296,9 +294,11 @@ mcmc_chains <- dim(mcmc_array)[3]
 mcmc_params <- dimnames(mcmc_array)[[3]]
 thin_factor <- 10
 
+
 trace_layout <- layout(
 		mat = matrix(
-					data = 1:length(mcmc_params), 
+					# data = 1:length(mcmc_params), 
+					data = 1:36, 
 					nrow = 6, 
 					byrow = TRUE
 					)
