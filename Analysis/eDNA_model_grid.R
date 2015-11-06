@@ -12,8 +12,8 @@ fig_dir <- file.path("..", "Figures")
 # Let:
 # i = taxon i (1:I); Carkeek grid dataset I = ? (limit to 10 for tests)
 # j = PCR replicate j (1:J); Carkeek grid dataset J = 4
-# k = location k (1:K); Carkeek grid dataset K = 24
-
+# k = position k from shore (1:K); Carkeek grid dataset K = 8
+# l = position l along shore (1:L); L = 3
 
 # Requires as input:
 # 1. otu file
@@ -36,8 +36,11 @@ colname_sampleid <- "sample_id"
 # what is the name of the column containing PCR replicate levels
 colname_pcr <- "PCR_replicate"
 
-# what is the name of the column containing relevant site replicate levels
-colname_site <- "transect"
+# what is the name of the column containing position in x direction (along shore) replicate levels
+colname_posx <- "transect"
+
+# what is the name of the column containing position in y direction (from shore) replicate levels
+colname_posy <- "dist_from_shore"
 
 # of each taxon (length = I)
 taxa <- colnames(counts_table)
@@ -45,8 +48,8 @@ taxa <- colnames(counts_table)
 # from each PCR replicate (length = J)
 pcr <- unique(metadata[, colname_pcr])
 
-# at each site (length = K)
-sites <- unique(metadata[, colname_site])
+# at each position in x direction (length = K)
+posx <- unique(metadata[, colname_posx])
 
 
 
@@ -58,18 +61,19 @@ sites <- unique(metadata[, colname_site])
 # JAGS won't do some basic R functions, so we need to give it the lengths explicitly
 N_taxa <- length(taxa)
 N_pcr <- length(pcr)
-N_sites <- length(sites)
+N_posx <- length(posx)
 
 
 # make a vector of the site for each sample name in the counts table
-site_by_rowname <- metadata[ , colname_site][
-  match(rownames(counts_table), metadata[ , colname_sampleid])
-]
+posx_by_rowname <- metadata[ , colname_posx][
+                        match(rownames(counts_table), 
+                        metadata[ , colname_sampleid])
+                        ]
 
 # unused for now
-# sampleid_by_site <- split(x = metadata[, colname_sampleid], f = metadata[, colname_site], drop = TRUE)
+# sampleid_by_posx <- split(x = metadata[, colname_sampleid], f = metadata[, colname_posx], drop = TRUE)
 
-counts_by_site <- split(x = counts_table, f = site_by_rowname)
+counts_by_posx <- split(x = counts_table, f = posx_by_rowname)
 
 
 
@@ -79,12 +83,12 @@ counts_by_site <- split(x = counts_table, f = site_by_rowname)
 # create an array for JAGS called "counts"
 # where counts[j,i,k] is the counts in pcr replicate j of taxon i at site k
 counts <- array(
-				data = unlist(counts_by_site),
-				dim = c(length(pcr), length(taxa), length(sites)),
+				data = unlist(counts_by_posx),
+				dim = c(length(pcr), length(taxa), length(posx)),
 				dimnames = list(
 				  pcr = pcr,
 				  taxa = taxa,
-				  sites = sites
+				  posx = posx
 				)
 )
 
@@ -96,7 +100,7 @@ counts <- array(
 # thus, you should be able to reference stuff like so:
 counts[ pcr[4] ,         ,          ]
 counts[        , taxa[8] ,          ]
-counts[        ,         , sites[2] ]
+counts[        ,         , posx[2] ]
 
 # lambda = mean of the Poisson dist that describes variation in counts
 # beta = intercept
@@ -117,7 +121,7 @@ jagsscript <- "
 model {
 
     ## MODEL STRUCTURE
-  for(k in 1:N_sites){
+  for(k in 1:N_posx){
     	for(i in 1:N_taxa){
     	  for(j in 1:N_pcr){
 
@@ -143,7 +147,7 @@ model {
       }
     }
     
-    for(k in 1:N_sites){
+    for(k in 1:N_posx){
 	    for(i in 1:N_taxa){
           # random effect for i,k
           epsilon[i,k] ~ dnorm(0, 1/tau2[i])
@@ -200,7 +204,7 @@ jags_data <- list(
                 "counts",
                 "N_taxa",
                 "N_pcr",
-                "N_sites"
+                "N_posx"
 )
 
 jags_params <- c(
@@ -213,7 +217,7 @@ jags_params <- c(
 
 # Set MCMC parameters
 N_burn <- 0
-N_iter <- 1000000
+N_iter <- 1000
 N_chain <- 3
 
 # run the MCMC
@@ -262,6 +266,9 @@ names(my_jags$BUGSoutput$sims.list)
 # simulations array
 str(my_jags$BUGSoutput$sims.array)
 
+my_jags$BUGSoutput$sims.matrix
+my_jags$BUGSoutput$pD
+my_jags$BUGSoutput$DIC
 
 dim(my_jags$BUGSoutput$sims.array)
 dimnames(my_jags$BUGSoutput$sims.array)
