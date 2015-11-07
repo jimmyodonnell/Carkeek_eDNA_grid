@@ -42,6 +42,13 @@ colname_posx <- "transect"
 # what is the name of the column containing position in y direction (from shore) replicate levels
 colname_posy <- "dist_from_shore"
 
+# give a name to call the variable describing the things that were counted
+varname_taxa <- "taxon"
+
+# give a name to call the variable describing what the counts are
+varname_counts <- "reads"
+
+
 # of each taxon (length = I)
 taxa <- colnames(counts_table)
 
@@ -51,17 +58,9 @@ pcr <- unique(metadata[, colname_pcr])
 # at each position in x direction (length = K)
 posx <- unique(metadata[, colname_posx])
 
+# at each position in y direction (length = L)
+posy <- unique(metadata[, colname_posy])
 
-
-
-
-
-
-
-# JAGS won't do some basic R functions, so we need to give it the lengths explicitly
-N_taxa <- length(taxa)
-N_pcr <- length(pcr)
-N_posx <- length(posx)
 
 
 # make a vector of the site for each sample name in the counts table
@@ -74,11 +73,6 @@ posx_by_rowname <- metadata[ , colname_posx][
 # sampleid_by_posx <- split(x = metadata[, colname_sampleid], f = metadata[, colname_posx], drop = TRUE)
 
 counts_by_posx <- split(x = counts_table, f = posx_by_rowname)
-
-
-
-
-
 
 # create an array for JAGS called "counts"
 # where counts[j,i,k] is the counts in pcr replicate j of taxon i at site k
@@ -101,6 +95,15 @@ counts <- array(
 counts[ pcr[4] ,         ,         ]
 counts[        , taxa[8] ,         ]
 counts[        ,         , posx[2] ]
+
+
+# IMPORTANT
+# JAGS won't do some basic R functions, so we need to give it the lengths explicitly
+N_taxa <- length(taxa)
+N_pcr <- length(pcr)
+N_posx <- length(posx)
+
+
 
 # lambda = mean of the Poisson dist that describes variation in counts
 # beta = intercept
