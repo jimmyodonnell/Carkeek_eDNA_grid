@@ -98,8 +98,8 @@ counts <- array(
 # }
 
 # thus, you should be able to reference stuff like so:
-counts[ pcr[4] ,         ,          ]
-counts[        , taxa[8] ,          ]
+counts[ pcr[4] ,         ,         ]
+counts[        , taxa[8] ,         ]
 counts[        ,         , posx[2] ]
 
 # lambda = mean of the Poisson dist that describes variation in counts
