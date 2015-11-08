@@ -115,7 +115,7 @@ N_posx <- length(posx)
 
 # pi = proportional abundance of each taxon
 
-model_loc <- "eDNA_model_grid.jags"
+# model_loc <- "eDNA_model_grid.jags"
 
 
 # Epsilon: i,k ; delta i,k ;
