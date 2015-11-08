@@ -157,4 +157,4 @@ data_array[        , taxa[9] ,         ,         ]
 data_array[        ,         , posx[3] ,         ]
 data_array[        ,         ,         , posy[1] ]
 
-
+counts <- data_array

@@ -102,7 +102,7 @@ counts[        ,         , posx[2] ]
 N_taxa <- length(taxa)
 N_pcr <- length(pcr)
 N_posx <- length(posx)
-
+N_posy <- length(posy)
 
 
 # lambda = mean of the Poisson dist that describes variation in counts
@@ -124,15 +124,19 @@ jagsscript <- "
 model {
 
     ## MODEL STRUCTURE
-  for(k in 1:N_posx){
+  for(l in 1:N_posy){
+    for(k in 1:N_posx){
     	for(i in 1:N_taxa){
     	  for(j in 1:N_pcr){
 
             # Likelihood function
-            counts[j,i,k] ~ dpois(exp(lambda[j,i,k]))
+            # 3D: counts[j,i,k] ~ dpois(exp(lambda[j,i,k]))
+    	      counts[j,i,k,l] ~ dpois(exp(lambda[j,i,k,l]))
+    	    
 
             # GLM
-            lambda[j,i,k] <- beta_0 + beta[i] + eta[j,i,k] + epsilon[i,k]
+    	    # 3D: lambda[j,i,k] <- beta_0 + beta[i] + eta[j,i,k] + epsilon[i,k]
+            lambda[j,i,k,l] <- beta_0 + beta[i] + eta[j,i,k,l] + epsilon[i,k,l] + something[i,l]
             # single site: lambda[i,j] <- beta_0 + beta[i] + eta[j,i]
             # alt format:
             # fixed[j,i] <- beta_0 + beta[i]
@@ -142,21 +146,30 @@ model {
             # random effect for PCR (for i,j)
             # note that precision = 1/variance and variance = sd^2
             # mu = mean, tau = precision
-            eta[j,i,k] ~ dnorm(0, 1/sigma2)
+            # 3D: eta[j,i,k] ~ dnorm(0, 1/sigma2)
+            eta[j,i,k,l] ~ dnorm(0, 1/sigma2)
             # eta[j,i] ~ dnorm(0, 1/sigma2) # single site (k)
 
-
+            
         }
-      }
+    	}
     }
-    
+  }
+  for(l in 1:N_posy){
     for(k in 1:N_posx){
 	    for(i in 1:N_taxa){
           # random effect for i,k
-          epsilon[i,k] ~ dnorm(0, 1/tau2[i])
+	      epsilon[i,k,l] ~ dnorm(0, 1/tau2[i])
 	    } 
     }
-    	
+  }
+  for(l in 1:N_posy){
+    for(i in 1:N_taxa){
+      something[i,l] ~ dnorm(0, 1/sumthin_else[i])
+    }
+  }
+  
+  
 
     ## PRIORS
     # *NOTE: in JAGS gamma, shape = r and rate = mu (lambda?)
@@ -183,6 +196,9 @@ model {
    		tau2[i] ~ dgamma(0.01, 0.01)   		
    	}
 
+   	for(i in 1:N_taxa){
+   	  sumthin_else[i] ~ dgamma(0.01, 0.01)
+   	}
    ## DERIVED QUANTITIES
 
     # multinomial poisson transformation
@@ -207,20 +223,22 @@ jags_data <- list(
                 "counts",
                 "N_taxa",
                 "N_pcr",
-                "N_posx"
+                "N_posx", 
+                "N_posy"
 )
 
 jags_params <- c(
                 "beta",
                 "sigma2",
                 "tau2",
+                "sumthin_else", 
                 "P",
                 "beta_0"
 )
 
 # Set MCMC parameters
 N_burn <- 0
-N_iter <- 1000
+N_iter <- 10000
 N_chain <- 3
 
 # run the MCMC
