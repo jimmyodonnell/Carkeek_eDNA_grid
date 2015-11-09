@@ -2,6 +2,7 @@
 
 library(reshape2)
 
+setwd("~/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Analysis")
 setwd("/Users/jimmy.odonnell/Projects/Carkeek_eDNA_grid/Analysis")
 
 data_dir <- file.path("..", "Data")

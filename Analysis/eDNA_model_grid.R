@@ -3,8 +3,10 @@
 # This is code to estimate some model parameters for proportional abundance of DNA in a sample given reads in the file from a sequencer
 
 library(R2jags)
+library(reshape2) # acast: turn long-form dataframe into array
 
 setwd("~/Documents/GoogleDrive/Kelly_Lab/Projects/Carkeek_eDNA_grid/Analysis")
+setwd("/Users/jimmy.odonnell/Projects/Carkeek_eDNA_grid/Analysis")
 
 data_dir <- file.path("..", "Data")
 fig_dir <- file.path("..", "Figures")
@@ -20,11 +22,16 @@ fig_dir <- file.path("..", "Figures")
 # 2. metadata file
 
 # a table of counts of sequences (Z, length = ...)
+# rows/rownames = samples, columns/colnames = taxa, cells = integer counts
 counts_file_path <- file.path(data_dir, "OTUs_top10_4000m.csv")
 counts_table <- read.csv(file = counts_file_path, row.names = 1)
-# rows/rownames = samples, columns/colnames = taxa, cells = integer counts
+counts_table <- counts_table[,1:10] # use only the top ten for now
+
 # if table is incorrectly oriented, transpose it:
 # counts_table <- as.data.frame(t(counts_table))
+
+# REMEMBER TO REMOVE CONTROL TAXON IF IT'S STILL THERE!
+# counts_table <- counts_table[,! names(counts_table) %in% "DUP_3"]
 
 # load metadata
 metadata_file_path <- file.path(data_dir, "metadata_spatial.csv")
@@ -53,48 +60,150 @@ varname_counts <- "reads"
 taxa <- colnames(counts_table)
 
 # from each PCR replicate (length = J)
-pcr <- unique(metadata[, colname_pcr])
+pcr <- as.character(unique(metadata[, colname_pcr]))
 
 # at each position in x direction (length = K)
 posx <- unique(metadata[, colname_posx])
 
 # at each position in y direction (length = L)
-posy <- unique(metadata[, colname_posy])
+posy <- as.character(unique(metadata[, colname_posy]))
 
-
-
-# make a vector of the site for each sample name in the counts table
-posx_by_rowname <- metadata[ , colname_posx][
-                        match(rownames(counts_table), 
-                        metadata[ , colname_sampleid])
-                        ]
-
-# unused for now
-# sampleid_by_posx <- split(x = metadata[, colname_sampleid], f = metadata[, colname_posx], drop = TRUE)
-
-counts_by_posx <- split(x = counts_table, f = posx_by_rowname)
-
-# create an array for JAGS called "counts"
-# where counts[j,i,k] is the counts in pcr replicate j of taxon i at site k
-counts <- array(
-				data = unlist(counts_by_posx),
-				dim = c(length(pcr), length(taxa), length(posx)),
-				dimnames = list(
-				  pcr = pcr,
-				  taxa = taxa,
-				  posx = posx
-				)
-)
-
+# MAKE AN ARRAY OF DATA TO BE INPUT TO JAGS
 # this really should be a function like this...
 # JAGSarray3D <- function(table, split_vector){
 #
 # }
 
-# thus, you should be able to reference stuff like so:
+# *** NOTE *** #
+# for the automated array approach to work, rows of metadata and otu table must line up!
+if(nrow(counts_table) != nrow(metadata)){
+	if( nrow(counts_table) > nrow(metadata) ){
+		# extract and order the relevant rows of the OTU table
+		counts_rel <- counts_table[metadata[, colname_sampleid], ]
+		metadata_rel <- metadata
+		# counts_table <- counts_rel
+	} else if( nrow(counts_table) < nrow(metadata) ){
+		# extract only the relevant rows of metadata
+		metadata_rel <- metadata[match(rownames(counts_table), metadata[,colname_sampleid]),]
+		counts_rel <- counts_table
+		# metadata <- metadata_rel
+	}
+} else if(nrow(counts_table) == nrow(metadata)){
+	counts_rel <- counts_table
+	metadata_rel <- metadata
+}
+
+# match(metadata[, colname_sampleid], rownames(counts_table))
+
+# make sure the order of the samples in the metadata and OTU table are the same
+identical(
+	rownames(counts_rel), 
+	metadata_rel[,colname_sampleid]
+	)
+
+# reshape into a long-format dataframe
+data_l <- reshape(cbind(metadata_rel, counts_rel), 
+  varying = colnames(counts_rel), # aka taxa
+  v.names = varname_counts,
+  timevar = varname_taxa, 
+  times = colnames(counts_rel), 
+  new.row.names = 1:(nrow(counts_rel)*ncol(counts_rel)),
+  direction = "long")[c(colname_sampleid, colname_pcr, colname_posx, colname_posy, varname_taxa, varname_counts)]
+
+################################################################################
+# THREE DIMENSIONAL ARRAY:
+
+# this reorders the names of taxa
+data_array <- acast(
+				data = data_l, 
+				formula =  list(colname_pcr, varname_taxa, colname_posx), 
+				value.var = varname_counts
+				)
+
+# ... and thus this fucks up the names 
+# dimnames(data_array) <- list(
+	# pcr = pcr,
+	# taxa = taxa,
+	# posx = posx
+	# )
+
+# so that if you're comparing this to the original way I created the array, this fails:
+identical(counts, data_array)
+
+# but this fixes it:
+data_array <- data_array[,taxa,]
+dimnames(data_array) <- list(
+	pcr = pcr,
+	taxa = taxa,
+	posx = posx
+	)
+identical(counts, data_array)
+
+data_array[ pcr[4] ,         ,         ]
+data_array[        , taxa[8] ,         ]
+data_array[        ,         , posx[2] ]
+
+
+
+################################################################################
+# FOUR DIMENSIONAL ARRAY:
+
+counts_file_path <- file.path(data_dir, "otu_table_filtered_per_samp.csv")
+
+# this reorders the names of taxa
+data_array <- acast(
+				data = data_l, 
+				formula =  list(colname_pcr, varname_taxa, colname_posx, colname_posy), 
+				value.var = varname_counts
+				)
+
+# but this fixes it:
+data_array <- data_array[,taxa,,]
+dimnames(data_array) <- list(
+	pcr = pcr,
+	taxa = taxa,
+	posx = posx, 
+	posy = posy
+	)
+identical(counts, data_array)
+
+data_array[ pcr[4] ,         ,         ,         ]
+data_array[        , taxa[9] ,         ,         ]
+data_array[        ,         , posx[3] ,         ]
+data_array[        ,         ,         , posy[1] ]
+
+counts <- data_array
+
+# ORIGINAL APPROACH
+# make a vector of the site for each sample name in the counts table
+# posx_by_rowname <- metadata[ , colname_posx][
+                        # match(rownames(counts_table), 
+                        # metadata[ , colname_sampleid])
+                        # ]
+# # unused for now
+# # sampleid_by_posx <- split(x = metadata[, colname_sampleid], f = metadata[, colname_posx], drop = TRUE)
+# counts_by_posx <- split(x = counts_table, f = posx_by_rowname)
+# # create an array for JAGS called "counts"
+# # where counts[j,i,k] is the counts in pcr replicate j of taxon i at site k
+# counts <- array(
+				# data = unlist(counts_by_posx),
+				# dim = c(length(pcr), length(taxa), length(posx)),
+				# dimnames = list(
+				  # pcr = pcr,
+				  # taxa = taxa,
+				  # posx = posx
+				# )
+# )
+
+
+# # thus, you should be able to reference stuff like so:
 counts[ pcr[4] ,         ,         ]
 counts[        , taxa[8] ,         ]
 counts[        ,         , posx[2] ]
+
+
+
+
 
 
 # IMPORTANT
