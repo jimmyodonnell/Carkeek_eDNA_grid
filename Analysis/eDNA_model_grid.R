@@ -24,14 +24,18 @@ fig_dir <- file.path("..", "Figures")
 # a table of counts of sequences (Z, length = ...)
 # rows/rownames = samples, columns/colnames = taxa, cells = integer counts
 counts_file_path <- file.path(data_dir, "OTUs_top10_4000m.csv")
+counts_file_path <- file.path(data_dir, "otu_table_filtered_per_samp.csv")
 counts_table <- read.csv(file = counts_file_path, row.names = 1)
+
+# REMEMBER TO REMOVE CONTROL TAXON IF IT'S STILL THERE!
+counts_table <- counts_table[,! names(counts_table) %in% "DUP_3"]
+
+
 counts_table <- counts_table[,1:10] # use only the top ten for now
 
 # if table is incorrectly oriented, transpose it:
 # counts_table <- as.data.frame(t(counts_table))
 
-# REMEMBER TO REMOVE CONTROL TAXON IF IT'S STILL THERE!
-# counts_table <- counts_table[,! names(counts_table) %in% "DUP_3"]
 
 # load metadata
 metadata_file_path <- file.path(data_dir, "metadata_spatial.csv")
@@ -97,16 +101,16 @@ if(nrow(counts_table) != nrow(metadata)){
 
 # make sure the order of the samples in the metadata and OTU table are the same
 identical(
-	rownames(counts_rel), 
+	rownames(counts_rel),
 	metadata_rel[,colname_sampleid]
 	)
 
 # reshape into a long-format dataframe
-data_l <- reshape(cbind(metadata_rel, counts_rel), 
+data_l <- reshape(cbind(metadata_rel, counts_rel),
   varying = colnames(counts_rel), # aka taxa
   v.names = varname_counts,
-  timevar = varname_taxa, 
-  times = colnames(counts_rel), 
+  timevar = varname_taxa,
+  times = colnames(counts_rel),
   new.row.names = 1:(nrow(counts_rel)*ncol(counts_rel)),
   direction = "long")[c(colname_sampleid, colname_pcr, colname_posx, colname_posy, varname_taxa, varname_counts)]
 
@@ -115,12 +119,12 @@ data_l <- reshape(cbind(metadata_rel, counts_rel),
 
 # this reorders the names of taxa
 data_array <- acast(
-				data = data_l, 
-				formula =  list(colname_pcr, varname_taxa, colname_posx), 
+				data = data_l,
+				formula =  list(colname_pcr, varname_taxa, colname_posx),
 				value.var = varname_counts
 				)
 
-# ... and thus this fucks up the names 
+# ... and thus this fucks up the names
 # dimnames(data_array) <- list(
 	# pcr = pcr,
 	# taxa = taxa,
@@ -143,17 +147,19 @@ data_array[ pcr[4] ,         ,         ]
 data_array[        , taxa[8] ,         ]
 data_array[        ,         , posx[2] ]
 
+# # thus, you should be able to reference stuff like so:
+counts[ pcr[4] ,         ,         ]
+counts[        , taxa[8] ,         ]
+counts[        ,         , posx[2] ]
 
 
 ################################################################################
 # FOUR DIMENSIONAL ARRAY:
 
-counts_file_path <- file.path(data_dir, "otu_table_filtered_per_samp.csv")
-
 # this reorders the names of taxa
 data_array <- acast(
-				data = data_l, 
-				formula =  list(colname_pcr, varname_taxa, colname_posx, colname_posy), 
+				data = data_l,
+				formula =  list(colname_pcr, varname_taxa, colname_posx, colname_posy),
 				value.var = varname_counts
 				)
 
@@ -162,11 +168,12 @@ data_array <- data_array[,taxa,,]
 dimnames(data_array) <- list(
 	pcr = pcr,
 	taxa = taxa,
-	posx = posx, 
+	posx = posx,
 	posy = posy
 	)
 identical(counts, data_array)
 
+# # thus, you should be able to reference stuff like so:
 data_array[ pcr[4] ,         ,         ,         ]
 data_array[        , taxa[9] ,         ,         ]
 data_array[        ,         , posx[3] ,         ]
@@ -177,7 +184,7 @@ counts <- data_array
 # ORIGINAL APPROACH
 # make a vector of the site for each sample name in the counts table
 # posx_by_rowname <- metadata[ , colname_posx][
-                        # match(rownames(counts_table), 
+                        # match(rownames(counts_table),
                         # metadata[ , colname_sampleid])
                         # ]
 # # unused for now
@@ -196,12 +203,6 @@ counts <- data_array
 # )
 
 
-# # thus, you should be able to reference stuff like so:
-counts[ pcr[4] ,         ,         ]
-counts[        , taxa[8] ,         ]
-counts[        ,         , posx[2] ]
-
-
 
 
 
@@ -215,12 +216,18 @@ N_posy <- length(posy)
 
 
 # lambda = mean of the Poisson dist that describes variation in counts
-# beta = intercept
-# eta = random effect for i,j,k
+# beta = intercept (fixed, taxon-specific effect)
+
+# eta = random effect of PCR for i,j,k,l
 # sigma2 = variance of normal distribution describing eta (attributable to PCR)
 
-# epsilon = random effect for i,k
-# tau2 = variance of normal distribution describing epsilon (attributable to location - k)
+# epsilon = random effect of position in X plane (along shore -- i.e. transect) for i,k,l
+# tau2 = variance of normal distribution describing epsilon (attributable to position in X plane - k)
+
+# delta = random effect of position in Y plane (distance from shore) i,l
+# phi = variance of normal distribution describing delta (attributable to position in Y plane - l)
+
+
 
 # pi = proportional abundance of each taxon
 
@@ -229,7 +236,7 @@ N_posy <- length(posy)
 
 # Epsilon: i,k ; delta i,k ;
 # jagsscript <- cat("
-jagsscript <- "
+# jagsscript <- "
 model {
 
     ## MODEL STRUCTURE
@@ -241,44 +248,47 @@ model {
             # Likelihood function
             # 3D: counts[j,i,k] ~ dpois(exp(lambda[j,i,k]))
     	      counts[j,i,k,l] ~ dpois(exp(lambda[j,i,k,l]))
-    	    
+
 
             # GLM
-    	    # 3D: lambda[j,i,k] <- beta_0 + beta[i] + eta[j,i,k] + epsilon[i,k]
-            lambda[j,i,k,l] <- beta_0 + beta[i] + eta[j,i,k,l] + epsilon[i,k,l] + something[i,l]
-            # single site: lambda[i,j] <- beta_0 + beta[i] + eta[j,i]
+            # 2D: lambda[i,j] <- beta_0 + beta[i] + eta[j,i]
             # alt format:
             # fixed[j,i] <- beta_0 + beta[i]
             # lambda[j,i] <- fixed[i] + eta[j,i]
+    	    # 3D: lambda[j,i,k] <- beta_0 + beta[i] + eta[j,i,k] + epsilon[i,k]
+    	    # 4D:
+            lambda[j,i,k,l] <- beta_0 + beta[i] + eta[j,i,k,l] + epsilon[i,k,l] + delta[i,l]
 
 
-            # random effect for PCR (for i,j)
+            # random effect of PCR (for i,j)
             # note that precision = 1/variance and variance = sd^2
             # mu = mean, tau = precision
+            # 2D: eta[j,i] ~ dnorm(0, 1/sigma2) # single site (k)
             # 3D: eta[j,i,k] ~ dnorm(0, 1/sigma2)
+    	    # 4D:
             eta[j,i,k,l] ~ dnorm(0, 1/sigma2)
-            # eta[j,i] ~ dnorm(0, 1/sigma2) # single site (k)
 
-            
+
         }
-    	}
+      }
     }
   }
   for(l in 1:N_posy){
     for(k in 1:N_posx){
 	    for(i in 1:N_taxa){
-          # random effect for i,k
+          # random effect of position in X plane (along shore -- i.e. transect) i,k,l
 	      epsilon[i,k,l] ~ dnorm(0, 1/tau2[i])
-	    } 
+	    }
     }
   }
   for(l in 1:N_posy){
     for(i in 1:N_taxa){
-      something[i,l] ~ dnorm(0, 1/sumthin_else[i])
+       # random effect of position in Y plane (distance from shore) i,l
+      delta[i,l] ~ dnorm(0, 1/phi[i])
     }
   }
-  
-  
+
+
 
     ## PRIORS
     # *NOTE: in JAGS gamma, shape = r and rate = mu (lambda?)
@@ -302,11 +312,11 @@ model {
 
    	# in JAGS gamma, shape = r and rate = mu (lambda?)
    	for(i in 1:N_taxa){
-   		tau2[i] ~ dgamma(0.01, 0.01)   		
+   		tau2[i] ~ dgamma(0.01, 0.01)
    	}
 
    	for(i in 1:N_taxa){
-   	  sumthin_else[i] ~ dgamma(0.01, 0.01)
+   	  phi[i] ~ dgamma(0.01, 0.01)
    	}
    ## DERIVED QUANTITIES
 
@@ -322,7 +332,6 @@ model {
 
 }
 "
-# "
 
 
 # ,
@@ -332,7 +341,7 @@ jags_data <- list(
                 "counts",
                 "N_taxa",
                 "N_pcr",
-                "N_posx", 
+                "N_posx",
                 "N_posy"
 )
 
@@ -340,7 +349,7 @@ jags_params <- c(
                 "beta",
                 "sigma2",
                 "tau2",
-                "sumthin_else", 
+                "phi",
                 "P",
                 "beta_0"
 )
@@ -348,10 +357,10 @@ jags_params <- c(
 # Set MCMC parameters
 N_burn <- 0
 N_iter <- 10000
-N_chain <- 3
+N_chain <- 4
 
 # run the MCMC
-my_jags <- jags(
+jags_out <- jags(
 				data = jags_data,
 				inits = NULL,
 				parameters.to.save = jags_params,
@@ -372,44 +381,17 @@ my_jags <- jags(
 )
 
 # Attach the jags output
-# attach.jags(my_jags, overwrite = TRUE)
+# attach.jags(jags_out, overwrite = TRUE)
 
 # if you want to save:
-# save(my_jags, file = "jagsoutput.RData")
+# save(jags_out, file = "jagsoutput.RData")
 
 # general plot
-plot(my_jags)
+plot(jags_out)
 
-# F this S. Keep getting the error "Error in coda.samples(my_jags, jags_params, N_iter = 1000) : attempt to apply non-function"
-# coda.samples(my_jags, jags_params, N_iter = 1000)
-# jags.samples(my_jags, jags_params, N_iter = 1000)
-
-str(my_jags)
-names(my_jags) # "model" "BUGSoutput" "parameters.to.save" "model.file" "n.iter" "DIC"
-
-str(my_jags$BUGSoutput)
-names(my_jags$BUGSoutput)
-
-# simulations list
-names(my_jags$BUGSoutput$sims.list)
-
-# simulations array
-str(my_jags$BUGSoutput$sims.array)
-
-my_jags$BUGSoutput$sims.matrix
-my_jags$BUGSoutput$pD
-my_jags$BUGSoutput$DIC
-
-dim(my_jags$BUGSoutput$sims.array)
-dimnames(my_jags$BUGSoutput$sims.array)
-dimnames(my_jags$BUGSoutput$sims.array)[[3]] # parameter names
-
-dim(my_jags$BUGSoutput$sims.array[,,])
-
-
-
-
-mcmc_summary <- my_jags$BUGSoutput$summary
+# F this S. Keep getting the error "Error in coda.samples(jags_out, jags_params, N_iter = 1000) : attempt to apply non-function"
+# coda.samples(jags_out, jags_params, N_iter = 1000)
+# jags.samples(jags_out, jags_params, N_iter = 1000)
 
 
 
@@ -418,89 +400,6 @@ mcmc_summary <- my_jags$BUGSoutput$summary
 
 
 
-################################################################################################
-# PLOT TRACES
-################################################################################################
-
-mcmc_array <- my_jags$BUGSoutput$sims.array
-
-dim(mcmc_array)
-
-mcmc_iter <- dim(mcmc_array)[1]
-mcmc_chains <- dim(mcmc_array)[3]
-mcmc_params <- dimnames(mcmc_array)[[3]]
-thin_factor <- 10
 
 
-trace_layout <- layout(
-		mat = matrix(
-					# data = 1:length(mcmc_params), 
-					data = 1:36, 
-					nrow = 6, 
-					byrow = TRUE
-					)
-	)
 
-layout.show(trace_layout)
-
-for(param in mcmc_params){
-
-	mcmc_samples <- mcmc_array[,,param]
-
-	plot(
-		x= 0, 
-		pch = '', 
-		xlim = c(0, nrow(mcmc_samples)/thin_factor), 
-		ylim = c(min(mcmc_samples), max(mcmc_samples)), 
-		xlab = "MCMC iteration", 
-		ylab = "value", 
-		main = param
-		)
-		
-	for(i in 1:ncol(mcmc_samples)){
-	
-		thinned_chain <- seq(from = 1, to = nrow(mcmc_samples), by = thin_factor)
-
-		points(
-			x = mcmc_samples[thinned_chain,i], 
-			type = "l", 
-			col = rgb(0,0,0, alpha = 0.3)
-			)
-
-	}
-
-}
-
-
-# OTHER PLOTS
-names(my_jags$BUGSoutput$sims.list)
-
-dim(my_jags$BUGSoutput$sims.list$deviance) # N_iter*N_chain by 1
-
-
-boxplot(
-	x = my_jags$BUGSoutput$sims.list$deviance,
-	main = "Deviance"
-	)
-
-dim(my_jags$BUGSoutput$sims.list[[1]]) # matrix of dim 300000 (N_iter*N_chain) by 10 (N_taxa)
-
-# so, to plot the estimated proportion of taxon 1 from all samples:
-boxplot(my_jags$BUGSoutput$sims.list[[1]][,1])
-
-# or, plot the estimates of P for all species:
-
-pdf(file = file.path(fig_dir, "P_boxplot.pdf"))
-boxplot(
-	x = my_jags$BUGSoutput$sims.list[[1]], 
-	main = "Posterior estimates of P", 
-	xlab = "Taxa", 
-	xaxt = "n", 
-	# names = taxa, 
-	las = 1, 
-	ylim = c(0,1), 
-	# cex.axis = 0.5
-	)
-axis(side = 1, at = 1:length(taxa), labels = taxa, cex.axis = 0.7)
-dev.off()
-dim()
