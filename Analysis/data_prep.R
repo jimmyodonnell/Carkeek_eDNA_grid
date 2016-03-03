@@ -49,6 +49,9 @@ if(
   warning("something does not match up, and you could screw up the data big time by proceeding.")
 }
 
+data_full_path <- file.path(data_dir, "data_full_top10.csv")
+write.csv(x = data_full, file = data_full_path)
+
 
 # --------------- DATA TRIMMING ------------------------------------------
 # RESTRICT TO ONLY A CERTAIN DISTANCE
