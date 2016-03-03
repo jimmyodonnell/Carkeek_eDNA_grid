@@ -50,7 +50,7 @@ if(
 }
 
 data_full_path <- file.path(data_dir, "data_full_top10.csv")
-write.csv(x = data_full, file = data_full_path)
+write.csv(x = data_full, file = data_full_path, row.names = FALSE)
 
 
 # --------------- DATA TRIMMING ------------------------------------------
