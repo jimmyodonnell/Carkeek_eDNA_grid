@@ -19,7 +19,8 @@ metadata <- read.csv(metadata_file, stringsAsFactors = FALSE)
 # get stuff togther in a way we can use in STAN
 sequenced_sample <- 1:nrow(metadata)
 transect_position <- as.numeric(as.factor(metadata[,"dist_from_shore"]))
-transect_line <- as.numeric(as.factor(metadata[,"transect"]))
+transect_line_rep <- as.numeric(as.factor(metadata[,"transect"]))
+transect_line <- as.numeric(as.factor(paste(transect_line_rep, transect_position)))
 
 # what is the name of the column containing the sample id (SEQUENCING samples)
 colname_sampleid <- "sample_id"
