@@ -98,7 +98,7 @@ We focus partly on species with known life histories that define their spatial d
 For these taxa whose spatial distribution is well-documented and restricted, we calculate the rate of change in space and compare this rate among taxa with similar spatial distributions.
 In turn, the distribution of rate of change serves as an estimate of the spatial distribution of DNA in this habitat.
 
-
+We would love to estimate the minimum distance over which eDNA community differences can be detected.
 
 
 
@@ -119,7 +119,13 @@ In turn, we further assume this parameter $\lambda$ is linearly proportional to 
 	\lambda_{ijk} = \beta_0 + \beta_i + \eta_{ijk} + \epsilon_{ijk}
 \end{equation}
 
+%(\ref{my_equation_label})
 Where $\beta_0$ is a general intercept across all taxa, $\beta_i$ is a fixed effect accounting for the variance associated with taxon $i$, and $\eta_{ijk}$ and $\epsilon_{ijk}$ are random effects of variance resulting from the processes associated with PCR and spatial location, respectively.
+
+
+Sidenote justification for k-means clustering: While variation among sampled ecological is indeed continuous, ecologists often apply categorical groupings to ecological communities.
+For example, we may sample along a transect that intersects rainforest and desert.
+As our samples become smaller and closer together, we may have increasing difficulty assigning samples to a distinct habitat type.
 
 %We constructed the following mathematical model (\ref{my_equation_label}) to better understand the concept:
 % using '\ref{something}' in the text will refer to any object (e.g. figure, equation, table) which contains the corresponding '\label{something}'
@@ -171,6 +177,48 @@ The data and code used to generate our results can be found at the following url
 
 %-----------------------------------FIGURES-------------------------------------
 \section*{Figures}
+
+\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{site_map.pdf}
+    \caption{Geographic position of collected samples. Lines give 10m isobaths.}
+  \label{site_map} % use this to refer to your figure in the text, so that numbering updates automatically
+\end{figure}
+
+\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{clustering_fig.pdf}
+    \caption{Plot of ?(non-metric multi-dimensional scaling | principal components ) analysis. Points are colored by their membership to clusters of k-means clustering analysis.}
+  \label{clustering_fig} % use this to refer to your figure in the text, so that numbering updates automatically
+\end{figure}
+
+\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{dissim_by_distance.pdf}
+    \caption{Pairwise dissimilarity ?(BRAY CURTIS/ETC) of eDNA communities plotted against pairwise spatial distance.}
+  \label{dissim_by_distance} % use this to refer to your figure in the text, so that numbering updates automatically
+\end{figure}
+
+\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{slope_plots.pdf}
+    \caption{Fit lines of DNA sequence counts as a function of distance from shore for a selection of taxa for which we have strong preconceived expectations (left). Box plots of the estimates of the slopes for taxa ?(100 most abundant)?, grouped by life history traits (right).}
+  \label{slope_plots} % use this to refer to your figure in the text, so that numbering updates automatically
+\end{figure}
+
+\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{var_boxplots.pdf}
+    \caption{Box plots of estimates of variance associated with each level of the multilevel model, corresponding to stages of the eDNA sampling protocol.}
+  \label{variance_boxplots} % use this to refer to your figure in the text, so that numbering updates automatically
+\end{figure}
+
+\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{clustering_map.pdf}
+    \caption{Geographic position of collected samples, colored by membership to clusters identified by k-means clustering analysis. Lines give 10m isobaths.}
+  \label{clustering_map} % use this to refer to your figure in the text, so that numbering updates automatically
+\end{figure}
 
 %\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
 %  \centering
