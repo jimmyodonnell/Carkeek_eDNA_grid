@@ -109,8 +109,13 @@ We collected samples from 8 points along three parallel transects, separated by 
 The first sample was collected over a lower-intertidal patch of \textit{Zostera marina}, with samples taken at 75, 125, 250, 500, 1000, 2000, and 4000 meters along the transect.
 
 \subsection*{Laboratory Methods}
+The sequencing run consisted of 14 samples ('libraries') prepared using different index sequences ligated during library preparation.
+Of these libraries, ten comprised of amplicons prepared using the 16S protocol reported above, and four comprised of amplicons prepared using a 12S protocol similar to that reported by (CITE PORT 2015).
+
+Pooled libraries were sequenced on an Illumina NextSeq at the Stanford Center for Functional Genomics (machine ID: NS50061; run ID: 115; flowcell ID: H3LFLAFXX).
 
 \subsection*{Data Preparation (Bioinformatics)}
+We calculated rates of cross-library contamination by counting occurrences of primer sequences: 12S primer sequences appearing in a 16S library (and vice versa) indicate an error in the preparation or sequencing procedures.
 
 \subsection*{Community Analysis}
 % Used k-medoids (PAM) rather than k-means because it does not require euclidean distances can be computed and that the observations follow a gaussian distribution
