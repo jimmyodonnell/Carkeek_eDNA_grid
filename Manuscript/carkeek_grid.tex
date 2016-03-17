@@ -112,6 +112,11 @@ The first sample was collected over a lower-intertidal patch of \textit{Zostera 
 
 \subsection*{Data Preparation (Bioinformatics)}
 
+\subsection*{Community Analysis}
+% Used k-medoids (PAM) rather than k-means because it does not require euclidean distances can be computed and that the observations follow a gaussian distribution
+% because of the nature of our data (lots of zeros, with some very high counts), the mean is not very informative
+We simultaneously assessed the existence of distinct community types and the membership of samples to those community types using a partitioning around mediods algorithm (CITE PAM, sometimes referred to as k-mediods clustering), as implemented in the R package fpc (CITE fpc).
+The classification of samples to communities was made on the basis of their pairwise Bray-Curtis dissimilarity, calculated using the function vegdist in the R package vegan (CITE VEGAN). % consider Gower distance
 
 \subsection*{Model Formulation}
 We use the general framework outlined by Shelton et al (CITE).
@@ -133,9 +138,6 @@ In turn, we further assume this parameter $\lambda$ is linearly proportional to 
 Where $\beta_0$ is a general intercept across all taxa, $\beta_i$ is a fixed effect accounting for the variance associated with taxon $i$, and $\eta_{ijk}$ and $\epsilon_{ijk}$ are random effects of variance resulting from the processes associated with PCR and spatial location, respectively.
 
 
-Sidenote justification for k-means clustering: While variation among sampled ecological is indeed continuous, ecologists often apply categorical groupings to ecological communities.
-For example, we may sample along a transect that intersects rainforest and desert.
-As our samples become smaller and closer together, we may have increasing difficulty assigning samples to a distinct habitat type.
 
 %We constructed the following mathematical model (\ref{my_equation_label}) to better understand the concept:
 % using '\ref{something}' in the text will refer to any object (e.g. figure, equation, table) which contains the corresponding '\label{something}'
@@ -190,8 +192,8 @@ The data and code used to generate our results can be found at the following url
 
 \begin{figure}[h!] % [h!] forces the figure to be placed roughly here
   \centering
-    \includegraphics[width=1\textwidth]{site_map.pdf}
-    \caption{Geographic position of collected samples. Lines give 10m isobaths.}
+    \includegraphics[width=1\textwidth]{../Figures/site_map.pdf}
+    \caption{Geographic position of collected samples. Lines give XXX meter isobaths.}
   \label{site_map} % use this to refer to your figure in the text, so that numbering updates automatically
 \end{figure}
 
