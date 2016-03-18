@@ -105,10 +105,12 @@ We would love to estimate the minimum distance over which eDNA community differe
 %-----------------------------------METHODS-------------------------------------
 \section*{Methods}
 \subsection*{Environmental Sampling}
-We collected samples from 8 points along three parallel transects, separated by 1000m.
+We collected samples from 8 points along three parallel transects separated by 1000 meters.
 The first sample was collected over a lower-intertidal patch of \textit{Zostera marina}, with samples taken at 75, 125, 250, 500, 1000, 2000, and 4000 meters along the transect.
 
 \subsection*{Laboratory Methods}
+
+Samples were randomly assigned to PCR primer and library adapter index sequences. 
 The sequencing run consisted of 14 samples ('libraries') prepared using different index sequences ligated during library preparation.
 Of these libraries, ten comprised of amplicons prepared using the 16S protocol reported above, and four comprised of amplicons prepared using a 12S protocol similar to that reported by (CITE PORT 2015).
 
@@ -123,7 +125,9 @@ We calculated rates of cross-library contamination by counting occurrences of pr
 We simultaneously assessed the existence of distinct community types and the membership of samples to those community types using a partitioning around mediods algorithm (CITE PAM, sometimes referred to as k-mediods clustering), as implemented in the R package fpc (CITE fpc).
 The classification of samples to communities was made on the basis of their pairwise Bray-Curtis dissimilarity, calculated using the function vegdist in the R package vegan (CITE VEGAN). % consider Gower distance
 
-\subsection*{Model Formulation}
+% Calculate Moran's I on ?(relative abundance | raw count) of ?(taxa | OTU | uniq_sequences) to report dispersion of DNA in space?
+
+\subsection*{Spatial Model Formulation}
 We use the general framework outlined by Shelton et al (CITE).
 That study outlined the structure for estimation of the proportional biomass of a taxon ($B_i$) given the proportional counts of sequences recovered from a parallel sequencing run ($Z_i$).
 
@@ -156,7 +160,14 @@ Where $\beta_0$ is a general intercept across all taxa, $\beta_i$ is a fixed eff
 
 %-----------------------------------RESULTS-------------------------------------
 \section*{Results}
-We found that if you have two apples, and someone gives you another two apples, you have four apples.
+\subsection*{Data Quality (Bioinformatics)}
+All value ranges are reported as (mean $\pm$ standard deviation).\\
+There was a very low frequency of cross-contamination from other libraries into those reported here (5e-05$\pm$8e-05; max 0.00034)
+
+\subsection*{Community Analysis}
+
+\subsection*{Spatial Model Output}
+
 
 %----------------------------------DISCUSSION-----------------------------------
 \section*{Discussion}
