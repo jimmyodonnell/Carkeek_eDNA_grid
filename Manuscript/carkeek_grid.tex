@@ -105,8 +105,7 @@ We would love to estimate the minimum distance over which eDNA community differe
 %-----------------------------------METHODS-------------------------------------
 \section*{Methods}
 \subsection*{Environmental Sampling}
-We collected samples from 8 points along three parallel transects separated by 1000 meters.
-The first sample was collected over a lower-intertidal patch of \textit{Zostera marina}, with samples taken at 75, 125, 250, 500, 1000, 2000, and 4000 meters along the transect.
+Starting from lower-intertidal patches of \textit{Zostera marina}, we collected water samples at 1 meter depth from 8 points (0, 75, 125, 250, 500, 1000, 2000, and 4000 meters) along three parallel transects separated by 1000 meters (Figure \ref{site_map}).
 
 \subsection*{Laboratory Methods}
 
@@ -125,6 +124,7 @@ We calculated rates of cross-library contamination by counting occurrences of pr
 We simultaneously assessed the existence of distinct community types and the membership of samples to those community types using a partitioning around mediods algorithm (CITE PAM, sometimes referred to as k-mediods clustering), as implemented in the R package fpc (CITE fpc).
 The classification of samples to communities was made on the basis of their pairwise Bray-Curtis dissimilarity, calculated using the function vegdist in the R package vegan (CITE VEGAN). % consider Gower distance
 
+We calculated the great circle distance between points using the Haversine method as implemented by the R package geosphere (CITE geosphere).
 % Calculate Moran's I on ?(relative abundance | raw count) of ?(taxa | OTU | uniq_sequences) to report dispersion of DNA in space?
 
 \subsection*{Spatial Model Formulation}
@@ -209,22 +209,22 @@ The data and code used to generate our results can be found at the following url
 \begin{figure}[h!] % [h!] forces the figure to be placed roughly here
   \centering
     \includegraphics[width=1\textwidth]{../Figures/site_map.pdf}
-    \caption{Geographic position of collected samples. Lines give XXX meter isobaths.}
+    \caption{TODO: Plot with GEBCO 30-second data or remove grid coloring and color by isobath. Looking into filling by contour. Geographic position of collected samples. Lines give XXX meter isobaths.}
   \label{site_map} % use this to refer to your figure in the text, so that numbering updates automatically
 \end{figure}
 
 \begin{figure}[h!] % [h!] forces the figure to be placed roughly here
   \centering
-    \includegraphics[width=1\textwidth]{clustering_fig.pdf}
-    \caption{Plot of ?(non-metric multi-dimensional scaling | principal components ) analysis. Points are colored by their membership to clusters of k-means clustering analysis.}
-  \label{clustering_fig} % use this to refer to your figure in the text, so that numbering updates automatically
+    \includegraphics[width=1\textwidth]{../Figures/pam_plot.pdf}
+    \caption{TODO figure out color of ellipses; I can't even plot them gray without Plot of partitioning around medoids (PAM) analysis of OTU sequence abundance from 4 replicate PCRs at each of 24 sampling points. Points represent communities of OTUs; color and shape indicate cluster membership as determined by PAM analysis. Ellipses indicate the smallest area of a cluster that contains all of its members.}
+  \label{pam_plot.pdf} % use this to refer to your figure in the text, so that numbering updates automatically
 \end{figure}
 
 \begin{figure}[h!] % [h!] forces the figure to be placed roughly here
   \centering
-    \includegraphics[width=1\textwidth]{dissim_by_distance.pdf}
-    \caption{Pairwise dissimilarity ?(BRAY CURTIS/ETC) of eDNA communities plotted against pairwise spatial distance.}
-  \label{dissim_by_distance} % use this to refer to your figure in the text, so that numbering updates automatically
+    \includegraphics[width=1\textwidth]{../Figures/comm_diss_by_geo_dist.pdf}
+    \caption{Pairwise Bray-Curtis dissimilarity of eDNA communities plotted against pairwise spatial distance.}
+  \label{comm_diss_by_geo_dist} % use this to refer to your figure in the text, so that numbering updates automatically
 \end{figure}
 
 \begin{figure}[h!] % [h!] forces the figure to be placed roughly here
@@ -243,17 +243,17 @@ The data and code used to generate our results can be found at the following url
 
 \begin{figure}[h!] % [h!] forces the figure to be placed roughly here
   \centering
-    \includegraphics[width=1\textwidth]{clustering_map.pdf}
-    \caption{Geographic position of collected samples, colored by membership to clusters identified by k-means clustering analysis. Lines give 10m isobaths.}
+    \includegraphics[width=1\textwidth]{../Figures/medoids_in_space.pdf}
+    \caption{Geographic position of collected samples, colored by membership to clusters identified by partitioning around medoids algorithm. Points are jittered in both horizontal and vertical dimension to distinguish among four replicate PCR products sequenced from each environmental sample.}
   \label{clustering_map} % use this to refer to your figure in the text, so that numbering updates automatically
 \end{figure}
 
-%\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
-%  \centering
-%    \includegraphics[width=1\textwidth]{figure_filename.pdf}
-%    \caption{This is the figure caption.}
-%  \label{myfigure} % use this to refer to your figure in the text, so that numbering updates automatically
-%\end{figure}
+\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{../Figures/otu_in_space.pdf}
+    \caption{Example of a DNA sequence's spatial distribution. This sequence is annotated to SPECIES X, which is found only in shallow, structured habitats such as patches of \textit{Zostera marina}. Point size and color transparency indicates abundance relative to other DNA sequences from that sample, scaled to the maximum value for this sequence (no fill = 0, full fill = 1). Samples from which this sequence was not recovered are indicated by an "x".}
+  \label{otu_in_space} % use this to refer to your figure in the text, so that numbering updates automatically
+\end{figure}
 
 
 %----------------------------------SUPPLEMENT-----------------------------------
