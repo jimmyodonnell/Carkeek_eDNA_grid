@@ -118,6 +118,39 @@ Pooled libraries were sequenced on an Illumina NextSeq at the Stanford Center fo
 \subsection*{Data Preparation (Bioinformatics)}
 We calculated rates of cross-library contamination by counting occurrences of primer sequences: 12S primer sequences appearing in a 16S library (and vice versa) indicate an error in the preparation or sequencing procedures.
 
+%----------------------------------------------------------------------------
+%METHODS
+%Sequences passing were demultiplexed on the basis of the ?(8-bp) sequence ligated during library preparation and read during the index read, and filtered for general quality by the sequencing facility.
+%
+%We used fastqc to assess the fastq files output from the sequencer for low-quality indications of a problematic run.
+%
+%Reads that contain primer index sequences (or combinations thereof) that we did not actually use in laboratory procedures are known to ?(be derived from contamination) be a result of processes that leave the same signature as contamination. For example, errors during oligonucleotide synthesis of the indexed primers would cause reads to be erroneously assigned to samples.
+%Because this represents the minimum rate at which we can be certain that sequences from one environmental sample could be erroneously assigned, we considered for further analysis only those reads occurring with greater frequency than this.
+%
+%To infer a genreal estimate of the rate of cross-sample contamination likely to be associated with lab procedures, we calculated the proportion of reads containing primer index sequences (or combinations thereof?) that we did not actually use 
+%
+%RESULTS
+%Reads were of generally high-quality, with ?(96.48)? % of base calls having a 0.001 or lower probability of incorrect base call (Phred q-score of 30 or higher). 
+%
+%
+%Total sequencing clusters passing filter per read:
+%
+%reads, reads passing filter, % >= Q30, for each run ( 7,052,307 ; 6,752,829; 97.47 :: 7,052,307 ; 6,752,829 ; 95.50)
+%
+%Cluster density of 358 ±22	clusters per mm^2
+%
+%XXX % of reads aligned to the PhiX genome
+%(31.02 ±0.59	; 29.17 ±0.89)
+%
+%and error rate as determined from alignment of PhiX reads to the PhiX genome was low (Read 1: 1.26 ±0.07; Read 2: 1.38 ±0.07)
+%----------------------------------------------------------------------------
+
+
+
+
+
+
+
 \subsection*{Community Analysis}
 % Used k-medoids (PAM) rather than k-means because it does not require euclidean distances can be computed and that the observations follow a gaussian distribution
 % because of the nature of our data (lots of zeros, with some very high counts), the mean is not very informative
