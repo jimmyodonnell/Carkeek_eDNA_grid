@@ -31,6 +31,7 @@
 \date{\today}
 \doublespacing % initiate double spacing (package setspace)
 %\linespread{2} % alternate method of double spacing
+%\graphicspath{{../../Figures/}} % I think if you do this it saves typing the path over and over in the figures section
 
 
 %------------------------------------TITLE--------------------------------------
@@ -113,12 +114,13 @@ Samples were randomly assigned to PCR primer and library adapter index sequences
 The sequencing run consisted of 14 samples ('libraries') prepared using different index sequences ligated during library preparation.
 Of these libraries, ten comprised of amplicons prepared using the 16S protocol reported above, and four comprised of amplicons prepared using a 12S protocol similar to that reported by (CITE PORT 2015).
 
-Pooled libraries were sequenced on an Illumina NextSeq at the Stanford Center for Functional Genomics (machine ID: NS50061; run ID: 115; flowcell ID: H3LFLAFXX).
+Pooled libraries were sequenced on the Illumina NextSeq platform at the Stanford Center for Functional Genomics (machine ID: NS50061; run ID: 115; flowcell ID: H3LFLAFXX). Raw sequence data in fastq format is publicly available (see Data Availability).
 
 \subsection*{Data Preparation (Bioinformatics)}
-We calculated rates of cross-library contamination by counting occurrences of primer sequences: 12S primer sequences appearing in a 16S library (and vice versa) indicate an error in the preparation or sequencing procedures.
+Detailed bioinformatic methods are provided in the supplemental material, and scripts used from raw sequencer output onward can be found in the project directory on GitHub (see Data Availability).
 
-Detailed bioinformatic methods are provided in the supplement, and scripts used from raw sequencer output onward can be found in the project directory on GitHub.%\href{https://github.com/jimmyodonnell/Carkeek_eDNA_grid}{https://github.com/jimmyodonnell/Carkeek_eDNA_grid}
+
+
 %----------------------------------------------------------------------------
 %METHODS
 %Sequences passing were demultiplexed on the basis of the ?(8-bp) sequence ligated during library preparation and read during the index read, and filtered for general quality by the sequencing facility.
@@ -128,6 +130,8 @@ Detailed bioinformatic methods are provided in the supplement, and scripts used 
 %Reads that contain primer index sequences (or combinations thereof) that we did not actually use in laboratory procedures are known to ?(be derived from contamination) be a result of processes that leave the same signature as contamination. For example, errors during oligonucleotide synthesis of the indexed primers would cause reads to be erroneously assigned to samples.
 %Because this represents the minimum rate at which we can be certain that sequences from one environmental sample could be erroneously assigned, we considered for further analysis only those reads occurring with greater frequency than this.
 %
+We calculated rates of cross-library contamination by counting occurrences of primer sequences: 12S primer sequences appearing in a 16S library (and vice versa) indicate an error in the preparation or sequencing procedures.
+
 %To infer a general estimate of the rate of cross-sample contamination likely to be associated with lab procedures, we calculated the proportion of reads containing primer index sequences (or combinations thereof?) that we did not actually use
 %
 %RESULTS
@@ -226,15 +230,14 @@ Edited the manuscript: .
 
 %-------------------------------------DATA-------------------------------------%
 \section*{Data Availablity}
-% Are the data and code available in a permanent, publicly accessible data archive or repository?
-The data and code used to generate our results can be found at the following url:
-
+% TODO SUBMIT DATA AND METADATA; ADD URL
+All sequence files and metadata are available from EMBL:\\ \verb!http://www.ebi.ac.uk/ena/data/view/XXXXXXXXX! \\
+All analyses were performed using scripts available from the project repository on GitHub:\\  \verb!https://github.com/jimmyodonnell/Carkeek_eDNA_grid!\\
 
 %----------------------------------REFERENCES-----------------------------------
 %\section*{References} % commented out because the section title is automatically inserted if using an automatically-generated bibliography
-
 \bibliographystyle{apalike} % or: plain,unsrt,alpha,abbrv,acm,apalike,ieeetr
-\bibliography{/Users/threeprime/Documents/Publications/bibtex/library} % path to your .bib file excluding .bib extension (e.g. /Users/threeprime/Documents/Publications/bibtex/library)
+\bibliography{carkeek_grid_bib} % path to your .bib file excluding .bib extension (e.g. /Users/threeprime/Documents/Publications/bibtex/library)
 
 
 %-----------------------------------FIGURES-------------------------------------
@@ -263,14 +266,14 @@ The data and code used to generate our results can be found at the following url
 
 \begin{figure}[h!] % [h!] forces the figure to be placed roughly here
   \centering
-    \includegraphics[width=1\textwidth]{slope_plots.pdf}
+    \includegraphics[width=1\textwidth]{../../Figures/slope_plots.pdf}
     \caption{Fit lines of DNA sequence counts as a function of distance from shore for a selection of taxa for which we have strong preconceived expectations (left). Box plots of the estimates of the slopes for taxa ?(100 most abundant)?, grouped by life history traits (right).}
   \label{slope_plots} % use this to refer to your figure in the text, so that numbering updates automatically
 \end{figure}
 
 \begin{figure}[h!] % [h!] forces the figure to be placed roughly here
   \centering
-    \includegraphics[width=1\textwidth]{var_boxplots.pdf}
+    \includegraphics[width=1\textwidth]{../../Figures/var_boxplots.pdf}
     \caption{Box plots of estimates of variance associated with each level of the multilevel model, corresponding to stages of the eDNA sampling protocol.}
   \label{variance_boxplots} % use this to refer to your figure in the text, so that numbering updates automatically
 \end{figure}
@@ -291,8 +294,9 @@ The data and code used to generate our results can be found at the following url
 
 
 %----------------------------------SUPPLEMENT-----------------------------------
-%\section*{Supplemental Material}
+\section*{Supplemental Material}
 
+\subsection*{Bioinformatic Methods}
 
 
 
