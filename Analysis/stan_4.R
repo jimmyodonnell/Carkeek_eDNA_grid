@@ -46,11 +46,15 @@ data {
   int<lower=0> Nj;
   // Number of level-3 clusters
   int<lower=0> Nk;
+  // Number of level-4 clusters
+  int<lower=0> Nl;
 
   // Cluster IDs
   int<lower=1> level2[Ni];
   int<lower=1> level3[Ni];
+  int<lower=1> level4[Nl];
   int<lower=1> lev3ForLev2[Nj];
+  int<lower=1> lev4ForLev3[Nk];
 
   // Continuous outcome
   real Y_ijk[Ni];
