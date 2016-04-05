@@ -12,9 +12,9 @@ fig_dir <- file.path("..", "Figures")
 # use the resulting object 'otu_filt' in place of table_transposed
 # OR use t(otu_filt) as object 'table_full'
 
-filename_orig <- file.path(data_dir, "OTUs_fam_w30_top10.csv")
+# filename_orig <- file.path(data_dir, "OTUs_fam_w30_top10.csv")
 
-filename_out <- file.path(data_dir, "OTUs_top10.csv")
+# filename_out <- file.path(data_dir, "OTUs_top10.csv")
 
 # table_full <- read.csv(filename_orig, row.names = 1)
 # maybe ? table_full <- t(otu_filt)
@@ -40,11 +40,11 @@ metadata_exp <- cbind.data.frame(metadata, sequenced_sample, transect_position, 
 table_restricted <- table_full[ , as.character(metadata[,colname_sampleid])]
 
 # write the file
-write.csv(x = table_restricted, file = filename_out, quote = FALSE)
+# write.csv(x = table_restricted, file = filename_out, quote = FALSE)
 
 # COMBINE UP DATA
 table_transposed <- t(table_restricted[,as.character(metadata[,colname_sampleid])])
-
+# table_transposed <- otu_filt
 if(
   identical(
     rownames(table_transposed),
@@ -63,9 +63,10 @@ if(
 
 # data_full_path <- file.path(data_dir, "data_full_top10.csv")
 data_full_path <- file.path(data_dir, "data_full_filt.csv")
-write.csv(x = data_full, file = data_full_path, row.names = FALSE)
+# write.csv(x = data_full, file = data_full_path, row.names = FALSE)
 
 # LONG FORMAT:
+library(reshape2)
 otu_long <- melt(otu_filt)
 colnames(otu_long) <- c("sample_id", "OTU", "count")
 otu_long$OTU <- as.character(otu_long$OTU)
@@ -76,8 +77,18 @@ row_match_long <- match(otu_long$sample_id , metadata_exp[, colname_sampleid])
 data_full_long <- cbind.data.frame(metadata_exp[row_match_long,], otu_long[,c("OTU", "count")])
 
 data_full_long_path <- file.path(data_dir, "data_full_long.csv")
-write.csv(x = data_full_long, file = data_full_long_path, row.names = FALSE)
+# write.csv(x = data_full_long, file = data_full_long_path, row.names = FALSE)
 
+aggregate(x = data_full_long, by = )
+
+# note high value for sample "lib_B_tag_GCGCTC" in PCT-C-0500
+# remove that sample?
+remove_outlier <- TRUE
+if(remove_outlier == TRUE){
+  metadata_exp <- metadata_exp[metadata_exp$sample_id != "lib_B_tag_GCGCTC",]
+  otu_filt <- otu_filt[rownames(otu_filt) != "lib_B_tag_GCGCTC",]
+  print("removed outlier PCR")
+}
 
 
 # --------------- DATA TRIMMING ------------------------------------------
