@@ -13,7 +13,7 @@ gghue <- function(n){
 
 # choose between using proportional or raw counts
 # DATA <- otu_table
-DATA <- otu_table_prop[,]
+DATA <- otu_filt[,]
 
 mydist <- vegdist(DATA)
 
@@ -22,12 +22,11 @@ pam_out <- mypam$pamobject
 mypam$nc # number of clusters
 
 plot(pam(mydist, k = mypam$nc), which.plots = 1)
-?pam
 
 mycolors <- gghue(mypam$nc)
 
 # see ?clusplot.default
-pdf(file = file.path(fig_dir, "pam_plot.pdf"))
+# pdf(file = file.path(fig_dir, "pam_plot.pdf"))
 	par(mar = c(5,5,1,1))
 	clusplot(
 		x = as.matrix(mydist), 
@@ -41,7 +40,7 @@ pdf(file = file.path(fig_dir, "pam_plot.pdf"))
 		col.clus = mycolors, 
 		main = NA
 	)
-dev.off()
+# dev.off()
 
 
 set.seed(2) # to control jitter
