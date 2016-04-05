@@ -54,10 +54,14 @@ dim(otu_scaled)
 otu_scaled <- otu_scaled[,order(colSums(otu_scaled), decreasing = TRUE)]
 otu_scaled[1:10,1:10]
 
-# exclude OTUs that were counted a total of fewer than 100 times across samples
-otu_filt <- otu_scaled[,which(colSums(otu_scaled) > 100)]
-dim(otu_filt)
+# how many OTUs occur more than a threshold number of times?
+abundance_threshold <- 100
+sum(colSums(otu_scaled) > abundance_threshold)
 
+
+# exclude OTUs that were counted a total of fewer than 100 times across samples
+otu_filt <- otu_scaled[,which(colSums(otu_scaled) > abundance_threshold)]
+dim(otu_filt)
 
 boxplot(otu_filt[,1:20])
 # boxplot(log(otu_table[,1:20]))
