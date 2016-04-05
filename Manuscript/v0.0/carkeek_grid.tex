@@ -132,6 +132,8 @@ Detailed bioinformatic methods are provided in the supplemental material, and sc
 %
 We calculated rates of cross-library contamination by counting occurrences of primer sequences: 12S primer sequences appearing in a 16S library (and vice versa) indicate an error in the preparation or sequencing procedures.
 
+We assessed PCR contamination by evaluating the dissimilarity of replicate PCRs of the same DNA sample, and removed one sample for which the Bray-Curtis dissimilarities between itseld and the other replicates exceeded 0.1 (lib_B_tag_GCGCTC).
+
 %To infer a general estimate of the rate of cross-sample contamination likely to be associated with lab procedures, we calculated the proportion of reads containing primer index sequences (or combinations thereof?) that we did not actually use
 %
 %RESULTS
@@ -202,6 +204,7 @@ Where $\beta_0$ is a general intercept across all taxa, $\beta_i$ is a fixed eff
 \subsection*{Data Quality (Bioinformatics)}
 All value ranges are reported as (mean $\pm$ standard deviation).\\
 There was a very low frequency of cross-contamination from other libraries into those reported here (5e-05$\pm$8e-05; max 0.00034)
+
 
 \subsection*{Community Analysis}
 
