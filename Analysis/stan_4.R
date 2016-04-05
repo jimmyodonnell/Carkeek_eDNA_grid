@@ -26,9 +26,9 @@ stan_data <- list(Ni          = length(unique(mydata[,colname_level1])),
                   level3      = mydata[,colname_level3],
                   level4      = mydata[,colname_level4],
                   lev3ForLev2 = lookup_3in2,
-                  lev4ForLev2 = lookup_4in3,
-                  Y_ijk       = mydata[,colname_outcome],
-                  X_1ijk      = mydata[,colname_predictor]
+                  lev4ForLev3 = lookup_4in3,
+                  Y_ijkl      = mydata[,colname_outcome],
+                  X_1ijkl     = mydata[,colname_predictor]
                   )
 
 lm_out <- lm(mydata[,colname_outcome] ~ mydata[,colname_predictor] )
@@ -52,14 +52,14 @@ data {
   // Cluster IDs
   int<lower=1> level2[Ni];
   int<lower=1> level3[Ni];
-  int<lower=1> level4[Nl];
+  int<lower=1> level4[Ni];
   int<lower=1> lev3ForLev2[Nj];
   int<lower=1> lev4ForLev3[Nk];
 
-  // Continuous outcome
-  real Y_ijk[Ni];
-  // Continuous predictor
-  real X_1ijk[Ni];
+  // Outcome: counts
+  int<lower=0> Y_ijkl[Ni];
+  // Predictor: continuous?
+  real X_1ijkl[Ni];
 }
 
 parameters {
@@ -73,12 +73,16 @@ parameters {
   real<lower=0> sigma_e0;
 
   // Level-2 random effect
-  real u_0jk[Nj];
-  real<lower=0> sigma_u0jk;
+  real u_0jkl[Nj];
+  real<lower=0> sigma_u0jkl;
 
   // Level-3 random effect
-  real u_0k[Nk];
-  real<lower=0> sigma_u0k;
+  real u_0kl[Nk];
+  real<lower=0> sigma_u0kl;
+
+  // Level-4 random effect
+  real u_0l[Nl];
+  real<lower=0> sigma_u0l;
 
   // overdispersion parameter
   real<lower=0> tau;
@@ -87,17 +91,24 @@ parameters {
 
 transformed parameters  {
   // Varying intercepts
-  real beta_0jk[Nj];
-  real beta_0k[Nk];
+  real beta_0jkl[Nj];
+  real beta_0kl[Nk];
+  real beta_0l[Nl];
 
   // Individual mean
   real mu[Ni];
 
   // Varying intercepts definition
+  // Level-4 (level-4 random intercepts)
+  for (l in 1:Nl) {
+    beta_0l[l] <- beta_0 + u_0l[l];
+  }
+
   // Level-3 (level-3 random intercepts)
   for (k in 1:Nk) {
-    beta_0k[k] <- beta_0 + u_0k[k];
+    beta_0kl[k] <- beta_0l[lev4ForLev3[k]] + u_0kl[k];
   }
+  
   // Level-2 (level-2 random intercepts)
   for (j in 1:Nj) {
     beta_0jk[j] <- beta_0k[lev3ForLev2[j]] + u_0jk[j];
