@@ -20,8 +20,8 @@ fig_dir <- file.path("..", "Figures")
 # maybe ? table_full <- t(otu_filt)
 
 # load metadata
-metadata_file <- file.path(data_dir, "metadata_spatial.csv")
-metadata <- read.csv(metadata_file, stringsAsFactors = FALSE)
+# metadata_file <- file.path(data_dir, "metadata_spatial.csv")
+# metadata <- read.csv(metadata_file, stringsAsFactors = FALSE)
 
 
 # get stuff togther in a way we can use in STAN
@@ -76,10 +76,27 @@ row_match_long <- match(otu_long$sample_id , metadata_exp[, colname_sampleid])
 
 data_full_long <- cbind.data.frame(metadata_exp[row_match_long,], otu_long[,c("OTU", "count")])
 
+data_for_cast <- data.frame(
+  sample_id = data_full_long$sample_id, 
+  OTU = data_full_long$OTU, 
+  count = data_full_long$count)
+
+# take mean of OTU abundance across replicate PCRs
+library(reshape2)
+otu_long_mean <- melt(dcast(data = data_for_cast, formula = sample_id ~ OTU, fun.aggregate = mean, na.rm = TRUE))
+colnames(otu_long_mean) <- c("sample_id", "OTU", "count")
+
+row_match_mean <- match(otu_long_mean$sample_id , metadata_exp[, colname_sampleid])
+otu_long_mean_full <- cbind.data.frame(metadata_exp[row_match_long,], otu_long[,c("OTU", "count")])
+
+split(data_for_cast$count, f = c(data_for_cast$sample_id, data_for_cast$OTU))
+
+# aggregate(x = data_for_cast, by = list(data_for_cast$OTU, data_for_cast$count), FUN = mean)
+
+
 data_full_long_path <- file.path(data_dir, "data_full_long.csv")
 # write.csv(x = data_full_long, file = data_full_long_path, row.names = FALSE)
 
-aggregate(x = data_full_long, by = )
 
 # note high value for sample "lib_B_tag_GCGCTC" in PCT-C-0500
 # remove that sample?
@@ -91,6 +108,12 @@ if(remove_outlier == TRUE){
 }
 
 
+dcast()
+dcast(data_full_long[1:400,], sample_id+OTU~count)
+  data_full_long$sample_id
+
+dcast(mtcars, )
+head(mtcars)
 # --------------- DATA TRIMMING ------------------------------------------
 # RESTRICT TO ONLY A CERTAIN DISTANCE
 # a table of counts of sequences (Z, length = ...)
