@@ -2,6 +2,12 @@
 
 library(geosphere) # distm()
 
+# REQUIRES:
+# 1. dataframe called "metadata" with unique sequenced samples given in column "sample_id"
+metadata <- metadata_exp
+# 2. OTU table with rownames that correspond to aforementioned column "sample_id"
+otu_table <- otu_filt
+
 # calculate pairwise great circle distance between sampling locations using Haversine method
 geo_dist <- distm(x = metadata[,c("lon", "lat")])
 dimnames(geo_dist) <- list(metadata$sample_id, metadata$sample_id)
@@ -24,7 +30,7 @@ if(!(identical(dimnames(comm_dist), dimnames(geo_dist)))){
 	warning("Whoa there! the row/column names of the two distance matrices do not seem to add up. This is bad.")
 }
 
-pdf(file = file.path(fig_dir, "comm_diss_by_geo_dist.pdf"), width = 8, height = 3)
+# pdf(file = file.path(fig_dir, "comm_diss_by_geo_dist.pdf"), width = 8, height = 3)
 	par(mar = c(4,5,1,1))
 	plot(
 		x = log(geo_dist + 100), 
@@ -38,4 +44,4 @@ pdf(file = file.path(fig_dir, "comm_diss_by_geo_dist.pdf"), width = 8, height = 
 		ylab = "Bray-Curtis dissimilarity"
 	)
 	axis(side = 1, at = unique(log(metadata$dist_from_shore + 100)), labels = unique(metadata$dist_from_shore))
-dev.off()
+# dev.off()
