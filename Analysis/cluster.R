@@ -14,8 +14,10 @@ gghue <- function(n){
 # choose between using proportional or raw counts
 # DATA <- otu_table
 DATA <- otu_filt[,]
+DATA <- otu_mean
+metadata <- metadata_exp[!duplicated(metadata_exp[,"env_sample_name"]),]
 
-mydist <- vegdist(DATA)
+mydist <- vegdist(DATA, binary = TRUE)
 
 mypam <- pamk(data = mydist) # to restrict range of Ks considered: , krange = 2:4
 pam_out <- mypam$pamobject
@@ -46,16 +48,40 @@ mycolors <- gghue(mypam$nc)
 set.seed(2) # to control jitter
 # pdf(file = file.path(fig_dir, "medoids_in_space.pdf"), width = 7, height = 7)
 	plot(
-		jitter(x = metadata$dist_along_shore, factor = 0.4), 
+		x = metadata$dist_along_shore, 
 		xaxt = "n", 
 		xlim = c(-500, 2500), 
-		y = jitter(log(metadata$dist_from_shore + 10), factor = 0.2), 
+		y = log(metadata$dist_from_shore + 10), 
 		yaxt = "n",
 		# log = "y",
 		col = mycolors[mypam$pamobject$clustering[metadata$sample_id]], 
 		# bg = mycolors[mypam$pamobject$clustering[metadata$sample_id]], 
 		pch = as.character(mypam$pamobject$clustering[metadata$sample_id]-1), 
 		cex = 1, 
+		# cex = 1.5, 
+		main = "membership to PAM classifications", 
+		las = 1, 
+		xlab = "Position along shore (meters)", 
+		ylab = "Position from 0 (meters)"
+	)
+	axis(side = 2, at = unique(log(metadata$dist_from_shore + 10)), labels = unique(metadata$dist_from_shore), las = 1)
+	axis(side = 1, at = unique(metadata$dist_along_shore), labels = unique(metadata$dist_along_shore), las = 1)
+# dev.off()
+
+
+# USING MEAN DATA
+# pdf(file = file.path(fig_dir, "medoids_in_space_mean.pdf"), width = 7, height = 7)
+plot(
+		x = metadata$dist_along_shore, 
+		xaxt = "n", 
+		xlim = c(-500, 2500), 
+		y = log(metadata$dist_from_shore + 10), 
+		yaxt = "n",
+		# log = "y",
+		col = mycolors[mypam$pamobject$clustering[metadata$env_sample_name]], 
+		# bg = mycolors[mypam$pamobject$clustering[metadata$sample_id]], 
+		pch = as.character(mypam$pamobject$clustering[metadata$env_sample_name]-1), 
+		cex = 2, 
 		# cex = 1.5, 
 		main = "membership to PAM classifications", 
 		las = 1, 

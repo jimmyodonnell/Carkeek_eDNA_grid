@@ -2,6 +2,7 @@
 
 library(geosphere) # distm()
 
+
 # REQUIRES:
 # 1. dataframe called "metadata" with unique sequenced samples given in column "sample_id"
 metadata <- metadata_exp

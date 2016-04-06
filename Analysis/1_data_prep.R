@@ -81,7 +81,32 @@ data_for_cast <- data.frame(
   OTU = data_full_long$OTU, 
   count = data_full_long$count)
 
+# note high value for sample "lib_B_tag_GCGCTC" in PCT-C-0500
+# remove that sample?
+remove_outlier <- TRUE
+if(remove_outlier == TRUE){
+  metadata <- metadata[metadata$sample_id != "lib_B_tag_GCGCTC",]
+  metadata_exp <- metadata_exp[metadata_exp$sample_id != "lib_B_tag_GCGCTC",]
+  otu_filt <- otu_filt[rownames(otu_filt) != "lib_B_tag_GCGCTC",]
+  print("removed outlier PCR")
+}
+
+
+#-----------------------------------------------------------
 # take mean of OTU abundance across replicate PCRs
+otu_mean <- do.call(rbind, 
+	lapply(
+	lapply(
+		split(otu_filt, metadata$env_sample_name), 
+		matrix, ncol = ncol(otu_filt)
+		), 
+	colMeans
+	)
+)
+colnames(otu_mean) <- colnames(otu_filt)
+
+
+# I think I may have been crazy when I wrote the next few lines:
 library(reshape2)
 otu_long_mean <- melt(dcast(data = data_for_cast, formula = sample_id ~ OTU, fun.aggregate = mean, na.rm = TRUE))
 colnames(otu_long_mean) <- c("sample_id", "OTU", "count")
@@ -92,20 +117,13 @@ otu_long_mean_full <- cbind.data.frame(metadata_exp[row_match_long,], otu_long[,
 split(data_for_cast$count, f = c(data_for_cast$sample_id, data_for_cast$OTU))
 
 # aggregate(x = data_for_cast, by = list(data_for_cast$OTU, data_for_cast$count), FUN = mean)
+#-----------------------------------------------------------
 
 
 data_full_long_path <- file.path(data_dir, "data_full_long.csv")
 # write.csv(x = data_full_long, file = data_full_long_path, row.names = FALSE)
 
 
-# note high value for sample "lib_B_tag_GCGCTC" in PCT-C-0500
-# remove that sample?
-remove_outlier <- TRUE
-if(remove_outlier == TRUE){
-  metadata_exp <- metadata_exp[metadata_exp$sample_id != "lib_B_tag_GCGCTC",]
-  otu_filt <- otu_filt[rownames(otu_filt) != "lib_B_tag_GCGCTC",]
-  print("removed outlier PCR")
-}
 
 
 dcast()
