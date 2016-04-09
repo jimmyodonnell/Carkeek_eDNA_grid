@@ -3,23 +3,42 @@
 data_dir <- file.path("..", "Data")
 fig_dir <- file.path("..", "Figures")
 
+# REQUIRES:
+# 1. Working directory is set to the 'Analysis' folder within this project's folder
+# 2. An OTU table (CSV) in the 'Data' folder
+# 3. A metadata file (CSV) in the 'Data' folder containing information for all and only the samples in the OTU table
+
+# LOAD OTU table
 # path to otu file: rows are samples, columns are OTUs, cells are counts.
 # rownames correspond to column "sample_id" in metadata
 otu_table_filename <- "OTU_table.csv"
 
-# path to metadata file.
-# column "sample_id" contains rownames of otu file.
-metadata_filename <- "metadata_spatial.csv"
-
-otu_table <- read.csv(file.path(data_dir, otu_table_filename), row.names = 1, stringsAsFactors = FALSE)
+otu_table <- read.csv(
+	file = file.path(data_dir, otu_table_filename), 
+	row.names = 1, 
+	stringsAsFactors = FALSE
+	)
+	
 dim(otu_table)
 
+# transpose the OTU table if "lib_" is found in the column names
+# (this indicates a sample, which should be in rows)
 if(length(grep("lib_", colnames(otu_table))) > 0){
 	otu_table <- t(otu_table)
 }
 dim(otu_table)
 
-metadata <- read.csv(file.path(data_dir, metadata_filename), stringsAsFactors = FALSE)
+# LOAD METADATA
+# path to metadata file.
+# column "sample_id" contains rownames of otu file.
+metadata_filename <- "metadata_spatial.csv"
+
+metadata <- read.csv(
+	file = file.path(data_dir, metadata_filename), 
+	stringsAsFactors = FALSE
+	)
+
+# add a "Distance along shore" column for each transect. Note the order of the input matters
 dist_along_shore <- c(1000,2000,0)[as.numeric(as.factor(metadata$transect))]
 metadata <- cbind.data.frame(metadata, dist_along_shore, stringsAsFactors = FALSE)
 

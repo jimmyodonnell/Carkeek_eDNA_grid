@@ -8,7 +8,7 @@ fig_dir <- file.path("..", "Figures")
 
 # holy macaroni, we need to decide on a standard orientation.
 # "OTUs_fam_w30_top10.csv" is in rows=OTU, cols=SAMPLES
-# YOU SHOULD PROBABLY DO THIS: start with script 'load_data.R',
+# YOU SHOULD PROBABLY DO THIS: start with script '0_load_data.R',
 # use the resulting object 'otu_filt' in place of table_transposed
 # OR use t(otu_filt) as object 'table_full'
 
