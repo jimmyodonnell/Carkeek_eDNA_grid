@@ -38,10 +38,6 @@ metadata <- read.csv(
 	stringsAsFactors = FALSE
 	)
 
-# add a "Distance along shore" column for each transect. Note the order of the input matters
-dist_along_shore <- c(1000,2000,0)[as.numeric(as.factor(metadata$transect))]
-metadata <- cbind.data.frame(metadata, dist_along_shore, stringsAsFactors = FALSE)
-
 # exclude rows from OTU table that are not in metadata
 otu_table <- otu_table[metadata$sample_id,]
 
