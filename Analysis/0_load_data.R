@@ -44,6 +44,9 @@ otu_table <- otu_table[metadata$sample_id,]
 # exclude OTUs not found in these samples
 otu_table <- otu_table[,which(colSums(otu_table) > 0)]
 dim(otu_table)
+if( nrow(metadata) != nrow(otu_table) ) {
+	warning("number of rows in metadata and otu table are not equal, but they should be.")
+}
 
 # calculate the minimum number of reads assigned to these OTUs in these samples
 minreads <- min(rowSums(otu_table))
