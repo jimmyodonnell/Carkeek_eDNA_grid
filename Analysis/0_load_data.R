@@ -1,5 +1,7 @@
 # !!! SET WORKING DIRECTORY TO THIS PROJECT'S SUBDIRECTORY 'Analysis'
 # Set directories from which to read/write data and write figures
+analysis_dir <- dirname(file.choose())
+setwd(analysis_dir)
 data_dir <- file.path("..", "Data")
 fig_dir <- file.path("..", "Figures")
 
