@@ -15,6 +15,7 @@
 # write the file
 # write.csv(x = table_restricted, file = filename_out, quote = FALSE)
 
+# RESCALE TO EQUAL SEQUENCING DEPTHS PER SAMPLE
 # calculate the minimum number of reads assigned to these OTUs in these samples
 minreads <- min(rowSums(otu_table))
 
@@ -54,9 +55,11 @@ boxplot(otu_filt[,1:20])
 boxplot(otu_table_prop[,1:20])
 boxplot(scale(otu_table[,1:20]))
 
-min(scale(otu_table[,1:20])+2)
-boxplot(scale(otu_table[,1:20])+2)
 
+# CHECK FOR OUTLIERS
+# ------------------
+# If you'd like to check for and remove replicates that seem inconsistent, go to:
+# 'dissimilarity.R'
 
 # COMBINE UP DATA
 if(
@@ -94,16 +97,6 @@ data_for_cast <- data.frame(
   sample_id = data_full_long$sample_id, 
   OTU = data_full_long$OTU, 
   count = data_full_long$count)
-
-# note high value for sample "lib_B_tag_GCGCTC" in PCT-C-0500
-# remove that sample?
-remove_outlier <- TRUE
-if(remove_outlier == TRUE){
-  metadata <- metadata[metadata$sample_id != "lib_B_tag_GCGCTC",]
-  metadata_exp <- metadata_exp[metadata_exp$sample_id != "lib_B_tag_GCGCTC",]
-  otu_filt <- otu_filt[rownames(otu_filt) != "lib_B_tag_GCGCTC",]
-  print("removed outlier PCR")
-}
 
 
 #-----------------------------------------------------------
