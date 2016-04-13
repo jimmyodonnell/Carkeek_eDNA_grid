@@ -3,7 +3,7 @@
 library(geosphere) # distm()
 
 my_otu <- otu_mean
-rownames(otu_mean) # PCT-C-0000 etc, aka "env_sample_name"
+rownames(my_otu) # should be e.g. PCT-C-0000 etc, aka "env_sample_name"
 my_metadata <- metadata_mean# metadata_exp[!duplicated(metadata_exp[,"env_sample_name"]),]
 
 # calculate pairwise great circle distance between sampling locations using Haversine method
@@ -22,54 +22,69 @@ if(!(identical(dimnames(comm_dist), dimnames(geo_dist)))){
 	warning("Whoa there! the row/column names of the two distance matrices do not seem to add up. This is bad.")
 }
 
+geo_dist_scaled <- log(geo_dist + 100)
+plot_x <- geo_dist # geo_dist_scaled
+
 # pdf(file = file.path(fig_dir, "diss_by_dist.pdf"), width = 8, height = 3)
 	par(mar = c(4,5,1,1))
 	plot(
-		x = log(geo_dist + 100), 
+		x = plot_x, 
 		y = comm_dist, 
 		ylim = c(0,1), 
 		xaxt = "n", 
-		pch = 1, 
+		pch = 21, 
 		las = 1, 
 		cex = 1, 
-		col = rgb(0,0,0), #,alpha = 0.1 
+		col = 1, 
+		bg = rgb(0,0,0,alpha = 0.1 ), #,alpha = 0.1 
 		xlab = "Distance between samples (meters)", 
 		ylab = "Bray-Curtis dissimilarity"
 	)
-	axis(side = 1, at = unique(log(metadata$dist_from_shore + 100)), labels = unique(metadata$dist_from_shore))
-# dev.off()
+	axis(side = 1)
+	#, at = unique(log(metadata$dist_from_shore + 100)), labels = unique(metadata$dist_from_shore)
 # abline(v = unique(log(metadata$dist_from_shore + 100)))
 smoothed <- loess.smooth(
-				x = log(geo_dist + 100), 
+				x = plot_x, 
 				y = comm_dist, 
 				span = 2/3, 
 				degree = 1, 
 				family = "gaussian"
 				)
-lines(smoothed, col="green", lwd=2)
+lines(smoothed, col="red", lwd=2)
+# dev.off()
 
 
-
-
-
+#-------------------------------------------------------------------------------
+# SPLIT BY TRANSECT
+#-------------------------------------------------------------------------------
 transects <- c("PCT-S", "PCT-C", "PCT-N")
+
 diss_by_transect <- list()
 for(transect in 1:length(transects)){
-	diss_by_transect[[transect]] <- comm_dist[grep(transects[transect], rownames(comm_dist)), grep(transects[transect], colnames(comm_dist))]
+	diss_by_transect[[transect]] <- vegdist(my_otu[grep(transects[transect], rownames(comm_dist)),], method = "bray")
 }
 
 dist_by_transect <- list()
 for(transect in 1:length(transects)){
-	dist_by_transect[[transect]] <- geo_dist[grep(transects[transect], rownames(geo_dist)), grep(transects[transect], colnames(geo_dist))]
+	transect_coords <- my_metadata[
+		grep(transects[transect], my_metadata[, colname_env_sample]), 
+		c(colname_lon, colname_lat)]
+	dist_by_transect[[transect]] <- as.dist(distm(x = transect_coords, fun = distHaversine))
 }
 
-mycols <- c("red", "green", "blue")
+# function for plot colors (sorta like ggplot)
+gghue <- function(n){
+	hues = seq(15, 375, length = n+1)
+	hcl(h = hues, l = 65, c = 100)[1:n]
+}
+mycols <- gghue(length(transects))
+
 # mycols <- c("rgb(1,0,0)", "rgb(0,1,0)", "rgb(0,0,1)")
 
-pdf(file = file.path(fig_dir, "diss_by_dist_by_transect.pdf"), width = 8, height = 3)
+# pdf(file = file.path(fig_dir, "diss_by_dist_by_transect.pdf"), width = 8, height = 3)
 par(mar = c(4,5,1,1))
 	plot(
-		x = log(geo_dist + 100), 
+		x = geo_dist, 
 		y = comm_dist, 
 		ylim = c(0,1), 
 		xaxt = "n", 
@@ -80,11 +95,11 @@ par(mar = c(4,5,1,1))
 		xlab = "Distance between samples (meters)", 
 		ylab = "Bray-Curtis dissimilarity"
 	)
-	axis(side = 1, at = unique(log(metadata$dist_from_shore + 100)), labels = unique(metadata$dist_from_shore))
+	axis(side = 1) #, at = unique(log(metadata$dist_from_shore + 100)), labels = unique(metadata$dist_from_shore)
 
 for( i in 1:length(transects)){
 	points(
-		x = log(dist_by_transect[[i]] + 100), 
+		x = dist_by_transect[[i]], 
 		y = diss_by_transect[[i]], 
 		ylim = c(0,1), 
 		xaxt = "n", 
@@ -96,4 +111,17 @@ for( i in 1:length(transects)){
 		ylab = "Bray-Curtis dissimilarity"
 	)
 }
-dev.off()
+legend("bottomright", legend = transects, bty = "n", pch = 19, col = mycols)
+
+smoothed <- list()
+for(i in 1:length(transects)) {
+	smoothed[[i]] <- loess.smooth(
+				x = dist_by_transect[[i]], 
+				y = diss_by_transect[[i]], 
+				span = 1, 
+				degree = 1, 
+				family = "gaussian"
+				)
+	lines(smoothed[[i]], col = mycols[[i]], lwd = 2)
+}
+# dev.off()
