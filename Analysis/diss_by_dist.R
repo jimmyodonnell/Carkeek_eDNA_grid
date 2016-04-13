@@ -22,7 +22,7 @@ if(!(identical(dimnames(comm_dist), dimnames(geo_dist)))){
 	warning("Whoa there! the row/column names of the two distance matrices do not seem to add up. This is bad.")
 }
 
-pdf(file = file.path(fig_dir, "diss_by_dist.pdf"), width = 8, height = 3)
+# pdf(file = file.path(fig_dir, "diss_by_dist.pdf"), width = 8, height = 3)
 	par(mar = c(4,5,1,1))
 	plot(
 		x = log(geo_dist + 100), 
@@ -37,8 +37,16 @@ pdf(file = file.path(fig_dir, "diss_by_dist.pdf"), width = 8, height = 3)
 		ylab = "Bray-Curtis dissimilarity"
 	)
 	axis(side = 1, at = unique(log(metadata$dist_from_shore + 100)), labels = unique(metadata$dist_from_shore))
-dev.off()
+# dev.off()
 # abline(v = unique(log(metadata$dist_from_shore + 100)))
+smoothed <- loess.smooth(
+				x = log(geo_dist + 100), 
+				y = comm_dist, 
+				span = 2/3, 
+				degree = 1, 
+				family = "gaussian"
+				)
+lines(smoothed, col="green", lwd=2)
 
 
 
