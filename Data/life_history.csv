@@ -1,0 +1,4 @@
+taxon_name,taxon_rank,adult_habitat,habitat_selectivity,range_gamete_km,range_larva_km,range_adult_km,size_adult_cm
+Mytilidae,family,intertidal_rocky,1,10,10,0,5
+Sessilia,order,intertidal_rocky,1,0,10,0,1
+Embiotocidae,family,seagrass,0.5,0,0,1,10
