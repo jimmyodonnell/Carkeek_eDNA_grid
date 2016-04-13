@@ -43,6 +43,19 @@ metadata <- read.csv(
 # what is the name of the column containing the sample id (SEQUENCING samples)
 colname_sampleid <- "sample_id"
 
+# what is the name of the column containing the sample id (SEQUENCING samples)
+colname_sampleid <- "sample_id"
+
+# what is the name of the column containing the sample id from which subsamples were drawn (environmental samples)
+colname_env_sample <- "env_sample_name"
+
+# what is the name of the column containing the adjusted x and y coordinates
+colname_xcoord <- "dist_along_shore"
+colname_ycoord <- "dist_from_shore"
+
+colname_lon <- "lon"
+colname_lat <- "lat"
+
 # get stuff togther in a way we can use in STAN
 sequenced_sample <- 1:nrow(metadata)
 transect_position <- as.numeric(as.factor(metadata[,"dist_from_shore"]))
