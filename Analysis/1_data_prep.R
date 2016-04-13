@@ -62,7 +62,7 @@ boxplot(scale(otu_table[,1:20]))
 #-------------------------------------------------------------------------------
 # CHECK FOR OUTLIERS
 # If you'd like to check for and remove replicates that seem inconsistent, go to:
-# 'dissimilarity.R'
+source('dissimilarity.R')
 #-------------------------------------------------------------------------------
 
 
@@ -80,6 +80,7 @@ metadata_mean <- metadata[match(rownames(otu_mean), metadata[,colname_env_sample
 #-------------------------------------------------------------------------------
 # rescale each column to its maximum value, ranging from 0 to 1
 otu_01 <- apply(otu_mean, MARGIN = 2, FUN = scale01)
+par(mar = c(4,5,1,1))
 stripchart(as.data.frame(otu_01[,1:20]), pch = 19, col = rgb(0,0,0, alpha = 0.2), 
   main = "", las = 1)
 #-------------------------------------------------------------------------------
