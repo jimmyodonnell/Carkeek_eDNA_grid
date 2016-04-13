@@ -89,4 +89,4 @@ max(sapply(dis_mean, mean))
 ####################################################################################
 # ALTERNATE
 # Use on mean OTU abundance per water sample (i.e. don't compare among PCR replicates)
-vegdist(otu_mean, method = "bray", binary = FALSE)
+# vegdist(otu_mean, method = "bray", binary = FALSE)
