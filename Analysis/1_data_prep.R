@@ -75,15 +75,6 @@ otu_mean <- do.call(rbind,
 	)
 )
 metadata_mean <- metadata[match(rownames(otu_mean), metadata[,colname_env_sample]),]
-
-# I think I may have been crazy when I wrote the next few lines:
-library(reshape2)
-otu_long_mean <- melt(dcast(data = data_for_cast, formula = sample_id ~ OTU, fun.aggregate = mean, na.rm = TRUE))
-colnames(otu_long_mean) <- c("sample_id", "OTU", "count")
-row_match_mean <- match(otu_long_mean$sample_id , metadata_exp[, colname_sampleid])
-otu_long_mean_full <- cbind.data.frame(metadata_exp[row_match_long,], otu_long[,c("OTU", "count")])
-split(data_for_cast$count, f = c(data_for_cast$sample_id, data_for_cast$OTU))
-# aggregate(x = data_for_cast, by = list(data_for_cast$OTU, data_for_cast$count), FUN = mean)
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
@@ -110,11 +101,11 @@ if(
 } else {
   warning("something does not match up, and you could screw up the data big time by proceeding.")
 }
+
+# data_full_path <- file.path(data_dir, "data_full_filt.csv") # "data_full_top10.csv"
+# write.csv(x = data_full, file = data_full_path, row.names = FALSE)
 #-------------------------------------------------------------------------------
 
-# data_full_path <- file.path(data_dir, "data_full_top10.csv")
-data_full_path <- file.path(data_dir, "data_full_filt.csv")
-# write.csv(x = data_full, file = data_full_path, row.names = FALSE)
 
 #-------------------------------------------------------------------------------
 # LONG FORMAT:
@@ -128,14 +119,20 @@ row_match_long <- match(otu_long$sample_id , metadata_exp[, colname_sampleid])
 
 data_full_long <- cbind.data.frame(metadata_exp[row_match_long,], otu_long[,c("OTU", "count")])
 
+data_full_long_path <- file.path(data_dir, "data_full_long.csv")
+# write.csv(x = data_full_long, file = data_full_long_path, row.names = FALSE)
+# I think I may have been crazy when I wrote the next few lines:
+library(reshape2)
 data_for_cast <- data.frame(
   sample_id = data_full_long$sample_id, 
   OTU = data_full_long$OTU, 
   count = data_full_long$count)
 
+otu_long_mean <- melt(dcast(data = data_for_cast, formula = sample_id ~ OTU, fun.aggregate = mean, na.rm = TRUE))
+colnames(otu_long_mean) <- c("sample_id", "OTU", "count")
+row_match_mean <- match(otu_long_mean$sample_id , metadata_exp[, colname_sampleid])
+otu_long_mean_full <- cbind.data.frame(metadata_exp[row_match_long,], otu_long[,c("OTU", "count")])
+split(data_for_cast$count, f = c(data_for_cast$sample_id, data_for_cast$OTU))
+# aggregate(x = data_for_cast, by = list(data_for_cast$OTU, data_for_cast$count), FUN = mean)
 
-
-
-data_full_long_path <- file.path(data_dir, "data_full_long.csv")
-# write.csv(x = data_full_long, file = data_full_long_path, row.names = FALSE)
 
