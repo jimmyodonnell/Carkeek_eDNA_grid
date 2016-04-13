@@ -4,20 +4,20 @@ library(geosphere) # distm()
 
 my_otu <- otu_mean
 rownames(otu_mean) # PCT-C-0000 etc, aka "env_sample_name"
-my_metadata <- metadata_exp[!duplicated(metadata_exp[,"env_sample_name"]),]
+my_metadata <- metadata_mean# metadata_exp[!duplicated(metadata_exp[,"env_sample_name"]),]
 
 # calculate pairwise great circle distance between sampling locations using Haversine method
-geo_dist <- distm(x = my_metadata[,c("lon", "lat")])
-dimnames(geo_dist) <- list(my_metadata$env_sample_name, my_metadata$env_sample_name)
+geo_dist <- as.dist(distm(x = my_metadata[,c(colname_lon, colname_lat)], fun = distHaversine))
+# dimnames(geo_dist) <- list(my_metadata$env_sample_name, my_metadata$env_sample_name)
 
 # test:
-for(i in 1:length(my_metadata$env_sample_name)){
-	if(geo_dist[my_metadata$env_sample_name[i], my_metadata$env_sample_name[i]] != 0){
-		warning("distance between a point and itself is not zero, this indicates a problem")
-	}
-}
+# for(i in 1:length(my_metadata$env_sample_name)){
+	# if(geo_dist[my_metadata$env_sample_name[i], my_metadata$env_sample_name[i]] != 0){
+		# warning("distance between a point and itself is not zero, this indicates a problem")
+	# }
+# }
 
-comm_dist <- as.matrix(vegdist(my_otu, method = "bray", diag = TRUE, upper = TRUE))
+comm_dist <- vegdist(my_otu, method = "bray", diag = TRUE, upper = TRUE)
 if(!(identical(dimnames(comm_dist), dimnames(geo_dist)))){
 	warning("Whoa there! the row/column names of the two distance matrices do not seem to add up. This is bad.")
 }
