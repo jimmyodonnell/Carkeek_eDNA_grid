@@ -271,19 +271,27 @@ All analyses were performed using scripts available from the project repository 
 
 \begin{figure}[h!] % [h!] forces the figure to be placed roughly here
   \centering
-    \includegraphics[width=1\textwidth]{../../Figures/pam_plot.pdf}
-    \caption{TODO figure out color of ellipses; I can't even plot them gray without Plot of partitioning around medoids (PAM) analysis of OTU sequence abundance from 4 replicate PCRs at each of 24 sampling points. Points represent communities of OTUs; color and shape indicate cluster membership as determined by PAM analysis. Ellipses indicate the smallest area of a cluster that contains all of its members.}
-  \label{pam_plot.pdf} % use this to refer to your figure in the text, so that numbering updates automatically
-\end{figure}
-
-\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
-  \centering
     \includegraphics[width=1\textwidth]{../../Figures/diss_by_dist.pdf}
     \caption{Pairwise Bray-Curtis dissimilarity of eDNA communities plotted against pairwise spatial distance.
     Line represents prediction of Gaussian LOESS (degree = 1; span = 2/3).
     Restricting comparison to within-transect has no qualitative difference in the outcome (see 'diss\_by\_dist\_by\_transect.pdf').
     }
   \label{comm_diss_by_geo_dist} % use this to refer to your figure in the text, so that numbering updates automatically
+\end{figure}
+
+
+\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{../../Figures/pam_plot_mean.pdf}
+    \caption{TODO figure out color of ellipses; I can't even plot them gray without Plot of partitioning around medoids (PAM) analysis of OTU sequence abundance from 4 replicate PCRs at each of 24 sampling points. Points represent communities of OTUs; color and shape indicate cluster membership as determined by PAM analysis. Ellipses indicate the smallest area of a cluster that contains all of its members.}
+  \label{pam_plot.pdf} % use this to refer to your figure in the text, so that numbering updates automatically
+\end{figure}
+
+\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{../../Figures/medoids_in_space_mean.pdf}
+    \caption{Geographic position of collected samples, colored by membership to clusters identified by partitioning around medoids algorithm. Points are jittered in both horizontal and vertical dimension to distinguish among four replicate PCR products sequenced from each environmental sample.}
+  \label{clustering_map} % use this to refer to your figure in the text, so that numbering updates automatically
 \end{figure}
 
 \begin{figure}[h!] % [h!] forces the figure to be placed roughly here
@@ -298,13 +306,6 @@ All analyses were performed using scripts available from the project repository 
     \includegraphics[width=1\textwidth]{../../Figures/var_boxplots.pdf}
     \caption{Box plots of estimates of variance associated with each level of the multilevel model, corresponding to stages of the eDNA sampling protocol.}
   \label{variance_boxplots} % use this to refer to your figure in the text, so that numbering updates automatically
-\end{figure}
-
-\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
-  \centering
-    \includegraphics[width=1\textwidth]{../../Figures/medoids_in_space.pdf}
-    \caption{Geographic position of collected samples, colored by membership to clusters identified by partitioning around medoids algorithm. Points are jittered in both horizontal and vertical dimension to distinguish among four replicate PCR products sequenced from each environmental sample.}
-  \label{clustering_map} % use this to refer to your figure in the text, so that numbering updates automatically
 \end{figure}
 
 \begin{figure}[h!] % [h!] forces the figure to be placed roughly here
