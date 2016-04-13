@@ -89,7 +89,8 @@ split(data_for_cast$count, f = c(data_for_cast$sample_id, data_for_cast$OTU))
 #-------------------------------------------------------------------------------
 # rescale each column to its maximum value, ranging from 0 to 1
 otu_01 <- apply(otu_mean, MARGIN = 2, FUN = scale01)
-stripchart(as.data.frame(otu_01[,1:20]), pch = 19, col = rgb(0,0,0, alpha = 0.2), las = 1)
+stripchart(as.data.frame(otu_01[,1:20]), pch = 19, col = rgb(0,0,0, alpha = 0.2), 
+  main = "", las = 1)
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
