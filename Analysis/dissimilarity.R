@@ -7,8 +7,11 @@ my_table <- otu_filt
 if(!(identical(metadata[,colname_sampleid], rownames(my_table)))){
 	warning("hold on, the otu and metadata rows are not in the same order; disaster could ensue")
 }
-# vector of groups to which samples belong.
-group_vector <- metadata$env_sample_name
+
+# vector of groups to which subsamples belong.
+# what is the name of the column containing the sample id from which subsamples were drawn (environmental samples)
+colname_env_sample <- "env_sample_name"
+group_vector <- metadata[, colname_env_sample]
 
 
 dis_by_sample <- function(contingency_table, grouping_vector)
