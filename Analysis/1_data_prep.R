@@ -56,10 +56,34 @@ boxplot(otu_table_prop[,1:20])
 boxplot(scale(otu_table[,1:20]))
 
 
+#-------------------------------------------------------------------------------
 # CHECK FOR OUTLIERS
-# ------------------
 # If you'd like to check for and remove replicates that seem inconsistent, go to:
 # 'dissimilarity.R'
+#-------------------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------------
+# take mean of OTU abundance across replicate PCRs
+otu_mean <- do.call(rbind, 
+	lapply(
+		split(as.data.frame(otu_filt), metadata[,colname_env_sample]), 
+	colMeans
+	)
+)
+metadata_mean <- metadata[match(rownames(otu_mean), metadata[,colname_env_sample]),]
+
+# I think I may have been crazy when I wrote the next few lines:
+library(reshape2)
+otu_long_mean <- melt(dcast(data = data_for_cast, formula = sample_id ~ OTU, fun.aggregate = mean, na.rm = TRUE))
+colnames(otu_long_mean) <- c("sample_id", "OTU", "count")
+row_match_mean <- match(otu_long_mean$sample_id , metadata_exp[, colname_sampleid])
+otu_long_mean_full <- cbind.data.frame(metadata_exp[row_match_long,], otu_long[,c("OTU", "count")])
+split(data_for_cast$count, f = c(data_for_cast$sample_id, data_for_cast$OTU))
+# aggregate(x = data_for_cast, by = list(data_for_cast$OTU, data_for_cast$count), FUN = mean)
+#-------------------------------------------------------------------------------
+
+
 
 # COMBINE UP DATA
 if(
@@ -99,43 +123,8 @@ data_for_cast <- data.frame(
   count = data_full_long$count)
 
 
-#-----------------------------------------------------------
-# take mean of OTU abundance across replicate PCRs
-otu_mean <- do.call(rbind, 
-	lapply(
-	lapply(
-		split(otu_filt, metadata$env_sample_name), 
-		matrix, ncol = ncol(otu_filt)
-		), 
-	colMeans
-	)
-)
-colnames(otu_mean) <- colnames(otu_filt)
-
-
-# I think I may have been crazy when I wrote the next few lines:
-library(reshape2)
-otu_long_mean <- melt(dcast(data = data_for_cast, formula = sample_id ~ OTU, fun.aggregate = mean, na.rm = TRUE))
-colnames(otu_long_mean) <- c("sample_id", "OTU", "count")
-
-row_match_mean <- match(otu_long_mean$sample_id , metadata_exp[, colname_sampleid])
-otu_long_mean_full <- cbind.data.frame(metadata_exp[row_match_long,], otu_long[,c("OTU", "count")])
-
-split(data_for_cast$count, f = c(data_for_cast$sample_id, data_for_cast$OTU))
-
-# aggregate(x = data_for_cast, by = list(data_for_cast$OTU, data_for_cast$count), FUN = mean)
-#-----------------------------------------------------------
 
 
 data_full_long_path <- file.path(data_dir, "data_full_long.csv")
 # write.csv(x = data_full_long, file = data_full_long_path, row.names = FALSE)
 
-
-
-
-dcast()
-dcast(data_full_long[1:400,], sample_id+OTU~count)
-  data_full_long$sample_id
-
-dcast(mtcars, )
-head(mtcars)
