@@ -1,74 +1,87 @@
 # INPUT COMES FROM SCRIPT "load_data.r"
 
+# REQUIRES
+# 1. abundance table of categories (columns; e.g. "otus") that were observed (rows; e.g. "samples")
+# 2. metadata file, with columns of:
+#    - "lon" and "lat" columns, or x and y coordinates
+#    - data matching rownames of abundance/otu table
+
+my_table <- otu_mean
+my_metadata <- metadata_mean
+
+if(!identical(rownames(my_table), my_metadata[, colname_env_sample])){
+	warning("Hold your horses: the rownames of the otu table don't match up with the metadata. This will make bad things happen.")
+}
+
+# this function rescales a numeric vector to 0 and 1
+scale01 <- function(x){(x-min(x))/(max(x)-min(x))}
+
 # plot scaled proportional abundance in space (i.e. darkest color is wherever OTU's proportional abundance is at maximum)
 
-for(i in c(1:5,7:10)){
+for(i in c(1:10)){
 	plot(
-		metadata$lon, 
-		metadata$lat, 
-		bg = rgb(r = 1, g = 0, b = 0, alpha = otu_table_prop[metadata$sample_id, i]/max(otu_table_prop[metadata$sample_id, i])), 
+		my_metadata[,colname_lon], 
+		my_metadata[,colname_lat], 
+		bg = rgb(r = 1, g = 0, b = 0, alpha = scale01(my_table[,i])), 
 		pch = 21, 
-		main = colnames(otu_table_prop)[i], 
+		main = colnames(my_table)[i], 
 		xlab = "Longitude", 
 		ylab = "Latitude"
 	)
 }
 
-otu_table[,6]
-
-pdf(file = file.path(fig_dir, "otu_in_space_mean.pdf"), width = 7, height = 7)
+# plot only a single otu 
+single_otu <- "DUP_3"
+# pdf(file = file.path(fig_dir, "otu_in_space_mean.pdf"), width = 7, height = 7)
 	plot(
-		metadata$lon, 
-		metadata$lat, 
-		bg = rgb(r = 1, g = 0, b = 0, alpha = otu_table_prop[metadata$sample_id, "DUP_3"]/max(otu_table_prop[metadata$sample_id, "DUP_3"])), 
+		my_metadata[,colname_lon], 
+		my_metadata[,colname_lat], 
+		bg = rgb(r = 1, g = 0, b = 0, alpha = my_table[, single_otu]/max(my_table[, single_otu])), 
 		pch = 21, 
-		cex = otu_table_prop[metadata$sample_id, "DUP_3"]/max(otu_table_prop[metadata$sample_id, "DUP_3"])*1.5, 
+		cex = my_table[, single_otu]/max(my_table[, single_otu])*1.5, 
 		# cex = 1.5, 
-		main = "DUP_3", 
+		main = single_otu, 
 		xlab = "Longitude", 
 		ylab = "Latitude"
 	)
+	# add 'x' to points where abundance was 0
 	points(
-		metadata$lon, 
-		metadata$lat, 		
-		pch = ifelse(otu_table_prop[metadata$sample_id, "DUP_3"]/max(otu_table_prop[metadata$sample_id, "DUP_3"]) == 0, 4, NA_integer_) 
+		my_metadata[,colname_lon], 
+		my_metadata[,colname_lat], 
+		pch = ifelse(my_table[, single_otu]/max(my_table[, single_otu]) == 0, 4, NA_integer_) 
 	)
-dev.off()
+# dev.off()
 
 set.seed(8) # to control jitter
 
 ################################################################################
 # LOOP TO PRINT MANY AT THE SAME TIME
-my_otus <- otu_mean
-rownames(otu_mean) # PCT-C-0000 etc, aka "env_sample_name"
-my_metadata <- metadata_exp[!duplicated(metadata_exp[,"env_sample_name"]),]
 
 pdf(file = file.path(fig_dir, "otu_in_space_50.pdf"), width = 7, height = 7)
 for(i in 1:50){
 	plot(
-		x = my_metadata$dist_along_shore, 
+		x = my_metadata[ , colname_xcoord], 
 		xaxt = "n", 
 		xlim = c(-500, 2500), 
-		y = log(my_metadata$dist_from_shore + 10), 
+		y = log(my_metadata[ , colname_ycoord] + 10), 
 		yaxt = "n",
 		# log = "y",
-		bg = rgb(r = 1, g = 0, b = 0, alpha = my_otus[my_metadata$env_sample_name, i]/max(my_otus[my_metadata$env_sample_name, i])), 
+		bg = rgb(r = 1, g = 0, b = 0, alpha = scale01(my_table[, i])), 
 		pch = 21, 
-		cex = my_otus[my_metadata$env_sample_name, i]/max(my_otus[my_metadata$env_sample_name, i])*5, 
+		cex = scale01(my_table[, i])*5, 
 		# cex = 1.5, 
-		main = colnames(my_otus)[i], 
+		main = colnames(my_table)[i], 
 		las = 1, 
 		xlab = "Position along shore (meters)", 
 		ylab = "Position from 0 (meters)"
 	)
 	points(
-		x = my_metadata$dist_along_shore, 
-		y = log(my_metadata$dist_from_shore + 10), 
+		x = my_metadata[ , colname_xcoord], 
+		y = log(my_metadata[ , colname_ycoord] + 10), 
 		# log = "y",
 		cex = 1, 
 		pch = ifelse(
-			my_otus[my_metadata$env_sample_name, i]/
-				max(my_otus[my_metadata$env_sample_name, i]) == 0, 
+			my_table[, i] == 0, 
 			4, NA_integer_) 
 	)
 	axis(side = 2, at = unique(log(my_metadata$dist_from_shore + 10)), labels = unique(my_metadata$dist_from_shore), las = 1)

@@ -15,6 +15,9 @@
 # write the file
 # write.csv(x = table_restricted, file = filename_out, quote = FALSE)
 
+# this function rescales a numeric vector to 0 and 1
+scale01 <- function(x){(x-min(x))/(max(x)-min(x))}
+
 # RESCALE TO EQUAL SEQUENCING DEPTHS PER SAMPLE
 # calculate the minimum number of reads assigned to these OTUs in these samples
 minreads <- min(rowSums(otu_table))
@@ -83,8 +86,13 @@ split(data_for_cast$count, f = c(data_for_cast$sample_id, data_for_cast$OTU))
 # aggregate(x = data_for_cast, by = list(data_for_cast$OTU, data_for_cast$count), FUN = mean)
 #-------------------------------------------------------------------------------
 
+#-------------------------------------------------------------------------------
+# rescale each column to its maximum value, ranging from 0 to 1
+otu_01 <- apply(otu_mean, MARGIN = 2, FUN = scale01)
+stripchart(as.data.frame(otu_01[,1:20]), pch = 19, col = rgb(0,0,0, alpha = 0.2), las = 1)
+#-------------------------------------------------------------------------------
 
-
+#-------------------------------------------------------------------------------
 # COMBINE UP DATA
 if(
   identical(
@@ -101,11 +109,13 @@ if(
 } else {
   warning("something does not match up, and you could screw up the data big time by proceeding.")
 }
+#-------------------------------------------------------------------------------
 
 # data_full_path <- file.path(data_dir, "data_full_top10.csv")
 data_full_path <- file.path(data_dir, "data_full_filt.csv")
 # write.csv(x = data_full, file = data_full_path, row.names = FALSE)
 
+#-------------------------------------------------------------------------------
 # LONG FORMAT:
 library(reshape2) # melt()
 otu_long <- melt(otu_filt)
