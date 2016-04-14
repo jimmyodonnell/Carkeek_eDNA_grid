@@ -170,6 +170,13 @@ To scale the OTU counts, we calculated the minimum number of OTU-assigned reads 
 
 
 \subsection*{Community Analysis}
+
+We subset the data in a variety of ways and conducted each analysis on all subsets.
+We report the subset used with each analysis, and report results on alternative subsets in the supplemental material. 
+For all analyses beyond the assessment of PCR consistency, we use the mean taxon abundance across PCR replicates from each of the 24 environmental samples.
+Our subsetting methods were (1) exclude rare taxa ?(threshold)?, (2) exclude abundant taxa ?(threshold)?, (3) subsampling of taxa randomly, (4) subsampling of taxa proportional to their abundance, (5) subsampling of taxa inversely proportional to their abundance, (6) exclude taxa found in only one environmental sample (spatially invariant), (7) exclude non-marine taxa (e.g. humans, pigs), (8) exclude taxa whose known individual range (including gametes and larvae) exceeds the spatial scale of our study. 
+We also tested a variety of transformations of the mean scaled abundance data, including (1) log ($log_{e}x$), and (2) binary ($1 = x > 1$; $0 = x < 1$).
+
 % Used k-medoids (PAM) rather than k-means because it does not require euclidean distances can be computed and that the observations follow a gaussian distribution
 % because of the nature of our data (lots of zeros, with some very high counts), the mean is not very informative
 We simultaneously assessed the existence of distinct community types and the membership of samples to those community types using a partitioning around mediods algorithm (CITE PAM, sometimes referred to as k-medoids clustering), as implemented in the R package fpc (CITE fpc).
