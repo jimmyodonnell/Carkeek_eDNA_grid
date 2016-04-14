@@ -2,3 +2,6 @@ taxon_name,taxon_rank,adult_habitat,habitat_selectivity,range_gamete_km,range_la
 Mytilidae,family,intertidal_rocky,1,10,10,0,5
 Sessilia,order,intertidal_rocky,1,0,10,0,1
 Embiotocidae,family,seagrass,0.5,0,0,1,10
+Suidae,family,terrestrial,1,0,0,0,200
+Hominidae,family,terrestrial,1,0,0,0,200
+Phasianidae,family,terrestrial,1,0,0,0,100
