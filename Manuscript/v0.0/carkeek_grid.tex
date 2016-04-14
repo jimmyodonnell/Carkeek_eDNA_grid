@@ -172,7 +172,7 @@ To scale the OTU counts, we calculated the minimum number of OTU-assigned reads 
 \subsection*{Community Analysis}
 % Used k-medoids (PAM) rather than k-means because it does not require euclidean distances can be computed and that the observations follow a gaussian distribution
 % because of the nature of our data (lots of zeros, with some very high counts), the mean is not very informative
-We simultaneously assessed the existence of distinct community types and the membership of samples to those community types using a partitioning around mediods algorithm (CITE PAM, sometimes referred to as k-mediods clustering), as implemented in the R package fpc (CITE fpc).
+We simultaneously assessed the existence of distinct community types and the membership of samples to those community types using a partitioning around mediods algorithm (CITE PAM, sometimes referred to as k-medoids clustering), as implemented in the R package fpc (CITE fpc).
 The classification of samples to communities was made on the basis of their pairwise Bray-Curtis dissimilarity, calculated using the function vegdist in the R package vegan (CITE VEGAN). % consider Gower distance
 
 We calculated the great circle distance between points using the Haversine method as implemented by the R package geosphere (CITE geosphere).
@@ -222,6 +222,7 @@ After removal of this sample, the highest mean Bray-Curtis dissimilarity among r
 
 
 \subsection*{Community Analysis}
+Excluding spatially-invariant taxa ?(taxa which occur in only one spatial location) had no discernible effect on the outcome of the PAM analysis (number of clusters, assignment to clusters).
 
 \subsection*{Spatial Model Output}
 
