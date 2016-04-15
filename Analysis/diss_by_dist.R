@@ -46,6 +46,15 @@ smoothed <- loess.smooth(
 lines(smoothed, col="red", lwd=2)
 # dev.off()
 
+#-------------------------------------------------------------------------------
+# Some Possible analyses
+#-------------------------------------------------------------------------------
+lm_out <- lm(log(1/comm_dist) ~ geo_dist)
+# Then the regression coefficient is usually used in the literature as the descriptor of distance decay, or the distance at which 50% of the maximum similarity is observed.
+summary(lm_out)
+
+mantel(comm_dist, geo_dist, perm = 9999)
+
 
 #-------------------------------------------------------------------------------
 # SPLIT BY TRANSECT
