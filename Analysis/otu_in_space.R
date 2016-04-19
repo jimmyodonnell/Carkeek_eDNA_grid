@@ -6,8 +6,17 @@
 #    - "lon" and "lat" columns, or x and y coordinates
 #    - data matching rownames of abundance/otu table
 
-my_table <- otu_mean
+my_table <- otu_mean # otu_named
+if(sum(colSums(my_table) < 1) > 0){
+	print("removing otus with total abundance < 1")
+	my_table <- my_table[,colSums(my_table) >= 1]
+}
 my_metadata <- metadata_mean
+
+LOG_TRANSFORM <- FALSE
+if(LOG_TRANSFORM) {
+  my_table <- log(my_table + 1)
+}
 
 if(!identical(rownames(my_table), my_metadata[, colname_env_sample])){
 	warning("Hold your horses: the rownames of the otu table don't match up with the metadata. This will make bad things happen.")
