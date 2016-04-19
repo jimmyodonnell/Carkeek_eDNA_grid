@@ -16,7 +16,7 @@ gghue <- function(n){
 # choose between using proportional or raw counts
 # my_table <- otu_table
 # my_table <- otu_filt[,]
-my_table <- otu_mean # otu_mean, otu_spvar
+my_table <- otu_mean # otu_mean, otu_spvar, otu_named
 my_metadata <- metadata_mean #metadata_exp[!duplicated(metadata_exp[,"env_sample_name"]),]
 
 mydist <- vegdist(my_table, method = "bray") # , binary = TRUE
