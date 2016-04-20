@@ -43,15 +43,21 @@ dim(otu_scaled)
 otu_scaled <- otu_scaled[,order(colSums(otu_scaled), decreasing = TRUE)]
 otu_scaled[1:10,1:10]
 
-# how many OTUs occur more than a threshold number of times?
-abundance_threshold <- 100
-sum(colSums(otu_scaled) > abundance_threshold)
-# round(colSums(otu_scaled)/sum(otu_scaled)*100, digits = 2)
-# plot(colSums(otu_scaled)/sum(otu_scaled), type = "l")
+#-------------------------------------------------------------------------------
+# Should OTUs be excluded that occur fewer than a threshold number of times?
+EXCLUDE_RARE_OTUs <- TRUE
+abundance_threshold <- 1
 
-# exclude OTUs that were counted a total of fewer than 100 times across samples
-otu_filt <- otu_scaled[,which(colSums(otu_scaled) > abundance_threshold)]
-dim(otu_filt)
+if(EXCLUDE_RARE_OTUs) {
+  # how many OTUs will be retained?
+  sum(colSums(otu_scaled) > abundance_threshold)
+  # round(colSums(otu_scaled)/sum(otu_scaled)*100, digits = 2)
+  # plot(colSums(otu_scaled)/sum(otu_scaled), type = "l")
+  # exclude OTUs that were counted a total of fewer than 100 times across samples
+  otu_filt <- otu_scaled[,which(colSums(otu_scaled) > abundance_threshold)]
+  dim(otu_filt)
+}
+
 
 boxplot(otu_filt[,1:20])
 # boxplot(log(otu_table[,1:20]))
@@ -60,9 +66,11 @@ boxplot(scale(otu_table[,1:20]))
 
 
 #-------------------------------------------------------------------------------
-# CHECK FOR OUTLIERS
-# If you'd like to check for and remove replicates that seem inconsistent, go to:
-source('dissimilarity.R')
+CHECK_FOR_OUTLIERS <- TRUE
+# If you'd like to check for and remove inconsistent PCR replicates, go to:
+if(CHECK_FOR_OUTLIERS) {
+  source('dissimilarity.R')
+}
 #-------------------------------------------------------------------------------
 
 

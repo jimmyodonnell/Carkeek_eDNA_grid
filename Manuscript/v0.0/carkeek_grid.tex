@@ -105,13 +105,17 @@ We would love to estimate the minimum distance over which eDNA community differe
 % We measure 'extra-(corporeal|organismal) DNA
 Some authors have cautioned against the use of DNA-based macrobial communities in marine environments because they are subject to dynamic physical forces (CITE).
 %If environmental circulation 
-In general, the relationship between community dissimilarity (0 = identical; 1 = completely different) and spatial distance is expected to be asymptotic, because communities nearer to each other tend to be more similar than those farther apart.
-The intercept is expected to be 0, because only within-sample comparisons can have 0 spatial separation, and communities have no dissimilarity within a sample. % technically impossible for samples to be taken at exactly 0; they are actually immediately adjacent.
-Deviation in the intercept from 0 indicates heterogeneous community composition/structure over fine scales.
-A flat relationship between dissimilarity and distance indicates that heterogeneity is not assorted spatially, and can be interpreted in different ways, depending on the mean.
-If the mean is 1, the spatial heterogeneity has overwhelmed the spatial scale of sampling.
-If the mean is 0, all samples are identical, and we infer there is complete community homogeneity over the scale sampled.
 
+Samples collected of ecological communities may vary in dissimilarity from 0 (completely identical) to 1 (completely different). 
+For samples collected from multiple locations, the relationship between their spatial distance and community dissimilarity is of interest because it reflects the amount of community heterogeneity over the spatial scale sampled.
+%In general, the relationship between community dissimilarity (0 = identical; 1 = completely different) and spatial distance is expected to be asymptotic, because communities nearer to each other tend to be more similar than those farther apart.
+The intercept is expected to be 0, because only within-sample comparisons can have 0 spatial separation, and communities have no dissimilarity within a sample. % technically impossible for samples to be taken at exactly 0; they are actually immediately adjacent.
+Likewise, dissimilarity cannot exceed 1. 
+Deviation from 0 indicates heterogeneous community composition/structure over fine scales.
+A flat relationship between dissimilarity and distance indicates that heterogeneity is not assorted spatially, and can be interpreted in different ways, depending on the mean.
+If the mean is close to 1, there is high spatial heterogeneity over the spatial scale of sampling.
+If the mean is 0, all samples are identical, and we infer there is complete community homogeneity over the scale sampled.
+The rate at which community dissimilarity approaches the mean gives an indication of the rate of community turnover.
 
 %-----------------------------------METHODS-------------------------------------
 \section*{Methods}
@@ -186,6 +190,16 @@ The classification of samples to communities was made on the basis of their pair
 We calculated the great circle distance between points using the Haversine method as implemented by the R package geosphere (CITE geosphere).
 % Calculate Moran's I on ?(relative abundance | raw count) of ?(taxa | OTU | uniq_sequences) to report dispersion of DNA in space?
 
+To estimate the maximum dissimilarity and the rate of community turnover in space, we modeled community dissimilarity as a function of distance from shore following a Michaelis-Menten relationship:
+\begin{equation}\label{MichaelisMenten}
+	com \sim V_{max}[d]/K_{m}[d]
+\end{equation}
+where $com$ is community dissimilarity, $d$ is spatial distance, and where the asymptote is given by $V_{max}$, and the distance at which half the asymptote has been reached is given by $K_{m}$. 
+Model fit was assessed using the function nls in R (CITE R). 
+
+
+
+
 \subsection*{Spatial Model Formulation}
 We use the general framework outlined by Shelton et al (CITE).
 That study outlined the structure for estimation of the proportional biomass of a taxon ($B_i$) given the proportional counts of sequences recovered from a parallel sequencing run ($Z_i$).
@@ -231,6 +245,10 @@ After removal of this sample, the highest mean Bray-Curtis dissimilarity among r
 
 \subsection*{Community Analysis}
 Excluding spatially-invariant taxa ?(taxa which occur in only one spatial location) had no discernible effect on the outcome of the PAM analysis (number of clusters, assignment to clusters).
+
+The estimated asymptote of community dissimilarity as a function of spatial distance ($V_m$) was 0.72 ($p <<< 0.05$), and the distance at which half this dissimilarity was accumulated ($K_m$) is 23.8 kilometers ($p = 0.006$).
+Residual standard error of the fit of the model is 0.1563 on 274 degrees of freedom.
+
 
 \subsection*{Spatial Model Output}
 
@@ -282,7 +300,7 @@ All analyses were performed using scripts available from the project repository 
   \centering
     \includegraphics[width=1\textwidth]{../../Figures/diss_by_dist.pdf}
     \caption{Pairwise Bray-Curtis dissimilarity of eDNA communities plotted against pairwise spatial distance.
-    Line represents prediction of Gaussian LOESS (degree = 1; span = 2/3).
+    Line represents prediction of the Non-linear Least Squares regression to a Michaelis-Menten model ($V_m = 0.72$, $p <<< 0.05$; $K_m = 23.8$ kilometers, $p = 0.006$; RSE = 0.1563; df = 274.).
     Restricting comparison to within-transect has no qualitative difference in the outcome (see 'diss\_by\_dist\_by\_transect.pdf').
     }
   \label{comm_diss_by_geo_dist} % use this to refer to your figure in the text, so that numbering updates automatically
@@ -305,19 +323,19 @@ All analyses were performed using scripts available from the project repository 
   \label{clustering_map} % use this to refer to your figure in the text, so that numbering updates automatically
 \end{figure}
 
-\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
-  \centering
-    \includegraphics[width=1\textwidth]{../../Figures/slope_plots.pdf}
-    \caption{Fit lines of DNA sequence counts as a function of distance from shore for a selection of taxa for which we have strong preconceived expectations (left). Box plots of the estimates of the slopes for taxa ?(100 most abundant)?, grouped by life history traits (right).}
-  \label{slope_plots} % use this to refer to your figure in the text, so that numbering updates automatically
-\end{figure}
+%\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
+%  \centering
+%    \includegraphics[width=1\textwidth]{../../Figures/slope_plots.pdf}
+%    \caption{Fit lines of DNA sequence counts as a function of distance from shore for a selection of taxa for which we have strong preconceived expectations (left). Box plots of the estimates of the slopes for taxa ?(100 most abundant)?, grouped by life history traits (right).}
+%  \label{slope_plots} % use this to refer to your figure in the text, so that numbering updates automatically
+%\end{figure}
 
-\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
-  \centering
-    \includegraphics[width=1\textwidth]{../../Figures/var_boxplots.pdf}
-    \caption{Box plots of estimates of variance associated with each level of the multilevel model, corresponding to stages of the eDNA sampling protocol.}
-  \label{variance_boxplots} % use this to refer to your figure in the text, so that numbering updates automatically
-\end{figure}
+%\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
+%  \centering
+%    \includegraphics[width=1\textwidth]{../../Figures/var_boxplots.pdf}
+%    \caption{Box plots of estimates of variance associated with each level of the multilevel model, corresponding to stages of the eDNA sampling protocol.}
+%  \label{variance_boxplots} % use this to refer to your figure in the text, so that numbering updates automatically
+%\end{figure}
 
 \begin{figure}[h!] % [h!] forces the figure to be placed roughly here
   \centering
