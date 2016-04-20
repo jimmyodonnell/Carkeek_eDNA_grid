@@ -18,30 +18,40 @@
 # this function rescales a numeric vector to 0 and 1
 scale01 <- function(x){(x-min(x))/(max(x)-min(x))}
 
+otu_table_in <- otu_table_raw # otu_table_raw | otu_sodm
+
+#-------------------------------------------------------------------------------
 # RESCALE TO EQUAL SEQUENCING DEPTHS PER SAMPLE
-# calculate the minimum number of reads assigned to these OTUs in these samples
-minreads <- min(rowSums(otu_table))
+RESCALE_SEQUENCING_DEPTH <- TRUE
 
-# calculate proportional abundance of OTUs in each sample
-otu_table_prop <- otu_table/rowSums(otu_table)
+if(RESCALE_SEQUENCING_DEPTH) {
+	
+	# calculate the minimum number of reads assigned to these OTUs in these samples
+	minreads <- min(rowSums(otu_table_in))
+	
+	# calculate proportional abundance of OTUs in each sample
+	otu_table_prop <- otu_table_in/rowSums(otu_table_in)
+	
+	# scale the proportional abundance of the OTU in each sample to the minimum number of reads
+	otu_scaled <- otu_table_prop * minreads
+	
+	# ignore counts OTUs found fewer than 0.5 times (anything greater would be rounded to 1)
+	otu_scaled[otu_scaled < 0.5] <- 0
+	
+	# round to whole numbers
+	otu_scaled <- round(otu_scaled)
+	dim(otu_scaled)
+	
+	# again exclude OTUs not found in these samples
+	otu_scaled <- otu_scaled[,which(colSums(otu_scaled) > 0)]
+	dim(otu_scaled)
 
-# scale the proportional abundance of the OTU in each sample to the minimum number of reads
-otu_scaled <- otu_table_prop * minreads
+	# to re-order by the abundance in THESE samples (i.e. not those from samples from elsewhere)
+	otu_scaled <- otu_scaled[,order(colSums(otu_scaled), decreasing = TRUE)]
+	otu_scaled[1:10,1:10]
 
-# ignore counts OTUs found fewer than 0.5 times (anything greater would be rounded to 1)
-otu_scaled[otu_scaled < 0.5] <- 0
+}
 
-# round to whole numbers
-otu_scaled <- round(otu_scaled)
-dim(otu_scaled)
-
-# again exclude OTUs not found in these samples
-otu_scaled <- otu_scaled[,which(colSums(otu_scaled) > 0)]
-dim(otu_scaled)
-
-# to re-order by the abundance in THESE samples (i.e. not those from samples from elsewhere)
-otu_scaled <- otu_scaled[,order(colSums(otu_scaled), decreasing = TRUE)]
-otu_scaled[1:10,1:10]
 
 #-------------------------------------------------------------------------------
 # Should OTUs be excluded that occur fewer than a threshold number of times?
@@ -60,9 +70,9 @@ if(EXCLUDE_RARE_OTUs) {
 
 
 boxplot(otu_filt[,1:20])
-# boxplot(log(otu_table[,1:20]))
+# boxplot(log(otu_table_in[,1:20]))
 boxplot(otu_table_prop[,1:20])
-boxplot(scale(otu_table[,1:20]))
+boxplot(scale(otu_table_in[,1:20]))
 
 
 #-------------------------------------------------------------------------------
@@ -103,11 +113,11 @@ otu_spvar <- rm_single_rows(otu_mean)
 # COMBINE UP DATA
 if(
   identical(
-    rownames(otu_table),
+    rownames(otu_table_in),
     metadata[,colname_sampleid]
   )
 ){
-  data_full <- cbind.data.frame(metadata_exp, otu_table)
+  data_full <- cbind.data.frame(metadata_exp, otu_table_in)
   if(identical(rownames(data_full), data_full[,colname_sampleid])){
     rownames(data_full) <- NULL
   } else {
