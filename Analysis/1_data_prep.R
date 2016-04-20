@@ -92,6 +92,7 @@ otu_mean <- do.call(rbind,
 	colMeans
 	)
 )
+# reduce corresponding metdata
 metadata_mean <- metadata[match(rownames(otu_mean), metadata[,colname_env_sample]),]
 #-------------------------------------------------------------------------------
 
