@@ -1,0 +1,15 @@
+model {
+    # Priors
+    psi ~ dunif(0,1)
+    p11 ~ dunif(0.1,1)
+    p10 ~ dunif(0.03, p10_max)
+    
+    # Likelihood 
+    for (i in 1:S){
+    z[i] ~ dbern(psi)
+    p[i] <- z[i]*p11 + (1-z[i])*p10
+    for (j in 1:K){
+    Y[i,j] ~ dbern(p[i])
+    }
+    }
+    } 
