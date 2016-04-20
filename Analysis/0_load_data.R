@@ -10,26 +10,7 @@ fig_dir <- file.path("..", "Figures")
 # 2. An OTU table (CSV) in the 'Data' folder
 # 3. A metadata file (CSV) in the 'Data' folder containing information for all and only the samples in the OTU table
 
-# LOAD OTU table
-# path to otu file: rows are samples, columns are OTUs, cells are counts.
-# rownames correspond to column "sample_id" in metadata
-otu_table_filename <- "OTU_table.csv"
-
-otu_table_raw <- read.csv(
-	file = file.path(data_dir, otu_table_filename), 
-	row.names = 1, 
-	stringsAsFactors = FALSE
-	)
-	
-dim(otu_table_raw)
-
-# transpose the OTU table if "lib_" is found in the column names
-# (this indicates a sample, which should be in rows)
-if(length(grep("lib_", colnames(otu_table_raw))) > 0){
-	otu_table_raw <- t(otu_table_raw)
-}
-dim(otu_table_raw)
-
+#-------------------------------------------------------------------------------
 # LOAD METADATA
 # path to metadata file.
 # column "sample_id" contains rownames of otu file.
@@ -65,6 +46,39 @@ transect_line <- as.numeric(as.factor(paste(transect_line_rep, transect_position
 metadata_exp <- cbind.data.frame(metadata, sequenced_sample, transect_position, transect_line)
 
 
+#-------------------------------------------------------------------------------
+# LOAD OTU table
+# path to otu file: rows are samples, columns are OTUs, cells are counts.
+# rownames correspond to column "sample_id" in metadata
+otu_table_filename <- "OTU_table.csv"
+
+otu_table_raw <- read.csv(
+	file = file.path(data_dir, otu_table_filename), 
+	row.names = 1, 
+	stringsAsFactors = FALSE
+	)
+	
+dim(otu_table_raw)
+
+otu_sodm_file <- "SODM/OTUs_BayesianVetted_OTUs.csv"
+
+otu_sodm <- read.csv(
+	file = otu_sodm_file, 
+	row.names = 1, 
+	stringsAsFactors = FALSE
+	)
+	
+dim(otu_sodm)
+
+#-------------------------------------------------------------------------------
+# transpose the OTU table if "lib_" is found in the column names
+# (this indicates a sample, which should be in rows)
+if(length(grep("lib_", colnames(otu_table_raw))) > 0){
+	otu_table_raw <- t(otu_table_raw)
+}
+dim(otu_table_raw)
+
+#-------------------------------------------------------------------------------
 # exclude rows from OTU table that are not in metadata
 if(class(metadata[,colname_sampleid]) != "character"){
 	warning("# !!! it will really screw things up if you don't convert the sample id column to a character vector!")
@@ -72,6 +86,7 @@ if(class(metadata[,colname_sampleid]) != "character"){
 	otu_table_raw <- otu_table_raw[metadata[,colname_sampleid],]
 }
 
+#-------------------------------------------------------------------------------
 # exclude OTUs not found in these samples
 otu_table_raw <- otu_table_raw[,which(colSums(otu_table_raw) > 0)]
 dim(otu_table_raw)
