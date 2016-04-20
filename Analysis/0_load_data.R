@@ -15,20 +15,20 @@ fig_dir <- file.path("..", "Figures")
 # rownames correspond to column "sample_id" in metadata
 otu_table_filename <- "OTU_table.csv"
 
-otu_table <- read.csv(
+otu_table_raw <- read.csv(
 	file = file.path(data_dir, otu_table_filename), 
 	row.names = 1, 
 	stringsAsFactors = FALSE
 	)
 	
-dim(otu_table)
+dim(otu_table_raw)
 
 # transpose the OTU table if "lib_" is found in the column names
 # (this indicates a sample, which should be in rows)
-if(length(grep("lib_", colnames(otu_table))) > 0){
-	otu_table <- t(otu_table)
+if(length(grep("lib_", colnames(otu_table_raw))) > 0){
+	otu_table_raw <- t(otu_table_raw)
 }
-dim(otu_table)
+dim(otu_table_raw)
 
 # LOAD METADATA
 # path to metadata file.
@@ -69,13 +69,13 @@ metadata_exp <- cbind.data.frame(metadata, sequenced_sample, transect_position, 
 if(class(metadata[,colname_sampleid]) != "character"){
 	warning("# !!! it will really screw things up if you don't convert the sample id column to a character vector!")
 } else {
-	otu_table <- otu_table[metadata[,colname_sampleid],]
+	otu_table_raw <- otu_table_raw[metadata[,colname_sampleid],]
 }
 
 # exclude OTUs not found in these samples
-otu_table <- otu_table[,which(colSums(otu_table) > 0)]
-dim(otu_table)
-if( nrow(metadata) != nrow(otu_table) ) {
+otu_table_raw <- otu_table_raw[,which(colSums(otu_table_raw) > 0)]
+dim(otu_table_raw)
+if( nrow(metadata) != nrow(otu_table_raw) ) {
 	warning("number of rows in metadata and otu table are not equal, but they should be.")
 }
 
