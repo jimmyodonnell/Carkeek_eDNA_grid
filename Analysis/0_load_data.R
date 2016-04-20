@@ -24,9 +24,6 @@ metadata <- read.csv(
 # what is the name of the column containing the sample id (SEQUENCING samples)
 colname_sampleid <- "sample_id"
 
-# what is the name of the column containing the sample id (SEQUENCING samples)
-colname_sampleid <- "sample_id"
-
 # what is the name of the column containing the sample id from which subsamples were drawn (environmental samples)
 colname_env_sample <- "env_sample_name"
 
@@ -57,23 +54,23 @@ otu_table_raw <- read.csv(
 	row.names = 1, 
 	stringsAsFactors = FALSE
 	)
-	
+
+USE_SODM_TABLE <- FALSE
+if (USE_SODM_TABLE) {
+	otu_sodm_file <- "SODM/OTUs_BayesianVetted_OTUs.csv"
+	otu_table_raw <- read.csv(
+		file = otu_sodm_file, 
+		row.names = 1, 
+		stringsAsFactors = FALSE
+		)
+
+}
 dim(otu_table_raw)
-
-otu_sodm_file <- "SODM/OTUs_BayesianVetted_OTUs.csv"
-
-otu_sodm <- read.csv(
-	file = otu_sodm_file, 
-	row.names = 1, 
-	stringsAsFactors = FALSE
-	)
-	
-dim(otu_sodm)
 
 #-------------------------------------------------------------------------------
 # transpose the OTU table if "lib_" is found in the column names
 # (this indicates a sample, which should be in rows)
-if(length(grep("lib_", colnames(otu_table_raw))) > 0){
+if(any(metadata[,colname_sampleid] %in% colnames(otu_table_raw))){
 	otu_table_raw <- t(otu_table_raw)
 }
 dim(otu_table_raw)
