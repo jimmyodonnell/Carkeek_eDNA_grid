@@ -69,10 +69,10 @@ if(EXCLUDE_RARE_OTUs) {
 }
 
 
-boxplot(otu_filt[,1:20])
+# boxplot(otu_filt[,1:20])
 # boxplot(log(otu_table_in[,1:20]))
-boxplot(otu_table_prop[,1:20])
-boxplot(scale(otu_table_in[,1:20]))
+# boxplot(otu_table_prop[,1:20])
+# boxplot(scale(otu_table_in[,1:20]))
 
 
 #-------------------------------------------------------------------------------
