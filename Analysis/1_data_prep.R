@@ -79,7 +79,15 @@ if(EXCLUDE_RARE_OTUs) {
 CHECK_FOR_OUTLIERS <- TRUE
 # If you'd like to check for and remove inconsistent PCR replicates, go to:
 if(CHECK_FOR_OUTLIERS) {
-  source('dissimilarity.R')
+  # source('dissimilarity.R')
+  cleaned <- find_bad_PCR(
+  	my_table = otu_filt, 
+  	my_metadata = metadata, 
+  	sample_id_column = colname_sampleid, 
+  	grouping_column = colname_env_sample)
+  otu_clean <- cleaned[[1]]
+  metadata_clean <- cleaned[[2]]
+  rm(cleaned)
 }
 #-------------------------------------------------------------------------------
 
