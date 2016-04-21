@@ -5,7 +5,7 @@ library(geosphere) # distm()
 
 # REQUIRES:
 # 1. dataframe called "metadata" with unique sequenced samples given in column "sample_id"
-metadata <- metadata_exp
+metadata <- metadata
 # 2. OTU table with rownames that correspond to aforementioned column "sample_id"
 otu_table <- otu_filt
 
@@ -22,7 +22,7 @@ for(i in 1:length(metadata$sample_id)){
 
 
 for(i in 1:length(metadata$sample_id)){
-	
+
 }
 
 
@@ -34,14 +34,14 @@ if(!(identical(dimnames(comm_dist), dimnames(geo_dist)))){
 # pdf(file = file.path(fig_dir, "comm_diss_by_geo_dist.pdf"), width = 8, height = 3)
 	par(mar = c(4,5,1,1))
 	plot(
-		x = log(geo_dist + 100), 
-		y = comm_dist, 
-		ylim = c(0,1), 
-		xaxt = "n", 
-		las = 1, 
-		cex = 0.5, 
-		col = rgb(0,0,0,alpha = 0.1), 
-		xlab = "Distance between samples (meters)", 
+		x = log(geo_dist + 100),
+		y = comm_dist,
+		ylim = c(0,1),
+		xaxt = "n",
+		las = 1,
+		cex = 0.5,
+		col = rgb(0,0,0,alpha = 0.1),
+		xlab = "Distance between samples (meters)",
 		ylab = "Bray-Curtis dissimilarity"
 	)
 	axis(side = 1, at = unique(log(metadata$dist_from_shore + 100)), labels = unique(metadata$dist_from_shore))

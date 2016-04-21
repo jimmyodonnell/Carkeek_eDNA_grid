@@ -4,7 +4,7 @@ library(geosphere) # distm()
 
 my_otu <- otu_mean
 rownames(my_otu) # should be e.g. PCT-C-0000 etc, aka "env_sample_name"
-my_metadata <- metadata_mean# metadata_exp[!duplicated(metadata_exp[,"env_sample_name"]),]
+my_metadata <- metadata_mean# metadata[!duplicated(metadata[,colname_env_sample]),]
 
 # calculate pairwise great circle distance between sampling locations using Haversine method
 geo_dist <- as.dist(distm(x = my_metadata[,c(colname_lon, colname_lat)], fun = distHaversine))
@@ -18,8 +18,8 @@ if(!(identical(dimnames(comm_dist), dimnames(geo_dist)))){
 # fit michaelis menten curve
 the_data <- data.frame(comm = as.vector(comm_dist), space = as.vector(geo_dist))
 mm_fit <- nls(
-  formula = comm ~ Vm * space/(Km + space), 
-  data = the_data, 
+  formula = comm ~ Vm * space/(Km + space),
+  data = the_data,
   start = list(
     Vm = max(the_data$comm), # comment out and set Vm to 1 if asymptote should be 1
     Km = max(the_data$comm)/2
@@ -33,16 +33,16 @@ plot_x <- geo_dist # geo_dist_scaled
 pdf(file = file.path(fig_dir, "diss_by_dist.pdf")) #, width = 8, height = 3
 	par(mar = c(4,5,1,1))
 	plot(
-		x = plot_x, 
-		y = comm_dist, 
-		ylim = c(0,1), 
-		xaxt = "n", 
-		pch = 21, 
-		las = 1, 
-		cex = 1, 
-		col = 1, 
-		bg = rgb(0,0,0,alpha = 0.1 ), #,alpha = 0.1 
-		xlab = "Distance between samples (meters)", 
+		x = plot_x,
+		y = comm_dist,
+		ylim = c(0,1),
+		xaxt = "n",
+		pch = 21,
+		las = 1,
+		cex = 1,
+		col = 1,
+		bg = rgb(0,0,0,alpha = 0.1 ), #,alpha = 0.1
+		xlab = "Distance between samples (meters)",
 		ylab = "Bray-Curtis dissimilarity"
 	)
 	axis(side = 1)
@@ -54,10 +54,10 @@ lines(x = c(0, sort(geo_dist)), y = c(0, sort(mm_prediction)), col = "red", lwd 
 
 # Add LOESS line
 # smoothed <- loess.smooth(
-				# x = plot_x, 
-				# y = comm_dist, 
-				# span = 2/3, 
-				# degree = 1, 
+				# x = plot_x,
+				# y = comm_dist,
+				# span = 2/3,
+				# degree = 1,
 				# family = "gaussian"
 				# )
 # lines(smoothed, col="red", lwd=2)
@@ -86,7 +86,7 @@ for(transect in 1:length(transects)){
 dist_by_transect <- list()
 for(transect in 1:length(transects)){
 	transect_coords <- my_metadata[
-		grep(transects[transect], my_metadata[, colname_env_sample]), 
+		grep(transects[transect], my_metadata[, colname_env_sample]),
 		c(colname_lon, colname_lat)]
 	dist_by_transect[[transect]] <- as.dist(distm(x = transect_coords, fun = distHaversine))
 }
@@ -103,30 +103,30 @@ mycols <- gghue(length(transects))
 # pdf(file = file.path(fig_dir, "diss_by_dist_by_transect.pdf"), width = 8, height = 3)
 par(mar = c(4,5,1,1))
 	plot(
-		x = geo_dist, 
-		y = comm_dist, 
-		ylim = c(0,1), 
-		xaxt = "n", 
-		pch = "", 
-		las = 1, 
-		cex = 1, 
-		col = rgb(0,0,0), #,alpha = 0.1 
-		xlab = "Distance between samples (meters)", 
+		x = geo_dist,
+		y = comm_dist,
+		ylim = c(0,1),
+		xaxt = "n",
+		pch = "",
+		las = 1,
+		cex = 1,
+		col = rgb(0,0,0), #,alpha = 0.1
+		xlab = "Distance between samples (meters)",
 		ylab = "Bray-Curtis dissimilarity"
 	)
 	axis(side = 1) #, at = unique(log(metadata$dist_from_shore + 100)), labels = unique(metadata$dist_from_shore)
 
 for( i in 1:length(transects)){
 	points(
-		x = dist_by_transect[[i]], 
-		y = diss_by_transect[[i]], 
-		ylim = c(0,1), 
-		xaxt = "n", 
-		las = 1, 
-		pch = 19, 
-		cex = 1, 
-		col = mycols[i], #,alpha = 0.1 
-		xlab = "Distance between samples (meters)", 
+		x = dist_by_transect[[i]],
+		y = diss_by_transect[[i]],
+		ylim = c(0,1),
+		xaxt = "n",
+		las = 1,
+		pch = 19,
+		cex = 1,
+		col = mycols[i], #,alpha = 0.1
+		xlab = "Distance between samples (meters)",
 		ylab = "Bray-Curtis dissimilarity"
 	)
 }
@@ -135,10 +135,10 @@ legend("bottomright", legend = transects, bty = "n", pch = 19, col = mycols)
 smoothed <- list()
 for(i in 1:length(transects)) {
 	smoothed[[i]] <- loess.smooth(
-				x = dist_by_transect[[i]], 
-				y = diss_by_transect[[i]], 
-				span = 1, 
-				degree = 1, 
+				x = dist_by_transect[[i]],
+				y = diss_by_transect[[i]],
+				span = 1,
+				degree = 1,
 				family = "gaussian"
 				)
 	lines(smoothed[[i]], col = mycols[[i]], lwd = 2)

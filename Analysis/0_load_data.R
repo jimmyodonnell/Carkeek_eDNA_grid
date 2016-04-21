@@ -17,7 +17,7 @@ fig_dir <- file.path("..", "Figures")
 metadata_filename <- "metadata_spatial.csv"
 
 metadata <- read.csv(
-	file = file.path(data_dir, metadata_filename), 
+	file = file.path(data_dir, metadata_filename),
 	stringsAsFactors = FALSE
 	)
 
@@ -40,7 +40,7 @@ transect_position <- as.numeric(as.factor(metadata[,"dist_from_shore"]))
 transect_line_rep <- as.numeric(as.factor(metadata[,"transect"]))
 transect_line <- as.numeric(as.factor(paste(transect_line_rep, transect_position)))
 
-metadata_exp <- cbind.data.frame(metadata, sequenced_sample, transect_position, transect_line)
+metadata <- cbind.data.frame(metadata, sequenced_sample, transect_position, transect_line)
 
 
 #-------------------------------------------------------------------------------
@@ -50,8 +50,8 @@ metadata_exp <- cbind.data.frame(metadata, sequenced_sample, transect_position, 
 otu_table_filename <- "OTU_table.csv"
 
 otu_table_raw <- read.csv(
-	file = file.path(data_dir, otu_table_filename), 
-	row.names = 1, 
+	file = file.path(data_dir, otu_table_filename),
+	row.names = 1,
 	stringsAsFactors = FALSE
 	)
 
@@ -59,8 +59,8 @@ USE_SODM_TABLE <- FALSE
 if (USE_SODM_TABLE) {
 	otu_sodm_file <- "SODM/OTUs_BayesianVetted_OTUs.csv"
 	otu_table_raw <- read.csv(
-		file = otu_sodm_file, 
-		row.names = 1, 
+		file = otu_sodm_file,
+		row.names = 1,
 		stringsAsFactors = FALSE
 		)
 
@@ -90,4 +90,3 @@ dim(otu_table_raw)
 if( nrow(metadata) != nrow(otu_table_raw) ) {
 	warning("number of rows in metadata and otu table are not equal, but they should be.")
 }
-

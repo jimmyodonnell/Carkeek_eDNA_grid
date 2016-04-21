@@ -85,7 +85,6 @@ find_bad_PCR <- function(my_table, my_metadata, sample_id_column, grouping_colum
 	remove_bad_replicate <- TRUE
 	if(remove_bad_replicate == TRUE){
 	  metadata_cleaned <- my_metadata[my_metadata[,sample_id_column] != bad_replicate_name,]
-	  # metadata_exp <- metadata_exp[metadata_exp$sample_id != bad_replicate_name,]
 	  my_table_cleaned <- my_table[rownames(my_table) != bad_replicate_name,]
 	  print(paste("removed outlier PCR:", bad_replicate_name))
 	}

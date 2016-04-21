@@ -25,23 +25,23 @@ otu_table_in <- otu_table_raw
 RESCALE_SEQUENCING_DEPTH <- TRUE
 
 if(RESCALE_SEQUENCING_DEPTH) {
-	
+
 	# calculate the minimum number of reads assigned to these OTUs in these samples
 	minreads <- min(rowSums(otu_table_in))
-	
+
 	# calculate proportional abundance of OTUs in each sample
 	otu_table_prop <- otu_table_in/rowSums(otu_table_in)
-	
+
 	# scale the proportional abundance of the OTU in each sample to the minimum number of reads
 	otu_scaled <- otu_table_prop * minreads
-	
+
 	# ignore counts OTUs found fewer than 0.5 times (anything greater would be rounded to 1)
 	otu_scaled[otu_scaled < 0.5] <- 0
-	
+
 	# round to whole numbers
 	otu_scaled <- round(otu_scaled)
 	dim(otu_scaled)
-	
+
 	# again exclude OTUs not found in these samples
 	otu_scaled <- otu_scaled[,which(colSums(otu_scaled) > 0)]
 	dim(otu_scaled)
@@ -81,9 +81,9 @@ CHECK_FOR_OUTLIERS <- TRUE
 if(CHECK_FOR_OUTLIERS) {
   # source('dissimilarity.R')
   cleaned <- find_bad_PCR(
-  	my_table = otu_filt, 
-  	my_metadata = metadata, 
-  	sample_id_column = colname_sampleid, 
+  	my_table = otu_filt,
+  	my_metadata = metadata,
+  	sample_id_column = colname_sampleid,
   	grouping_column = colname_env_sample)
   otu_clean <- cleaned[[1]]
   metadata_clean <- cleaned[[2]]
@@ -94,9 +94,9 @@ if(CHECK_FOR_OUTLIERS) {
 
 #-------------------------------------------------------------------------------
 # take mean of OTU abundance across replicate PCRs
-otu_mean <- do.call(rbind, 
+otu_mean <- do.call(rbind,
 	lapply(
-		split(as.data.frame(otu_filt), metadata[,colname_env_sample]), 
+		split(as.data.frame(otu_filt), metadata[,colname_env_sample]),
 	colMeans
 	)
 )
@@ -108,7 +108,7 @@ metadata_mean <- metadata[match(rownames(otu_mean), metadata[,colname_env_sample
 # rescale each column to its maximum value, ranging from 0 to 1
 otu_01 <- apply(otu_mean, MARGIN = 2, FUN = scale01)
 par(mar = c(4,5,1,1))
-stripchart(as.data.frame(otu_01[,1:20]), pch = 19, col = rgb(0,0,0, alpha = 0.2), 
+stripchart(as.data.frame(otu_01[,1:20]), pch = 19, col = rgb(0,0,0, alpha = 0.2),
   main = "", las = 1)
 #-------------------------------------------------------------------------------
 
@@ -126,7 +126,7 @@ if(
     metadata[,colname_sampleid]
   )
 ){
-  data_full <- cbind.data.frame(metadata_exp, otu_table_in)
+  data_full <- cbind.data.frame(metadata, otu_table_in)
   if(identical(rownames(data_full), data_full[,colname_sampleid])){
     rownames(data_full) <- NULL
   } else {
@@ -149,24 +149,22 @@ colnames(otu_long) <- c("sample_id", "OTU", "count")
 otu_long$OTU <- as.character(otu_long$OTU)
 otu_long$sample_id <- as.character(otu_long$sample_id)
 
-row_match_long <- match(otu_long$sample_id , metadata_exp[, colname_sampleid])
+row_match_long <- match(otu_long$sample_id , metadata[, colname_sampleid])
 
-data_full_long <- cbind.data.frame(metadata_exp[row_match_long,], otu_long[,c("OTU", "count")])
+data_full_long <- cbind.data.frame(metadata[row_match_long,], otu_long[,c("OTU", "count")])
 
 data_full_long_path <- file.path(data_dir, "data_full_long.csv")
 # write.csv(x = data_full_long, file = data_full_long_path, row.names = FALSE)
 # I think I may have been crazy when I wrote the next few lines:
 library(reshape2)
 data_for_cast <- data.frame(
-  sample_id = data_full_long$sample_id, 
-  OTU = data_full_long$OTU, 
+  sample_id = data_full_long$sample_id,
+  OTU = data_full_long$OTU,
   count = data_full_long$count)
 
 otu_long_mean <- melt(dcast(data = data_for_cast, formula = sample_id ~ OTU, fun.aggregate = mean, na.rm = TRUE))
 colnames(otu_long_mean) <- c("sample_id", "OTU", "count")
-row_match_mean <- match(otu_long_mean$sample_id , metadata_exp[, colname_sampleid])
-otu_long_mean_full <- cbind.data.frame(metadata_exp[row_match_long,], otu_long[,c("OTU", "count")])
+row_match_mean <- match(otu_long_mean$sample_id , metadata[, colname_sampleid])
+otu_long_mean_full <- cbind.data.frame(metadata[row_match_long,], otu_long[,c("OTU", "count")])
 split(data_for_cast$count, f = c(data_for_cast$sample_id, data_for_cast$OTU))
 # aggregate(x = data_for_cast, by = list(data_for_cast$OTU, data_for_cast$count), FUN = mean)
-
-
