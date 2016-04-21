@@ -18,7 +18,7 @@
 # this function rescales a numeric vector to 0 and 1
 scale01 <- function(x){(x-min(x))/(max(x)-min(x))}
 
-otu_table_in <- otu_table_raw # otu_table_raw | otu_sodm
+otu_table_in <- otu_table_raw
 
 #-------------------------------------------------------------------------------
 # RESCALE TO EQUAL SEQUENCING DEPTHS PER SAMPLE
