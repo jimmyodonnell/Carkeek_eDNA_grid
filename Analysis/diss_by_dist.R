@@ -1,16 +1,24 @@
+# FIRST RUN 'load_data.r'
+
 # dissimilarity by distance for reduced data set (mean abundance within sample for each OTU)
+
+# REQUIRES:
+# 1. dataframe called "metadata" with unique sequenced samples given in column "sample_id"
+my_metadata <- metadata_mean # metadata[!duplicated(metadata[,colname_env_sample]),]
+# 2. OTU table with rownames that correspond to aforementioned column "sample_id"
+my_table <- otu_mean # otu_mean, otu_spvar, otu_named, as.binary(otu_mean), log(otu_mean + 1)
+rownames(my_table) # should be e.g. PCT-C-0000 etc, aka "env_sample_name"
+
 
 library(geosphere) # distm()
 
-my_otu <- otu_mean
-rownames(my_otu) # should be e.g. PCT-C-0000 etc, aka "env_sample_name"
-my_metadata <- metadata_mean# metadata[!duplicated(metadata[,colname_env_sample]),]
 
 # calculate pairwise great circle distance between sampling locations using Haversine method
 geo_dist <- as.dist(distm(x = my_metadata[,c(colname_lon, colname_lat)], fun = distHaversine))
 # dimnames(geo_dist) <- list(my_metadata$env_sample_name, my_metadata$env_sample_name)
 
-comm_dist <- vegdist(my_otu, method = "bray") #, diag = TRUE, upper = TRUE
+comm_dist <- vegdist(my_table, method = "bray") #, diag = TRUE, upper = TRUE
+
 if(!(identical(dimnames(comm_dist), dimnames(geo_dist)))){
 	warning("Whoa there! the row/column names of the two distance matrices do not seem to add up. This is bad.")
 }
@@ -30,7 +38,7 @@ mm_prediction <- predict(mm_fit)
 geo_dist_scaled <- log(geo_dist + 100)
 plot_x <- geo_dist # geo_dist_scaled
 
-pdf(file = file.path(fig_dir, "diss_by_dist.pdf")) #, width = 8, height = 3
+# pdf(file = file.path(fig_dir, "diss_by_dist.pdf")) #, width = 8, height = 3
 	par(mar = c(4,5,1,1))
 	plot(
 		x = plot_x,
@@ -43,7 +51,8 @@ pdf(file = file.path(fig_dir, "diss_by_dist.pdf")) #, width = 8, height = 3
 		col = 1,
 		bg = rgb(0,0,0,alpha = 0.1 ), #,alpha = 0.1
 		xlab = "Distance between samples (meters)",
-		ylab = "Bray-Curtis dissimilarity"
+		ylab = "Bray-Curtis dissimilarity", 
+		log = "x"
 	)
 	axis(side = 1)
 	#, at = unique(log(metadata$dist_from_shore + 100)), labels = unique(metadata$dist_from_shore)
@@ -61,7 +70,7 @@ lines(x = c(0, sort(geo_dist)), y = c(0, sort(mm_prediction)), col = "red", lwd 
 				# family = "gaussian"
 				# )
 # lines(smoothed, col="red", lwd=2)
-dev.off()
+# dev.off()
 
 #-------------------------------------------------------------------------------
 # Some Possible analyses
@@ -80,7 +89,7 @@ transects <- c("PCT-S", "PCT-C", "PCT-N")
 
 diss_by_transect <- list()
 for(transect in 1:length(transects)){
-	diss_by_transect[[transect]] <- vegdist(my_otu[grep(transects[transect], rownames(comm_dist)),], method = "bray")
+	diss_by_transect[[transect]] <- vegdist(my_table[grep(transects[transect], rownames(comm_dist)),], method = "bray")
 }
 
 dist_by_transect <- list()

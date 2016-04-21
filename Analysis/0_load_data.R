@@ -34,10 +34,10 @@ colname_ycoord <- "dist_from_shore"
 colname_lon <- "lon"
 colname_lat <- "lat"
 
-# get stuff togther in a way we can use in STAN
+# add columns that will be compatible with
 sequenced_sample <- 1:nrow(metadata)
-transect_position <- as.numeric(as.factor(metadata[,"dist_from_shore"]))
-transect_line_rep <- as.numeric(as.factor(metadata[,"transect"]))
+transect_position <- as.numeric(as.factor(metadata[,colname_ycoord]))
+transect_line_rep <- as.numeric(as.factor(metadata[,colname_xcoord])) #metadata[,"transect"]
 transect_line <- as.numeric(as.factor(paste(transect_line_rep, transect_position)))
 
 metadata <- cbind.data.frame(metadata, sequenced_sample, transect_position, transect_line)

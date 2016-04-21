@@ -16,7 +16,14 @@
 # write.csv(x = table_restricted, file = filename_out, quote = FALSE)
 
 # this function rescales a numeric vector to 0 and 1
-scale01 <- function(x){(x-min(x))/(max(x)-min(x))}
+scale01 <- function (x) {(x-min(x))/(max(x)-min(x))}
+
+# this function rescales a matrix to contain only 0 and 1
+as.binary <- function (a_matrix) {
+	bin_mat <- a_matrix
+	bin_mat[bin_mat > 0] <- 1
+	return(bin_mat)
+}
 
 otu_table_in <- otu_table_raw
 
@@ -79,7 +86,7 @@ if(EXCLUDE_RARE_OTUs) {
 CHECK_FOR_OUTLIERS <- TRUE
 # If you'd like to check for and remove inconsistent PCR replicates, go to:
 if(CHECK_FOR_OUTLIERS) {
-  # source('dissimilarity.R')
+  source('dissimilarity.R')
   cleaned <- find_bad_PCR(
   	my_table = otu_filt,
   	my_metadata = metadata,
@@ -96,12 +103,12 @@ if(CHECK_FOR_OUTLIERS) {
 # take mean of OTU abundance across replicate PCRs
 otu_mean <- do.call(rbind,
 	lapply(
-		split(as.data.frame(otu_filt), metadata[,colname_env_sample]),
+		split(as.data.frame(otu_clean), metadata_clean[,colname_env_sample]),
 	colMeans
 	)
 )
 # reduce corresponding metdata
-metadata_mean <- metadata[match(rownames(otu_mean), metadata[,colname_env_sample]),]
+metadata_mean <- metadata_clean[match(rownames(otu_mean), metadata_clean[,colname_env_sample]),]
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
@@ -144,7 +151,7 @@ if(
 #-------------------------------------------------------------------------------
 # LONG FORMAT:
 library(reshape2) # melt()
-otu_long <- melt(otu_filt)
+otu_long <- melt(otu_clean)
 colnames(otu_long) <- c("sample_id", "OTU", "count")
 otu_long$OTU <- as.character(otu_long$OTU)
 otu_long$sample_id <- as.character(otu_long$sample_id)

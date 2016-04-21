@@ -29,35 +29,35 @@ scale01 <- function(x){(x-min(x))/(max(x)-min(x))}
 
 for(i in c(1:10)){
 	plot(
-		my_metadata[,colname_lon], 
-		my_metadata[,colname_lat], 
-		bg = rgb(r = 1, g = 0, b = 0, alpha = scale01(my_table[,i])), 
-		pch = 21, 
-		main = colnames(my_table)[i], 
-		xlab = "Longitude", 
+		my_metadata[,colname_lon],
+		my_metadata[,colname_lat],
+		bg = rgb(r = 1, g = 0, b = 0, alpha = scale01(my_table[,i])),
+		pch = 21,
+		main = colnames(my_table)[i],
+		xlab = "Longitude",
 		ylab = "Latitude"
 	)
 }
 
-# plot only a single otu 
+# plot only a single otu
 single_otu <- "DUP_3"
 # pdf(file = file.path(fig_dir, "otu_in_space_mean.pdf"), width = 7, height = 7)
 	plot(
-		my_metadata[,colname_lon], 
-		my_metadata[,colname_lat], 
-		bg = rgb(r = 1, g = 0, b = 0, alpha = my_table[, single_otu]/max(my_table[, single_otu])), 
-		pch = 21, 
-		cex = my_table[, single_otu]/max(my_table[, single_otu])*1.5, 
-		# cex = 1.5, 
-		main = single_otu, 
-		xlab = "Longitude", 
+		my_metadata[,colname_lon],
+		my_metadata[,colname_lat],
+		bg = rgb(r = 1, g = 0, b = 0, alpha = my_table[, single_otu]/max(my_table[, single_otu])),
+		pch = 21,
+		cex = my_table[, single_otu]/max(my_table[, single_otu])*1.5,
+		# cex = 1.5,
+		main = single_otu,
+		xlab = "Longitude",
 		ylab = "Latitude"
 	)
 	# add 'x' to points where abundance was 0
 	points(
-		my_metadata[,colname_lon], 
-		my_metadata[,colname_lat], 
-		pch = ifelse(my_table[, single_otu]/max(my_table[, single_otu]) == 0, 4, NA_integer_) 
+		my_metadata[,colname_lon],
+		my_metadata[,colname_lat],
+		pch = ifelse(my_table[, single_otu]/max(my_table[, single_otu]) == 0, 4, NA_integer_)
 	)
 # dev.off()
 
@@ -69,32 +69,31 @@ set.seed(8) # to control jitter
 pdf(file = file.path(fig_dir, "otu_in_space_50.pdf"), width = 7, height = 7)
 for(i in 1:50){
 	plot(
-		x = my_metadata[ , colname_xcoord], 
-		xaxt = "n", 
-		xlim = c(-500, 2500), 
-		y = log(my_metadata[ , colname_ycoord] + 10), 
+		x = my_metadata[ , colname_xcoord],
+		xaxt = "n",
+		xlim = c(-500, 2500),
+		y = log(my_metadata[ , colname_ycoord] + 10),
 		yaxt = "n",
 		# log = "y",
-		bg = rgb(r = 1, g = 0, b = 0, alpha = scale01(my_table[, i])), 
-		pch = 21, 
-		cex = scale01(my_table[, i])*5, 
-		# cex = 1.5, 
-		main = colnames(my_table)[i], 
-		las = 1, 
-		xlab = "Position along shore (meters)", 
+		bg = rgb(r = 1, g = 0, b = 0, alpha = scale01(my_table[, i])),
+		pch = 21,
+		cex = scale01(my_table[, i])*5,
+		# cex = 1.5,
+		main = colnames(my_table)[i],
+		las = 1,
+		xlab = "Position along shore (meters)",
 		ylab = "Position from 0 (meters)"
 	)
 	points(
-		x = my_metadata[ , colname_xcoord], 
-		y = log(my_metadata[ , colname_ycoord] + 10), 
+		x = my_metadata[ , colname_xcoord],
+		y = log(my_metadata[ , colname_ycoord] + 10),
 		# log = "y",
-		cex = 1, 
+		cex = 1,
 		pch = ifelse(
-			my_table[, i] == 0, 
-			4, NA_integer_) 
+			my_table[, i] == 0,
+			4, NA_integer_)
 	)
-	axis(side = 2, at = unique(log(my_metadata$dist_from_shore + 10)), labels = unique(my_metadata$dist_from_shore), las = 1)
-	axis(side = 1, at = unique(my_metadata$dist_along_shore), labels = unique(my_metadata$dist_along_shore), las = 1)
+	axis(side = 2, at = unique(log(my_metadata[,colname_ycoord] + 10)), labels = unique(my_metadata[,colname_ycoord]), las = 1)
+	axis(side = 1, at = unique(my_metadata[,colname_xcoord]), labels = unique(my_metadata[,colname_xcoord]), las = 1)
 }
 dev.off()
-

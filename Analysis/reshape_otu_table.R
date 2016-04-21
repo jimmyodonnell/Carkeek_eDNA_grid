@@ -81,16 +81,16 @@ if(nrow(counts_table) != nrow(metadata)){
 
 # make sure the order of the samples in the metadata and OTU table are the same
 identical(
-	rownames(counts_rel), 
+	rownames(counts_rel),
 	metadata_rel[,colname_sampleid]
 	)
 
 # reshape into a long-format dataframe
-data_l <- reshape(cbind(metadata_rel, counts_rel), 
+data_l <- reshape(cbind(metadata_rel, counts_rel),
   varying = colnames(counts_rel), # aka taxa
   v.names = varname_counts,
-  timevar = varname_taxa, 
-  times = colnames(counts_rel), 
+  timevar = varname_taxa,
+  times = colnames(counts_rel),
   new.row.names = 1:(nrow(counts_rel)*ncol(counts_rel)),
   direction = "long")[c(colname_sampleid, colname_pcr, colname_posx, colname_posy, varname_taxa, varname_counts)]
 
@@ -101,12 +101,12 @@ data_l <- reshape(cbind(metadata_rel, counts_rel),
 
 # this reorders the names of taxa
 data_array <- acast(
-				data = data_l, 
-				formula =  list(colname_pcr, varname_taxa, colname_posx), 
+				data = data_l,
+				formula =  list(colname_pcr, varname_taxa, colname_posx),
 				value.var = varname_counts
 				)
 
-# ... and thus this fucks up the names 
+# ... and thus this fucks up the names
 # dimnames(data_array) <- list(
 	# pcr = pcr,
 	# taxa = taxa,
@@ -138,8 +138,8 @@ counts_file_path <- file.path(data_dir, "otu_table_filtered_per_samp.csv")
 
 # this reorders the names of taxa
 data_array <- acast(
-				data = data_l, 
-				formula =  list(colname_pcr, varname_taxa, colname_posx, colname_posy), 
+				data = data_l,
+				formula =  list(colname_pcr, varname_taxa, colname_posx, colname_posy),
 				value.var = varname_counts
 				)
 
@@ -148,7 +148,7 @@ data_array <- data_array[,taxa,,]
 dimnames(data_array) <- list(
 	pcr = pcr,
 	taxa = taxa,
-	posx = posx, 
+	posx = posx,
 	posy = posy
 	)
 identical(counts, data_array)

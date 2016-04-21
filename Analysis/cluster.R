@@ -14,9 +14,7 @@ gghue <- function(n){
 }
 
 # choose between using proportional or raw counts
-# my_table <- otu_table
-# my_table <- otu_filt[,]
-my_table <- otu_mean # otu_mean, otu_spvar, otu_named
+my_table <- as.binary(otu_mean[,1:100]) # otu_mean, otu_spvar, otu_named, as.binary(otu_mean), 
 my_metadata <- metadata_mean #metadata[!duplicated(metadata[,"env_sample_name"]),]
 
 mydist <- vegdist(my_table, method = "bray") # , binary = TRUE
@@ -25,7 +23,7 @@ mypam <- pamk(data = mydist) # to restrict range of Ks considered: , krange = 2:
 pam_out <- mypam$pamobject
 mypam$nc # number of clusters
 
-plot(pam(mydist, k = mypam$nc), which.plots = 1)
+# plot(pam(mydist, k = mypam$nc), which.plots = 1)
 
 mycolors <- gghue(mypam$nc)
 
@@ -53,7 +51,7 @@ plot(
 		x = my_metadata[,colname_xcoord],
 		xaxt = "n",
 		xlim = c(-500, 2500),
-		y = log(my_metadata[,colname_ycoord] + 10),
+		y = log(my_metadata[,colname_ycoord] + 100),
 		yaxt = "n",
 		# log = "y",
 		col = mycolors[mypam$pamobject$clustering[my_metadata[,colname_env_sample]]],
@@ -70,7 +68,7 @@ points(
 		x = my_metadata[,colname_xcoord],
 		xaxt = "n",
 		xlim = c(-500, 2500),
-		y = log(my_metadata[,colname_ycoord] + 10),
+		y = log(my_metadata[,colname_ycoord] + 100),
 		yaxt = "n",
 		# log = "y",
 		col = "white",
@@ -83,7 +81,7 @@ points(
 		xlab = "Position along shore (meters)",
 		ylab = "Position from 0 (meters)"
 	)
-	axis(side = 2, at = unique(log(my_metadata[,colname_ycoord] + 10)), labels = unique(my_metadata[,colname_ycoord]), las = 1)
+	axis(side = 2, at = unique(log(my_metadata[,colname_ycoord] + 100)), labels = unique(my_metadata[,colname_ycoord]), las = 1)
 	axis(side = 1, at = unique(my_metadata[,colname_xcoord]), labels = unique(my_metadata[,colname_xcoord]), las = 1)
 dev.off()
 
