@@ -14,22 +14,22 @@ gghue <- function(n){
 }
 
 # choose between using proportional or raw counts
-my_table <- as.binary(otu_mean[,1:100]) # otu_mean, otu_spvar, otu_named, as.binary(otu_mean), 
+my_table <- otu_mean # otu_mean, otu_spvar, otu_named, as.binary(otu_mean), [,1:100]
 my_metadata <- metadata_mean #metadata[!duplicated(metadata[,"env_sample_name"]),]
 
 mydist <- vegdist(my_table, method = "bray") # , binary = TRUE
 
-mypam <- pamk(data = mydist) # to restrict range of Ks considered: , krange = 2:4
+mypam <- pamk(data = mydist, krange = 1:(attributes(mydist)$Size-1)) # to restrict range of Ks considered: , krange = 2:4
 pam_out <- mypam$pamobject
-mypam$nc # number of clusters
+(K_optim <- mypam$nc) # number of clusters
 
 # plot(pam(mydist, k = mypam$nc), which.plots = 1)
 
 mycolors <- gghue(mypam$nc)
 
 # see ?clusplot.default
-pdf(file = file.path(fig_dir, "pam_plot.pdf"))
-	par(mar = c(5,5,1,1))
+# pdf(file = file.path(fig_dir, "pam_plot.pdf"))
+	par(mar = c(5,5,2,1))
 	clusplot(
 		x = as.matrix(mydist),
 		clus = pam_out$clustering,
@@ -42,11 +42,11 @@ pdf(file = file.path(fig_dir, "pam_plot.pdf"))
 		col.clus = mycolors,
 		main = NA
 	)
-dev.off()
+# dev.off()
 
 
 # USING MEAN DATA
-pdf(file = file.path(fig_dir, "pam_in_space.pdf"), width = 5, height = 7)
+# pdf(file = file.path(fig_dir, "pam_in_space.pdf"), width = 5, height = 7)
 plot(
 		x = my_metadata[,colname_xcoord],
 		xaxt = "n",
@@ -59,31 +59,32 @@ plot(
 		pch = 19, #as.character(mypam$pamobject$clustering[my_metadata$env_sample_name]-1)
 		cex = 4,
 		# cex = 1.5,
-		main = "membership to PAM classifications",
+		main = paste("membership to PAM clusters, K =", K_optim),
+		bty = "n", 
 		las = 1,
 		xlab = "Position along shore (meters)",
 		ylab = "Position from 0 (meters)"
 	)
-points(
+text(
 		x = my_metadata[,colname_xcoord],
-		xaxt = "n",
 		xlim = c(-500, 2500),
 		y = log(my_metadata[,colname_ycoord] + 100),
-		yaxt = "n",
 		# log = "y",
 		col = "white",
 		# bg = mycolors[mypam$pamobject$clustering[my_metadata$sample_id]],
-		pch = as.character(mypam$pamobject$clustering[my_metadata[,colname_env_sample]]),
-		cex = 2,
-		# cex = 1.5,
-		main = "membership to PAM classifications",
-		las = 1,
-		xlab = "Position along shore (meters)",
-		ylab = "Position from 0 (meters)"
+		labels = as.character(mypam$pamobject$clustering[my_metadata[,colname_env_sample]]),
+		cex = 1.5,
+		las = 1
 	)
-	axis(side = 2, at = unique(log(my_metadata[,colname_ycoord] + 100)), labels = unique(my_metadata[,colname_ycoord]), las = 1)
-	axis(side = 1, at = unique(my_metadata[,colname_xcoord]), labels = unique(my_metadata[,colname_xcoord]), las = 1)
-dev.off()
+	axis(side = 2, 
+		at = unique(log(my_metadata[,colname_ycoord] + 100)), 
+		labels = unique(my_metadata[,colname_ycoord]), 
+		line = -1, lwd = 0, lwd.ticks = 1, las = 1)
+	axis(side = 1, 
+		at = unique(my_metadata[,colname_xcoord]), 
+		labels = unique(my_metadata[,colname_xcoord]), 
+		line = 0, lwd = 0, lwd.ticks = 1, las = 1)
+# dev.off()
 
 
 # PLOT INDIVIDUAL PCR REPLICATES
