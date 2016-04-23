@@ -31,3 +31,11 @@ range_adult_km
 size_adult_cm
   - def: order of magnitude estimate of adult body size, in centimeters
   - ex: 0; 100; 1000
+
+higher_group
+  - def: a higher taxonomic group with which this one shares data
+  - ex: Nemertea
+
+known_to_puget_sound
+  - def: do any members of the taxon occur in Puget Sound
+  - ex: 1 = yes, 0 = no
