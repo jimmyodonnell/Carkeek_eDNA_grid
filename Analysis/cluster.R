@@ -29,7 +29,7 @@ mycolors <- gghue(mypam$nc)
 
 # see ?clusplot.default
 # pdf(file = file.path(fig_dir, "pam_plot.pdf"))
-	par(mar = c(5,5,2,1))
+	par(mar = c(5,5,3,1))
 	clusplot(
 		x = as.matrix(mydist),
 		clus = pam_out$clustering,
@@ -44,6 +44,7 @@ mycolors <- gghue(mypam$nc)
 	)
 # dev.off()
 
+dev.new(width = 4, height = 7)
 
 # USING MEAN DATA
 # pdf(file = file.path(fig_dir, "pam_in_space.pdf"), width = 5, height = 7)
