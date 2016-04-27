@@ -35,7 +35,7 @@
 %\graphicspath{{../../Figures/}} % I think if you do this it saves typing the path over and over in the figures section
 
 
-%------------------------------------TITLE--------------------------------------
+%-------------------------------------------------------------------------------
 
 \title{There once was a grid at ol' Carkeek}
 
@@ -64,11 +64,15 @@
 \section*{Keywords}
 Stuff, things, neat, cool, wow, instafun, tags4likes, etc
 
+%-------------------------------------------------------------------------------
 %----------------------------------ABSTRACT-------------------------------------
+%-------------------------------------------------------------------------------
 \section*{Abstract}
 This is the text of the abstract.
 
+%-------------------------------------------------------------------------------
 %---------------------------------INTRODUCTION----------------------------------
+%-------------------------------------------------------------------------------
 \section*{Introduction}
 
 Biodiversity surveillance is being revolutionized by DNA-based detection of organisms from environmental samples. ?(specifically speed and scope of ecological studies). % "The surveillance of biodiversity using DNA-based detection from environmental samples"
@@ -154,7 +158,9 @@ If the mean is close to 1, there is high spatial heterogeneity over the spatial 
 If the mean is 0, all samples are identical, and we infer there is complete community homogeneity over the scale sampled.
 The rate at which community dissimilarity approaches the mean gives an indication of the rate of community turnover.
 
+%-------------------------------------------------------------------------------
 %-----------------------------------METHODS-------------------------------------
+%-------------------------------------------------------------------------------
 \section*{Methods}
 \subsection*{Environmental Sampling}
 Starting from lower-intertidal patches of \textit{Zostera marina}, we collected water samples at 1 meter depth from 8 points (0, 75, 125, 250, 500, 1000, 2000, and 4000 meters) along three parallel transects separated by 1000 meters (Figure \ref{site_map}).
@@ -235,6 +241,15 @@ where $com$ is community dissimilarity, $d$ is spatial distance, and where the a
 Model fit was assessed using the function nls in R (CITE R). 
 
 
+\subsection*{Laboratory Methods}
+We collated coarse-scale data on life history characteristic for each of the major taxonomic groups recovered, 
+including dispersal range of the gametes, larvae, and adults, adult habitat type and selectivity, and adult body size. 
+Dispersal range was given as an order-of-magnitude approximation of the scale of dispersal: for example, internally fertilized species were assigned a gamete range of 0 km, while broadcast spawners were assigned a gamete range of 10 km. 
+Similarly, adult range size was approximated as 0 km (sessile), 1 km (motile but not pelagic), or 10 km (highly mobile, pelagic). 
+Variables were specified as 'multiple' for groups known to span more than 1 magnitude of range size. 
+For groups to which sequences were annotated with high confidence, but for which life history strategy is diverse or poorly known (e.g. families in the phylum Nemertea), we used conservative, coarse approximations at a higher taxonomic rank. 
+We assessed whether or not marine invertebrate taxa are thought to be present in Puget Sound by checking for their presence in a comprehensive checklist of invertebrates of Puget Sound CITE KOZLOFF. 
+These data are available as part of the REFERENCE SUPPLEMENTAL DATA.
 
 
 \subsection*{Spatial Model Formulation}
@@ -268,7 +283,9 @@ Where $\beta_0$ is a general intercept across all taxa, $\beta_i$ is a fixed eff
 %
 %Where $a$ represents an apple.
 
+%-------------------------------------------------------------------------------
 %-----------------------------------RESULTS-------------------------------------
+%-------------------------------------------------------------------------------
 \section*{Results}
 \subsection*{Data Quality (Bioinformatics)}
 All value ranges are reported as (mean $\pm$ standard deviation).\\
@@ -290,7 +307,9 @@ Residual standard error of the fit of the model is 0.1563 on 274 degrees of free
 \subsection*{Spatial Model Output}
 
 
+%-------------------------------------------------------------------------------
 %----------------------------------DISCUSSION-----------------------------------
+%-------------------------------------------------------------------------------
 \section*{Discussion}
 Boy those results sure are neat. Now, the pressing question becomes: How do you like them apples?
 
@@ -346,14 +365,14 @@ All analyses were performed using scripts available from the project repository 
 
 \begin{figure}[h!] % [h!] forces the figure to be placed roughly here
   \centering
-    \includegraphics[width=1\textwidth]{../../Figures/pam_plot.pdf}
+    \includegraphics[height=0.5\textheight]{../../Figures/pam_plot.pdf}
     \caption{TODO figure out color of ellipses; I can't even plot them gray without Plot of partitioning around medoids (PAM) analysis of OTU sequence abundance from 4 replicate PCRs at each of 24 sampling points. Points represent communities of OTUs; color and shape indicate cluster membership as determined by PAM analysis. Ellipses indicate the smallest area of a cluster that contains all of its members.}
   \label{pam_plot.pdf} % use this to refer to your figure in the text, so that numbering updates automatically
 \end{figure}
 
 \begin{figure}[h!] % [h!] forces the figure to be placed roughly here
   \centering
-    \includegraphics[width=1\textwidth]{../../Figures/pam_in_space.pdf}
+    \includegraphics[height=0.5\textheight]{../../Figures/pam_in_space.pdf}
     \caption{Geographic position of collected samples, colored by membership to clusters identified by partitioning around medoids algorithm. 
 %    Points are jittered in both horizontal and vertical dimension to distinguish among four replicate PCR products sequenced from each environmental sample.
 }
