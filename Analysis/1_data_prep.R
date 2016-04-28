@@ -63,7 +63,7 @@ if(RESCALE_SEQUENCING_DEPTH) {
 #-------------------------------------------------------------------------------
 # Should OTUs be excluded that occur fewer than a threshold number of times?
 EXCLUDE_RARE_OTUs <- TRUE
-abundance_threshold <- 1
+abundance_threshold <- 100
 
 if(EXCLUDE_RARE_OTUs) {
   # how many OTUs will be retained?

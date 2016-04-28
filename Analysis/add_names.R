@@ -25,10 +25,12 @@ colSums(the_otu_table)[!colnames(the_otu_table) %in% taxa_df$query_seq]
 taxa_df$query_seq == 
 colnames(the_otu_table)
 
-colnames(taxa_df)
-head(classification_df)
+taxa_by_otu <- as.character(taxa_df[taxa_vector,"class_all"])
+source("aggregate_cols.R")
+aggregate_cols(otu_mean, col_groups = taxa_by_otu)
 
-as.character(classification_df$query)
+stop()
+# OK pick up here
 
 # columns in the taxa_df with taxon_id
 as.character(taxa_df$LCA_id_all)
