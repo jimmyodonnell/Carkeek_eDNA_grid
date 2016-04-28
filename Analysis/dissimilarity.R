@@ -1,8 +1,12 @@
 # calculate dissimilarity
-find_bad_PCR <- function(my_table, my_metadata, sample_id_column, grouping_column) {
+find_bad_PCR <- function(my_table, my_metadata,
+	sample_id_column, grouping_column, threshold_sd = 1.5) {
 
 	library(vegan) # vegdist
 	# rownames must be unique sample IDs. get this from 1_data_prep.R
+
+	# convert the data matrix to proportional abundance within sample
+	prop_table <- my_table/rowSums(my_table)
 
 	# testing:
 	# my_table <- otu_filt
@@ -12,7 +16,7 @@ find_bad_PCR <- function(my_table, my_metadata, sample_id_column, grouping_colum
 
 	# At how many standard deviations above the mean dissimilarity
 	# should a sample be excluded?
-	THRESHOLD_SD <- 1
+	THRESHOLD_SD <- threshold_sd
 	if(!(identical(my_metadata[,sample_id_column], rownames(my_table)))){
 		stop("hold on, the otu and metadata rows are not in the same order; disaster could ensue")
 	}
@@ -30,12 +34,12 @@ find_bad_PCR <- function(my_table, my_metadata, sample_id_column, grouping_colum
 	        split(as.data.frame(contingency_table), grouping_vector),
 	        # matrix, ncol = ncol(contingency_table)
 	      # ),
-	      vegdist, method = "bray", upper = TRUE, diag = TRUE
+	      vegdist, method = "bray", binary = FALSE, diag = TRUE, upper = TRUE
 	    )
 	  return(dis_by_group)
 	}
 
-	my_dis <- dis_by_sample(my_table, group_vector)
+	my_dis <- dis_by_sample(prop_table, group_vector)
 	# unlist seems to conveniently remove 0s and redundant values for distance matrices
 	my_dis_v <- unlist(my_dis)
 
@@ -43,28 +47,6 @@ find_bad_PCR <- function(my_table, my_metadata, sample_id_column, grouping_colum
 	dis_mean <- mean(my_dis_v)
 	dis_sd <- sd(my_dis_v)
 	dissimilarity_cutoff <- dis_mean + (dis_sd * THRESHOLD_SD)
-
-	# pdf(file = file.path(fig_dir, "BC_before_cleaning.pdf"))
-	par(mar = c(4,7,1,1))
-	stripchart(my_dis, method = "jitter", pch = 21, xlim = c(0,1),
-	           xlab = "Pairwise Bray-Curtis Dissimilarity",
-	           bg = rgb(0,0,0,alpha = 0.2), las = 1)
-
-
-	# plot all
-	# plot(my_dis_v, ylim = c(0,1),
-		# ylab = "Within-sample dissimilarity (Bray-Curtis)",
-		# xlab = "arbitrary sample index",
-		# las = 1)
-	line_colors <- c("black", "red")
-	abline(v = c(dis_mean, dissimilarity_cutoff),
-		lty = 2, col = line_colors)
-
-	legend("topright", legend = c("mean", "threshold"),
-		bty = "n", lty = 2, col = line_colors)
-
-	# note high value for sample "lib_B_tag_GCGCTC" in PCT-C-0500
-	# dev.off()
 
 	# which sample group contains dissimilarities over the threshold?
 	bad_env_sample <- which(
@@ -81,7 +63,36 @@ find_bad_PCR <- function(my_table, my_metadata, sample_id_column, grouping_colum
 	# what is the name of the replicate occuring more than once?
 	bad_replicate_name <- names(table(dis_names))[table(dis_names) > 1]
 
-	# remove that sample?
+	# pdf(file = file.path(fig_dir, "BC_before_cleaning.pdf"))
+	color_vector <- rep(1, length(my_dis))
+	color_vector[bad_env_sample] <- "white"
+	par(mar = c(4,7,1,1))
+	stripchart(my_dis, method = "jitter", pch = 21, xlim = c(0,1),
+	           xlab = "Pairwise Bray-Curtis Dissimilarity",
+	           bg = rgb(0,0,0,alpha = 0.2), #col = color_vector,
+	           las = 1)
+
+	# attempting to color the points red over the threshold
+	# bad_x <- as.vector(my_dis[[bad_env_sample]])
+	# bad_y <- rep(bad_env_sample, length(temp))
+	# points(jitter(bad_x), jitter(bad_y), col = (as.numeric(bad_x > dissimilarity_cutoff) + 1))
+
+	# plot all
+	# plot(my_dis_v, ylim = c(0,1),
+		# ylab = "Within-sample dissimilarity (Bray-Curtis)",
+		# xlab = "arbitrary sample index",
+		# las = 1)
+	line_colors <- c("black", "red")
+	abline(v = c(dis_mean, dissimilarity_cutoff),
+		lty = 2, col = line_colors)
+
+	legend("topright", legend = c("mean", "threshold"),
+		bty = "n", lty = 2, col = line_colors)
+
+	# note high value for sample "lib_B_tag_GCGCTC" in PCT-C-0500
+	# dev.off()
+
+	# remove the bad sample?
 	remove_bad_replicate <- TRUE
 	if(remove_bad_replicate == TRUE){
 	  metadata_cleaned <- my_metadata[my_metadata[,sample_id_column] != bad_replicate_name,]
