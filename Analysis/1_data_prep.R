@@ -15,6 +15,9 @@
 # write the file
 # write.csv(x = table_restricted, file = filename_out, quote = FALSE)
 
+# TODO: append tables to a list like so:
+# some_tables[["yet_another"]] <- matrix(data = rnorm(25), nrow = 5)
+
 # this function rescales a numeric vector to 0 and 1
 scale01 <- function (x) {(x-min(x))/(max(x)-min(x))}
 
