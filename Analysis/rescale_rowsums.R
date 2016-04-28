@@ -20,7 +20,7 @@ rescale_rowsums <- function(mat)
 	# to re-order by the abundance in THESE samples (i.e. not those from samples from elsewhere)
 	scaled <- scaled[,order(colSums(scaled), decreasing = TRUE)]
 
-	print(paste("dimensions of rescaled matrix:", dim(scaled)))
+	print(paste("dimensions of rescaled matrix:", paste(dim(scaled), collapse = " ")))
 	
 	return(scaled)
 
