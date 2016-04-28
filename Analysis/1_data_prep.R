@@ -28,57 +28,81 @@ as.binary <- function (a_matrix) {
 	return(bin_mat)
 }
 
-present_in_all_rows <- function(x)
-{
-# this function removes columns which are not > 0 in all rows
-	return(x[ , colSums(x > 0) >= nrow(x)])
-}
-
 strip_absent <- function(x)
 {
 # this function removes any columns for which the sum is <= 0
 	return(x[,which(colSums(x) > 0)])
 }
 
+present_in_all_rows <- function(x)
+{
+# this function removes columns which are not > 0 in all rows
+	return(x[ , colSums(x > 0) >= nrow(x)])
+}
+
+not_in_all_rows <- function(x)
+{
+# this function removes columns which are > 0 in all rows
+	return(x[ , colSums(x > 0) < nrow(x)])
+}
+
+prop <- function(x)
+{
+# convert a matrix of counts to proportions of the samples
+	return(x/rowSums(x))
+}
+
 otu_table_in <- otu_table_raw
+
+# calculate proportional abundance of OTUs in each sample
+otu_table_prop <- otu_table_in/rowSums(otu_table_in)
+
+
+#-------------------------------------------------------------------------------
+CHECK_FOR_OUTLIERS <- TRUE
+# If you'd like to check for and remove inconsistent PCR replicates, go to:
+if(CHECK_FOR_OUTLIERS) {
+  source('dissimilarity.R')
+  cleaned <- find_bad_PCR(
+  	my_table = otu_table_in,
+  	my_metadata = metadata,
+  	sample_id_column = colname_sampleid,
+  	grouping_column = colname_env_sample, 
+  	threshold_sd = 1.5)
+  otu_clean <- strip_absent(cleaned[[1]])
+  metadata_clean <- cleaned[[2]]
+  rm(cleaned)
+}
+#-------------------------------------------------------------------------------
+
 
 #-------------------------------------------------------------------------------
 # RESCALE TO EQUAL SEQUENCING DEPTHS PER SAMPLE
 RESCALE_SEQUENCING_DEPTH <- TRUE
 
+source("rescale_rowsums.R")
+
 if(RESCALE_SEQUENCING_DEPTH) {
 
-	# calculate the minimum number of reads assigned to these OTUs in these samples
-	minreads <- min(rowSums(otu_table_in))
-
-	# calculate proportional abundance of OTUs in each sample
-	otu_table_prop <- otu_table_in/rowSums(otu_table_in)
-
-	# scale the proportional abundance of the OTU in each sample to the minimum number of reads
-	otu_scaled <- otu_table_prop * minreads
-
-	# ignore counts OTUs found fewer than 0.5 times (anything greater would be rounded to 1)
-	otu_scaled[otu_scaled < 0.5] <- 0
-
-	# round to whole numbers
-	otu_scaled <- round(otu_scaled)
-	dim(otu_scaled)
-
-	# again exclude OTUs not found in these samples
-	otu_scaled <- strip_absent(otu_scaled)
-	dim(otu_scaled)
-
-	# to re-order by the abundance in THESE samples (i.e. not those from samples from elsewhere)
-	otu_scaled <- otu_scaled[,order(colSums(otu_scaled), decreasing = TRUE)]
-	otu_scaled[1:10,1:10]
+	otu_scaled <- rescale_rowsums(otu_clean)
 
 }
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+# CALCULATE THRESHOLD AT WHICH THERE IS NO LONGER TURNOVER IN PRESENCE ABSENCE
+# I.E., for replicate PCRs, how many counts can be observed of one OTU 
+# where it is completely absent from another PCR?
+source("no_turnover.R")
+turnover_thresholds <- no_turnover(otu_scaled, metadata_clean[,colname_env_sample])
+turnover_threshold <- max(turnover_thresholds)
+#-------------------------------------------------------------------------------
 
 
 #-------------------------------------------------------------------------------
 # Should OTUs be excluded that occur fewer than a threshold number of times?
 EXCLUDE_RARE_OTUs <- TRUE
-abundance_threshold <- 4
+abundance_threshold <- turnover_threshold
 
 if(EXCLUDE_RARE_OTUs) {
   # how many OTUs will be retained?
@@ -95,23 +119,6 @@ if(EXCLUDE_RARE_OTUs) {
 # boxplot(log(otu_table_in[,1:20]))
 # boxplot(otu_table_prop[,1:20])
 # boxplot(scale(otu_table_in[,1:20]))
-
-
-#-------------------------------------------------------------------------------
-CHECK_FOR_OUTLIERS <- TRUE
-# If you'd like to check for and remove inconsistent PCR replicates, go to:
-if(CHECK_FOR_OUTLIERS) {
-  source('dissimilarity.R')
-  cleaned <- find_bad_PCR(
-  	my_table = otu_filt,
-  	my_metadata = metadata,
-  	sample_id_column = colname_sampleid,
-  	grouping_column = colname_env_sample)
-  otu_clean <- cleaned[[1]]
-  metadata_clean <- cleaned[[2]]
-  rm(cleaned)
-}
-#-------------------------------------------------------------------------------
 
 
 #-------------------------------------------------------------------------------
