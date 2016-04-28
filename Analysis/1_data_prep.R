@@ -28,6 +28,18 @@ as.binary <- function (a_matrix) {
 	return(bin_mat)
 }
 
+present_in_all_rows <- function(x)
+{
+# this function removes columns which are not > 0 in all rows
+	return(x[ , colSums(x > 0) >= nrow(x)])
+}
+
+strip_absent <- function(x)
+{
+# this function removes any columns for which the sum is <= 0
+	return(x[,which(colSums(x) > 0)])
+}
+
 otu_table_in <- otu_table_raw
 
 #-------------------------------------------------------------------------------
@@ -53,7 +65,7 @@ if(RESCALE_SEQUENCING_DEPTH) {
 	dim(otu_scaled)
 
 	# again exclude OTUs not found in these samples
-	otu_scaled <- otu_scaled[,which(colSums(otu_scaled) > 0)]
+	otu_scaled <- strip_absent(otu_scaled)
 	dim(otu_scaled)
 
 	# to re-order by the abundance in THESE samples (i.e. not those from samples from elsewhere)
@@ -66,7 +78,7 @@ if(RESCALE_SEQUENCING_DEPTH) {
 #-------------------------------------------------------------------------------
 # Should OTUs be excluded that occur fewer than a threshold number of times?
 EXCLUDE_RARE_OTUs <- TRUE
-abundance_threshold <- 100
+abundance_threshold <- 4
 
 if(EXCLUDE_RARE_OTUs) {
   # how many OTUs will be retained?
