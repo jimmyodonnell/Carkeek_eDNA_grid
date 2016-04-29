@@ -189,7 +189,7 @@ Detailed bioinformatic methods are provided in the supplemental material, and sc
 %
 We calculated rates of cross-library contamination by counting occurrences of primer sequences: 12S primer sequences appearing in a 16S library (and vice versa) indicate an error in the preparation or sequencing procedures.
 
-We assessed PCR contamination by evaluating the dissimilarity of replicate PCRs of the same DNA sample, and removed one sample for which the Bray-Curtis dissimilarities between itself and the other replicates exceeded 0.1 (lib\_B\_tag\_GCGCTC).
+We checked for experimental error by evaluating the Bray-Curtis dissimilarity of proportional read abundance among replicate PCRs of the same DNA sample (0.033$\pm$0.063), and excluded one PCR replicate for which the dissimilarities between itself and the other replicates exceeded 1 SD (lib\_B\_tag\_GCGCTC).
 
 %To infer a general estimate of the rate of cross-sample contamination likely to be associated with lab procedures, we calculated the proportion of reads containing primer index sequences (or combinations thereof?) that we did not actually use
 %
@@ -211,7 +211,16 @@ We assessed PCR contamination by evaluating the dissimilarity of replicate PCRs 
 %----------------------------------------------------------------------------
 
 
-To scale the OTU counts, we calculated the minimum number of OTU-assigned reads (as opposed to raw number of reads) found in these samples (130402), multiplied this by within-sample proportional abundance of each OTU, and finally rounded these numbers.
+To account for variation in the number of sequencing reads (sequencing depth) recovered per sample, we multiplied the within-sample proportional abundance of each OTU by the minimum sequencing depth (130402), and rounded to the nearest integer.
+
+Because each step in the massively parallel sequencing workflow is sensitive to contamination, it is possible that some sequences are the result of contamination during field sampling, filtration, DNA extraction, PCR, fragment size selection, quantitation, sequencing adapter ligation, or the sequencing process itself. 
+Some authors have argued that these risks could bias sequence abundance, making those data meaningless and prohibiting quantitative estimates, yet convert count data to binary presence absence data on the basis of the sequence abundance greater than some arbitrary threshold). %massively parallel metabarcoding, 
+Recent work has shown that this binary treatment of data can (?falsely?) overestimate taxon richness and falsely elevate the estimate of taxon turnover among samples (CITE LERAY FORTHCOMING).
+We take the view that it is unlikely that contaminants would manifest as sequences in the final dataset in consistent abundance across replicates; indeed, our data show that the process from PCR onward is remarkably consistent. 
+Thus, we calculated from our data the maximum number of sequence counts (after scaling to correct for sequencing depth variation) for which there is turnover in presence-absence among PCR replicates within an environmental sample. 
+We use this number to determine a conservative minimum threshold above which we can be confident that counts are consistent among replicates and not of (?spurious | dubious?) origin, and exclude from further analysis observations where the mean abundance across PCR replicates within samples does not reach this threshold. % the number is turnover_threshold=178
+
+
 
 We compiled life history data for taxonomic groups at the family level and higher.
 For groups with sparse data at the family level (e.g. Nemertea), we used the data from the higher level group.
