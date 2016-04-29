@@ -46,6 +46,13 @@ find_bad_PCR <- function(my_table, my_metadata,
 	# calculate mean dissimilarity
 	dis_mean <- mean(my_dis_v)
 	dis_sd <- sd(my_dis_v)
+	print(
+		paste(
+			"dissimilarity among replicates within sample (mean, sd):", 
+			paste(
+				round(dis_mean, digits = 3), 
+				round(dis_sd, digits = 3), 
+				collapse = " ")))
 	dissimilarity_cutoff <- dis_mean + (dis_sd * THRESHOLD_SD)
 
 	# which sample group contains dissimilarities over the threshold?
