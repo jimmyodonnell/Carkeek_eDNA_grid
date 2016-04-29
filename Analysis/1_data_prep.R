@@ -68,7 +68,7 @@ if(CHECK_FOR_OUTLIERS) {
   	my_metadata = metadata,
   	sample_id_column = colname_sampleid,
   	grouping_column = colname_env_sample, 
-  	threshold_sd = 1.5)
+  	threshold_sd = 1)
   otu_clean <- strip_absent(cleaned[[1]])
   metadata_clean <- cleaned[[2]]
   rm(cleaned)
@@ -95,31 +95,8 @@ if(RESCALE_SEQUENCING_DEPTH) {
 # where it is completely absent from another PCR?
 source("no_turnover.R")
 turnover_thresholds <- no_turnover(otu_scaled, metadata_clean[,colname_env_sample])
-turnover_threshold <- max(turnover_thresholds)
+(turnover_threshold <- max(turnover_thresholds))
 #-------------------------------------------------------------------------------
-
-
-#-------------------------------------------------------------------------------
-# Should OTUs be excluded that occur fewer than a threshold number of times?
-EXCLUDE_RARE_OTUs <- TRUE
-abundance_threshold <- turnover_threshold
-
-if(EXCLUDE_RARE_OTUs) {
-  # how many OTUs will be retained?
-  sum(colSums(otu_scaled) > abundance_threshold)
-  # round(colSums(otu_scaled)/sum(otu_scaled)*100, digits = 2)
-  # plot(colSums(otu_scaled)/sum(otu_scaled), type = "l")
-  # exclude OTUs that were counted a total of fewer than 100 times across samples
-  otu_filt <- otu_scaled[,which(colSums(otu_scaled) > abundance_threshold)]
-  dim(otu_filt)
-}
-
-
-# boxplot(otu_filt[,1:20])
-# boxplot(log(otu_table_in[,1:20]))
-# boxplot(otu_table_prop[,1:20])
-# boxplot(scale(otu_table_in[,1:20]))
-
 
 #-------------------------------------------------------------------------------
 # take mean of OTU abundance across replicate PCRs
@@ -134,8 +111,39 @@ metadata_mean <- metadata_clean[match(rownames(otu_mean), metadata_clean[,colnam
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
+# Should OTUs be excluded that occur fewer than a threshold number of times?
+EXCLUDE_RARE_OTUs <- TRUE
+abundance_threshold <- turnover_threshold
+
+# should the threshold be applied to each observation, or across all samples
+# If at observation, any count < abundance threshold will be set to 0
+# If across all samples, counts set to 0 for columns with sum < abundance_threshold
+
+THRESHOLD_LEVEL <- "observation" # "observation" | "all_samples"
+
+if(EXCLUDE_RARE_OTUs) {
+  if(THRESHOLD_LEVEL == "all_samples"){
+	  # how many OTUs will be retained?
+	  sum(colSums(otu_scaled) > abundance_threshold)
+	  # round(colSums(otu_scaled)/sum(otu_scaled)*100, digits = 2)
+	  # plot(colSums(otu_scaled)/sum(otu_scaled), type = "l")
+	  # exclude OTUs that were counted a total of fewer than 100 times across samples
+	  otu_filt <- otu_scaled[,which(colSums(otu_scaled) > abundance_threshold)]
+	  dim(otu_filt)
+  } else if(THRESHOLD_LEVEL == "observation"){
+  	# do it on a per-sample basis
+	otu_filt <- otu_mean
+	otu_filt[otu_filt < abundance_threshold] <- 0
+	otu_filt <- strip_absent(otu_filt)
+	dim(otu_filt)
+  }
+}
+#-------------------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------------
 # rescale each column to its maximum value, ranging from 0 to 1
-otu_01 <- apply(otu_mean, MARGIN = 2, FUN = scale01)
+otu_01 <- apply(otu_filt, MARGIN = 2, FUN = scale01)
 par(mar = c(4,5,1,1))
 stripchart(as.data.frame(otu_01[,1:20]), pch = 19, col = rgb(0,0,0, alpha = 0.2),
   main = "", las = 1)
