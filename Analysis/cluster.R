@@ -2,6 +2,7 @@
 # INPUT COMES FROM SCRIPT "load_data.r"
 # Watch out: if number of clusters is >9, the plotting will look funky
 # Only single digits can be used as symbols in base plotting
+#-------------------------------------------------------------------------------
 
 library(fpc) #pamk()
 library(cluster) #pam
@@ -14,10 +15,10 @@ gghue <- function(n){
 }
 
 # choose between using proportional or raw counts
-my_table <- otu_mean # otu_mean, otu_spvar, otu_named, as.binary(otu_mean), [,1:100]
+my_table <- otu_filt # otu_mean, otu_spvar, otu_named, as.binary(otu_mean), [,1:100] , otu_filt
 my_metadata <- metadata_mean #metadata[!duplicated(metadata[,"env_sample_name"]),]
 
-mydist <- vegdist(my_table, method = "bray") # , binary = TRUE
+mydist <- vegdist(my_table, method = "bray", binary = FALSE) # , binary = TRUE
 
 mypam <- pamk(data = mydist, krange = 1:(attributes(mydist)$Size-1)) # to restrict range of Ks considered: , krange = 2:4
 pam_out <- mypam$pamobject
