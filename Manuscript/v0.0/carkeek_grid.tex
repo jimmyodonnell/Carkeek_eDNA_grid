@@ -165,7 +165,7 @@ The rate at which community dissimilarity approaches the mean gives an indicatio
 \subsection*{Environmental Sampling}
 Starting from lower-intertidal patches of \textit{Zostera marina}, we collected water samples at 1 meter depth from 8 points (0, 75, 125, 250, 500, 1000, 2000, and 4000 meters) along three parallel transects separated by 1000 meters (Figure \ref{site_map}).
 
-\subsection*{Laboratory Methods}
+\subsection*{Laboratory Procedures}
 
 Samples were randomly assigned to PCR primer and library adapter index sequences.
 The sequencing run consisted of 14 samples ('libraries') prepared using different index sequences ligated during library preparation.
@@ -174,6 +174,7 @@ Of these libraries, ten comprised of amplicons prepared using the 16S protocol r
 Pooled libraries were sequenced on the Illumina NextSeq platform at the Stanford Center for Functional Genomics (machine ID: NS50061; run ID: 115; flowcell ID: H3LFLAFXX). Raw sequence data in fastq format is publicly available (see Data Availability).
 
 \subsection*{Data Preparation (Bioinformatics)}
+
 Detailed bioinformatic methods are provided in the supplemental material, and scripts used from raw sequencer output onward can be found in the project directory on GitHub (see Data Availability).
 
 
@@ -216,17 +217,14 @@ To account for variation in the number of sequencing reads (sequencing depth) re
 Because each step in the massively parallel sequencing workflow is sensitive to contamination, it is possible that some sequences are the result of contamination during field sampling, filtration, DNA extraction, PCR, fragment size selection, quantitation, sequencing adapter ligation, or the sequencing process itself. 
 Some authors have argued that these risks could bias sequence abundance, making those data meaningless and prohibiting quantitative estimates, yet convert count data to binary presence absence data on the basis of the sequence abundance greater than some arbitrary threshold). %massively parallel metabarcoding, 
 Recent work has shown that this binary treatment of data can (?falsely?) overestimate taxon richness and falsely elevate the estimate of taxon turnover among samples (CITE LERAY FORTHCOMING).
-We take the view that it is unlikely that contaminants would manifest as sequences in the final dataset in consistent abundance across replicates; indeed, our data show that the process from PCR onward is remarkably consistent. 
+We take the view that contaminants are unlikely to manifest as sequences in the final dataset in consistent abundance across replicates; indeed, our data show that the process from PCR onward is remarkably consistent. 
 Thus, we calculated from our data the maximum number of sequence counts (after scaling to correct for sequencing depth variation) for which there is turnover in presence-absence among PCR replicates within an environmental sample. 
 We use this number to determine a conservative minimum threshold above which we can be confident that counts are consistent among replicates and not of (?spurious | dubious?) origin, and exclude from further analysis observations where the mean abundance across PCR replicates within samples does not reach this threshold. % the number is turnover_threshold=178
 
 
 
-We compiled life history data for taxonomic groups at the family level and higher.
-For groups with sparse data at the family level (e.g. Nemertea), we used the data from the higher level group.
 
-
-\subsection*{Community Analysis}
+\subsection*{Ecological Analyses}
 
 We subset the data in a variety of ways and conducted each analysis on all subsets.
 We report the subset used with each analysis, and report results on alternative subsets in the supplemental material. 
