@@ -4,7 +4,7 @@ library(ggplot2)
 library(reshape2)
 
 
-mytable <- otu_mean_LCT[,1:20]
+mytable <- otu_filt[,1:20]
 mytable_long <- melt(mytable)
 colnames(mytable_long) <- c("sample_id", "OTU", "count")
 
@@ -12,7 +12,7 @@ plot_dat <- mytable_long
 
 
 outfile_name <- "stacked_bar_community.pdf"
-pdf(file = file.path(fig_dir, outfile_name), width = 9, height = 5)
+# pdf(file = file.path(fig_dir, outfile_name), width = 9, height = 5)
 p <- ggplot(aes(x = sample_id, weight = count, fill = OTU), data = plot_dat)
 p + geom_bar() + 
   scale_fill_discrete("Taxa") + 
@@ -24,7 +24,7 @@ p + geom_bar() +
       # axis.ticks = element_blank(), 
       panel.background = element_rect(fill = 'white', colour = 'white')
       )
-dev.off()
+# dev.off()
 
 # note high value for sample "lib_B_tag_GCGCTC" in PCT-C-0500
 
