@@ -6,7 +6,7 @@
 #    - "lon" and "lat" columns, or x and y coordinates
 #    - data matching rownames of abundance/otu table
 
-my_table <- otu_mean # otu_named
+my_table <- otu_filt # otu_named # otu_filt , otu_mean
 if(sum(colSums(my_table) < 1) > 0){
 	print("removing otus with total abundance < 1")
 	my_table <- my_table[,colSums(my_table) >= 1]
