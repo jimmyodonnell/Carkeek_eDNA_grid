@@ -1,7 +1,19 @@
-my_table    <- otu_mean
+my_table    <- otu_filt
 my_metadata <- metadata_mean
 
 library(geoR) # variog
+
+# Attempting multivariate variogram
+# TODO as of now, I think it just calculates individual variograms
+my_geodata <- as.geodata(
+	obj = cbind.data.frame(
+		my_metadata[,c(colname_lon, colname_lat)], #c(colname_xcoord, colname_ycoord)
+		my_table), 
+	coords.col = 1:2, 
+	data.col = 2 + 1:ncol(my_table)
+)
+vg_all <- variog(my_geodata)
+plot(vg_all, type = "b")
 
 # variogram for individual taxon abundance
 pdf(file = file.path(fig_dir, "variogram_taxa.pdf"))
