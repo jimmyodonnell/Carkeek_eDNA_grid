@@ -1,5 +1,5 @@
 # add organism names to an otu table
-the_otu_table <- otu_mean
+the_otu_table <- otu_filt
 
 blast_file <- "query_hit_LCA.csv"
 
@@ -16,10 +16,17 @@ taxa_vector <- match(colnames(the_otu_table), taxa_df$query_seq)
 nrow(taxa_df)
 
 # which taxa are not in the blast file?
-not_in_blastfile <- colnames(the_otu_table)[!colnames(the_otu_table) %in% taxa_df$query_seq]
+(not_in_blastfile <- colnames(the_otu_table)[!colnames(the_otu_table) %in% taxa_df$query_seq])
 
 # how abundant are they?
-colSums(the_otu_table)[!colnames(the_otu_table) %in% taxa_df$query_seq]
+round(colSums(the_otu_table)[!colnames(the_otu_table) %in% taxa_df$query_seq] / sum(the_otu_table), digits = 3)
+
+# plot
+# plot(
+  # colSums(the_otu_table), 
+  # col = as.numeric(!colnames(the_otu_table) %in% taxa_df$query_seq) + 1, 
+  # log = "y", ylab = "", las = 1
+# )
 
 # taxon ID of each otu
 taxa_df$query_seq == 
