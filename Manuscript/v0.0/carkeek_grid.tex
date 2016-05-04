@@ -148,15 +148,16 @@ Some authors have cautioned against the use of DNA-based macrobial communities i
 %If environmental circulation 
 
 Samples collected of ecological communities may vary in dissimilarity from 0 (completely identical) to 1 (completely different). 
-For samples collected from multiple locations, the relationship between their spatial distance and community dissimilarity is of interest because it reflects the amount of community heterogeneity over the spatial scale sampled.
+For samples collected from multiple locations, the relationship between their spatial distance and community dissimilarity is of interest because it reflects the amount of community heterogeneity---changes in abundance and composition---over the spatial scale sampled. 
 %In general, the relationship between community dissimilarity (0 = identical; 1 = completely different) and spatial distance is expected to be asymptotic, because communities nearer to each other tend to be more similar than those farther apart.
-The intercept is expected to be 0, because only within-sample comparisons can have 0 spatial separation, and communities have no dissimilarity within a sample. % technically impossible for samples to be taken at exactly 0; they are actually immediately adjacent.
-Likewise, dissimilarity cannot exceed 1. 
-Deviation from 0 indicates heterogeneous community composition/structure over fine scales.
-A flat relationship between dissimilarity and distance indicates that heterogeneity is not assorted spatially, and can be interpreted in different ways, depending on the mean.
-If the mean is close to 1, there is high spatial heterogeneity over the spatial scale of sampling.
-If the mean is 0, all samples are identical, and we infer there is complete community homogeneity over the scale sampled.
-The rate at which community dissimilarity approaches the mean gives an indication of the rate of community turnover.
+The intercept is expected to be 0, because only within-sample comparisons can have 0 spatial separation, and communities have no dissimilarity within a sample if sampling method is repeatable. % technically impossible for samples to be taken at exactly 0; they are actually immediately adjacent.
+%Deviation from 0 indicates heterogeneous community composition/structure over fine scales. 
+Likewise, dissimilarity cannot exceed 1, and reaches 1 only when multiple discrete community types are sampled.
+The trend is expected to be asymptotic if communities within a habitat are spatially structured, where the value of the asymptote and the rate of increase provide insight about community turnover. 
+A flat relationship indicates that heterogeneity is not assorted spatially, and can be interpreted in different ways, depending on the asymptote. % ?or no relationship both 
+If the asymptote is close to 1, there is high spatial heterogeneity over the spatial scale of sampling. 
+If the asymptote is close 0, all samples are similar, and we infer there is complete community homogeneity over the scale sampled. 
+The rate at which community dissimilarity approaches the mean gives an indication of the rate of community turnover. 
 
 %-------------------------------------------------------------------------------
 %-----------------------------------METHODS-------------------------------------
@@ -248,7 +249,7 @@ where $com$ is community dissimilarity, $d$ is spatial distance, and where the a
 Model fit was assessed using the function nls in R (CITE R). 
 
 
-\subsection*{Laboratory Methods}
+\subsection*{Organismal Life History Data}
 We collated coarse-scale data on life history characteristic for each of the major taxonomic groups recovered, 
 including dispersal range of the gametes, larvae, and adults, adult habitat type and selectivity, and adult body size. 
 Dispersal range was given as an order-of-magnitude approximation of the scale of dispersal: for example, internally fertilized species were assigned a gamete range of 0 km, while broadcast spawners were assigned a gamete range of 10 km. 
@@ -368,6 +369,28 @@ All analyses were performed using scripts available from the project repository 
     }
   \label{comm_diss_by_geo_dist} % use this to refer to your figure in the text, so that numbering updates automatically
 \end{figure}
+
+\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{../../Figures/dissimilarity_from_shore.pdf}
+    \caption{Pairwise dissimilarity (Bray-Curtis) across transects plotted against distance from shore. A linear model determined no effect of distance from shore on dissimilarity.}
+  \label{dissimilarity_from_shore} % use this to refer to your figure in the text, so that numbering updates automatically
+\end{figure}
+
+\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{../../Figures/variance_from_shore.pdf}
+    \caption{Within-OTU variance across transects plotted against distance from shore.}
+  \label{variance_from_shore} % use this to refer to your figure in the text, so that numbering updates automatically
+\end{figure}
+
+\begin{figure}[h!] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{../../Figures/heatmap_sites.pdf}
+    \caption{Heatmap of pairwise site dissimilarity (Bray-Curtis).}
+  \label{heatmap} % use this to refer to your figure in the text, so that numbering updates automatically
+\end{figure}
+
 
 
 \begin{figure}[h!] % [h!] forces the figure to be placed roughly here
