@@ -4,7 +4,7 @@ classifications_file <- "classifications20160329.RData"
 # I don't know how this works, I am just clicking to load the data
 # classifications <- load(file.path(data_dir, classifications_file))
 
-classifications
+classifications[[1]]
 
 
 the_ranks <- lapply(lapply(classifications, function(x) x[2]), "[[", 1)
@@ -19,7 +19,8 @@ classification_df <- data.frame(
          row.names = NULL
          )
 
-current_time <- gsub(pattern = " ", replacement = "_", x = Sys.time())
+current_time <- gsub(pattern = " ", replacement = "T", x = Sys.time())
+current_time <- gsub(pattern = ":", replacement = "", x = current_time)
 write.csv(classification_df,file = file.path(data_dir, paste("classification_", current_time, ".csv", sep = "")))
 
 #----------------------------------------------------------------------------------------
