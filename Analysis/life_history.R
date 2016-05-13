@@ -7,7 +7,11 @@ life_history <- read.csv(
 )
 
 head(life_history)
-lh_taxon <- "taxon_name"
+# Exclude data for groups where no data is given but a higher level is
+life_history <- life_history[
+!apply(life_history, 1, function(x) all(is.na(x[5:8])))
+,]
+# lh_taxon <- "taxon_name"
 
 # join sequence count table and life history table, using blast results and classifications as intermediate
 
@@ -24,12 +28,103 @@ classification_col <- "taxname"
 
 # which of the taxa in the classification df have data?
 # classification_df$taxname %in% life_history$taxon_name
-# their index in the life history data
+
+# Add a column to the classification_df, specifiying the corresponding 
+# row in the life history data
 classification_df$lifehist_row <- match(
 	classification_df$taxname, life_history$taxon_name
 )
 head(classification_df)
 
+
+##########
+table(blast_df$LCA_id_all   %in% classification_df$query)
+table(blast_df$LCA_id_beste %in% classification_df$query)
+
+table(blast_df$LCA_name_all   %in% classification_df$taxname)
+table(blast_df$LCA_name_beste %in% classification_df$taxname)
+# table(is.na(blast_df$LCA_name_beste))
+# table(is.na(blast_df$LCA_name_beste))
+
+# get the index where each of the blast results are found in the
+# classification hierarchy data frame
+blast_to_classif <- match(blast_df$LCA_name_beste, classification_df$taxname)
+
+classification_by_query <- split(classification_df, classification_df$query)
+classification_df$query[blast_to_classif]
+
+has_numbers <- function(x){
+	any(!is.na(x[,"lifehist_row"]))
+}
+table(sapply(classification_by_query, has_numbers))
+
+# get the first occurrence of a taxon in the classification_df
+get_lh_data <- function(taxon){
+	if(class(taxon) != "character"){
+		stop("input should be a character string specifying a taxon name")
+	}
+	# show all of the rows of the query containing the taxon
+	temp <- classification_df[
+		classification_df$query == classification_df$query[
+			match(taxon, classification_df$taxname)],
+	]
+	has_data <- temp$lifehist_row[1:match(taxon, temp$taxname)]
+	return(temp$lifehist_row[max(which(!is.na(has_data)))])
+}
+get_lh_data(1)
+get_lh_data("Hominidae")
+
+rm(blast_to_lh)
+blast_df$lifehist_row <- sapply(blast_df$LCA_name_beste, get_lh_data)
+
+life_history[blast_df$lifehist_row,]
+otu_to_lifehist <- blast_df[taxa_vector, "lifehist_row"]
+life_history[otu_to_lifehist,range_gamete_km]
+head(life_history)
+
+life_history_OTU <- data.frame(
+  query_taxon = taxa_by_otu, 
+  life_history[otu_to_lifehist,], 
+  row.names = NULL
+)
+
+# gets rows meeting certain conditions:
+low_dispersal <- 	life_history_OTU$adult_habitat != "terrestrial" &
+	life_history_OTU$adult_habitat != "freshwater" &
+	life_history_OTU$range_gamete_km < 10 &
+	life_history_OTU$range_larva_km < 10 &
+	life_history_OTU$range_adult_km < 10
+low_dispersal[is.na(low_dispersal)] <- FALSE
+life_history_OTU[ low_dispersal, ]
+the_otu_table[,which(low_dispersal)]
+
+# what percent of sequences belonging to organisms with high dispersal potential
+round(sum(the_otu_table[,which(!low_dispersal)])/sum(the_otu_table) * 100, 1)
+
+# what percent of otus were matched to organisms with high dispersal potential
+round(sum(!low_dispersal)/length(low_dispersal) * 100, 1)
+
+otu_sum_by_gamete_range <- split(colSums(the_otu_table), life_history[otu_to_lifehist,"range_gamete_km"])
+
+par(mar = c(4,4,1,1))
+stripchart(
+  x = otu_sum_by_gamete_range, 
+  method = "jitter", 
+  pch = 21, 
+  bg = rgb(1,1,1,alpha = 0.2), 
+  las = 1
+)
+
+best_data_row <- max(which(!is.na(has_data)))
+# THIS IS THE VALUE TO RETURN
+
+
+life_history[,]
+life_history[life_history$taxon_name == "Vetigastropoda",]
+classification_by_query[as.character(classification_df$query[match(a_taxon, classification_df$taxname)])]
+
+
+##########
 
 for OTU (column)
 
