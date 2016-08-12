@@ -7,6 +7,8 @@ life_history <- read.csv(
 )
 
 head(life_history)
+tail(life_history)
+
 # Exclude data for groups where no data is given but a higher level is
 life_history <- life_history[
 !apply(life_history, 1, function(x) all(is.na(x[5:8])))
@@ -38,11 +40,12 @@ head(classification_df)
 
 
 ##########
+# How many of the values from a given column of the blast_df are in classification_df
 table(blast_df$LCA_id_all   %in% classification_df$query)
 table(blast_df$LCA_id_beste %in% classification_df$query)
+table(blast_df$LCA_name_all   %in% classification_df$taxname) # all 1153
+table(blast_df$LCA_name_beste %in% classification_df$taxname) # all 1153
 
-table(blast_df$LCA_name_all   %in% classification_df$taxname)
-table(blast_df$LCA_name_beste %in% classification_df$taxname)
 # table(is.na(blast_df$LCA_name_beste))
 # table(is.na(blast_df$LCA_name_beste))
 
@@ -50,13 +53,12 @@ table(blast_df$LCA_name_beste %in% classification_df$taxname)
 # classification hierarchy data frame
 blast_to_classif <- match(blast_df$LCA_name_beste, classification_df$taxname)
 
-classification_by_query <- split(classification_df, classification_df$query)
-classification_df$query[blast_to_classif]
-
-has_numbers <- function(x){
-	any(!is.na(x[,"lifehist_row"]))
-}
-table(sapply(classification_by_query, has_numbers))
+# I don't think I need to do the split anymore.
+# classification_by_query <- split(classification_df, classification_df$query)
+# has_numbers <- function(x){
+	# any(!is.na(x[,"lifehist_row"]))
+# }
+# table(sapply(classification_by_query, has_numbers))
 
 # get the first occurrence of a taxon in the classification_df
 get_lh_data <- function(taxon){
@@ -74,12 +76,11 @@ get_lh_data <- function(taxon){
 get_lh_data(1)
 get_lh_data("Hominidae")
 
-rm(blast_to_lh)
 blast_df$lifehist_row <- sapply(blast_df$LCA_name_beste, get_lh_data)
 
 life_history[blast_df$lifehist_row,]
 otu_to_lifehist <- blast_df[taxa_vector, "lifehist_row"]
-life_history[otu_to_lifehist,range_gamete_km]
+life_history[otu_to_lifehist,"range_gamete_km"]
 head(life_history)
 
 life_history_OTU <- data.frame(
@@ -87,6 +88,16 @@ life_history_OTU <- data.frame(
   life_history[otu_to_lifehist,], 
   row.names = NULL
 )
+
+not_marine <- which(
+# exclude terrestrial
+  life_history_OTU$adult_habitat == "terrestrial" |
+# exclude freshwater
+  life_history_OTU$adult_habitat == "freshwater"
+)
+the_otu_table[,-not_marine]
+life_history_OTU[is.na(not_marine), ]
+# not_marine[]
 
 # gets rows meeting certain conditions:
 low_dispersal <- 	life_history_OTU$adult_habitat != "terrestrial" &
