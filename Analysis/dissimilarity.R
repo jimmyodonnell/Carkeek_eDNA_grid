@@ -17,6 +17,7 @@ find_bad_PCR <- function(my_table, my_metadata,
 	# At how many standard deviations above the mean dissimilarity
 	# should a sample be excluded?
 	THRESHOLD_SD <- threshold_sd
+
 	if(!(identical(my_metadata[,sample_id_column], rownames(my_table)))){
 		stop("hold on, the otu and metadata rows are not in the same order; disaster could ensue")
 	}
@@ -78,6 +79,7 @@ find_bad_PCR <- function(my_table, my_metadata,
 	           xlab = "Pairwise Bray-Curtis Dissimilarity",
 	           bg = rgb(0,0,0,alpha = 0.2), #col = color_vector,
 	           las = 1)
+    abline(h = seq(from = 0.5, to = 60.5, by = 1), col = "gray")
 
 	# attempting to color the points red over the threshold
 	# bad_x <- as.vector(my_dis[[bad_env_sample]])
