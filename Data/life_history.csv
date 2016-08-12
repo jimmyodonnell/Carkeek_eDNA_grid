@@ -4,7 +4,7 @@ Sessilia,order,intertidal_rocky,1,0,10,0,1,NA,1
 Embiotocidae,family,seagrass,0.5,0,0,1,10,Actinopterygii,1
 Suidae,family,terrestrial,1,0,0,0,200,Mammalia,1
 Hominidae,family,terrestrial,1,0,0,0,200,Primates,1
-Phasianidae,family,terrestrial,1,0,0,0,100,Aves,1
+Phasianidae,family,terrestrial,1,0,0,0,100,Galliformes,1
 Limapontiidae,family,marine,1,1,10,0,1,Sacoglossa,1
 Percomorphaceae,below-infraclass,multiple,0,multiple,multiple,multiple,multiple,Actinopterygii,1
 Euphausiidae,family,pelagic,1,1,10,10,1,NA,1
@@ -160,3 +160,9 @@ Congridae,family,marine,1,unknown,unknown,1,100,Anguilliformes,0
 Torquaratoridae,family,NA,NA,NA,NA,NA,NA,Enteropneusta,NA
 Beaniidae,family,NA,NA,NA,NA,NA,NA,Bryozoa,NA
 Cucumariidae,family,NA,NA,NA,NA,NA,NA,Holothuroidea,NA
+Galliformes,family,terrestrial,1,0,0,0,100,Aves,1
+Cetacea,order,marine,1,0,0,1000,1000,Mammalia,1
+Asteroidea,class,benthic,1,1,100,1,10,NA,1
+Boreoeutheria,below-class,NA,NA,NA,NA,NA,NA,Mammalia,1
+Mammalia,class,multiple,0,0,0,10,10,NA,1
+Lophotrochozoa,phylum,marine,1,multiple,multiple,0,10,NA,1
