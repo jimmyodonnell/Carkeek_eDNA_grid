@@ -227,6 +227,17 @@ Similarly, we calculated rates of cross-library contamination by counting occurr
 These occurrences indicate an error in the preparation or sequencing procedures.
 This represents a general minimum rate at which we can expect that sequences from one environmental sample could be erroneously assigned, and so we considered for further analysis only those reads occurring with greater frequency than this across the entire dataset.
 
+We checked for experimental error by evaluating the Bray-Curtis dissimilarity of proportional read abundance among replicate PCRs from the same DNA sample (0.033$\pm$0.063), and excluded one PCR replicate for which the dissimilarities between itself and the other replicates exceeded 1 SD.% (lib\_B\_tag\_GCGCTC)
+
+To account for variation in the number of sequencing reads (sequencing depth) recovered per sample, we multiplied the within-sample proportional abundance of each OTU by the minimum sequencing depth, and rounded to the nearest integer.
+
+Because each step in this workflow is sensitive to contamination, it is possible that some sequences are not truly derived from the environmental sample, and instead represent contamination during field sampling, filtration, DNA extraction, PCR, fragment size selection, quantitation, sequencing adapter ligation, or the sequencing process itself.
+Some authors have argued that these risks could bias sequence abundance, making those data meaningless and prohibiting quantitative estimates; instead these authors advocate for converting count data to binary presence absence data on the basis of sequence abundance greater than some arbitrary threshold.
+Recent work indicates that this binary treatment of data can overestimate taxon richness and falsely elevate the estimate of taxon turnover among samples (CITE LERAY FORTHCOMING).
+We take the view that contaminants are unlikely to manifest as sequences in the final dataset in consistent abundance across replicates; indeed, our data show that the process from PCR onward is remarkably consistent.
+Thus, we calculated from our data the maximum number of sequence counts (after scaling to correct for sequencing depth variation) for which there is turnover in presence-absence among PCR replicates within an environmental sample.
+We use this number to determine a conservative minimum threshold above which we can be confident that counts are consistent among replicates and not of (?spurious | dubious?) origin, and exclude from further analysis observations where the mean abundance across PCR replicates within samples does not reach this threshold. % the number is turnover_threshold=178
+
 In order to determine the most likely taxon from which each sequence originated, the representative sequence from each OTU was then queried against the NCBI nucleotide database (GenBank; version October 2015) using the blastn command line utility (CITE BLAST).
 In order to maximize the accuracy of this computationally intensive step, we implemented a nested approach whereby each sequence was first queried using strict parameters (e-value = 5e-52), and if no match was found, the query was repeated with decreasingly strict e-values (5e-48 5e-44 5e-40 5e-36 5e-33 5e-29 5e-25 5e-21 5e-17 5e-13).
 Other parameters were unchanged among repetitions (word size: 7; maximum matches: 1000; culling limit: 100; minimum percent identity: 0).
@@ -235,19 +246,6 @@ In order to guard against these spurious results, we used an algorithm to find t
 Similarly, we repeated analyses using the dataset consolidated at the same taxonomic rank across all queries, for the rank of both family and order.
 
 The data for input to further analyses are thus a contingency table of counts of unique sequences, OTUs, or taxa present in each PCR.
-
-We checked for experimental error by evaluating the Bray-Curtis dissimilarity of proportional read abundance among replicate PCRs from the same DNA sample (0.033$\pm$0.063), and excluded one PCR replicate for which the dissimilarities between itself and the other replicates exceeded 1 SD.% (lib\_B\_tag\_GCGCTC)
-
-
-To account for variation in the number of sequencing reads (sequencing depth) recovered per sample, we multiplied the within-sample proportional abundance of each OTU by the minimum sequencing depth (130402), and rounded to the nearest integer.
-
-Because each step in the massively parallel sequencing workflow is sensitive to contamination, it is possible that some sequences are the result of contamination during field sampling, filtration, DNA extraction, PCR, fragment size selection, quantitation, sequencing adapter ligation, or the sequencing process itself.
-Some authors have argued that these risks could bias sequence abundance, making those data meaningless and prohibiting quantitative estimates, yet convert count data to binary presence absence data on the basis of the sequence abundance greater than some arbitrary threshold). %massively parallel metabarcoding,
-Recent work has shown that this binary treatment of data can (?falsely?) overestimate taxon richness and falsely elevate the estimate of taxon turnover among samples (CITE LERAY FORTHCOMING).
-We take the view that contaminants are unlikely to manifest as sequences in the final dataset in consistent abundance across replicates; indeed, our data show that the process from PCR onward is remarkably consistent.
-Thus, we calculated from our data the maximum number of sequence counts (after scaling to correct for sequencing depth variation) for which there is turnover in presence-absence among PCR replicates within an environmental sample.
-We use this number to determine a conservative minimum threshold above which we can be confident that counts are consistent among replicates and not of (?spurious | dubious?) origin, and exclude from further analysis observations where the mean abundance across PCR replicates within samples does not reach this threshold. % the number is turnover_threshold=178
-
 
 
 
@@ -261,13 +259,13 @@ We also tested a variety of transformations of the mean scaled abundance data, i
 
 % Used k-medoids (PAM) rather than k-means because it does not require euclidean distances can be computed and that the observations follow a gaussian distribution
 % because of the nature of our data (lots of zeros, with some very high counts), the mean is not very informative
-We simultaneously assessed the existence of distinct community types and the membership of samples to those community types using a partitioning around mediods algorithm (CITE PAM, sometimes referred to as k-medoids clustering), as implemented in the R package fpc (CITE fpc).
+We simultaneously assessed the existence of distinct community types and the membership of samples to those community types using an unsupervised classification alogrithm known as partitioning around medoids (CITE PAM, sometimes referred to as k-medoids clustering), as implemented in the R package fpc (CITE fpc).
 The classification of samples to communities was made on the basis of their pairwise Bray-Curtis dissimilarity, calculated using the function vegdist in the R package vegan (CITE VEGAN). % consider Gower distance
 
 We calculated the great circle distance between points using the Haversine method as implemented by the R package geosphere (CITE geosphere).
-% Calculate Moran's I on ?(relative abundance | raw count) of ?(taxa | OTU | uniq_sequences) to report dispersion of DNA in space?
+% Calculate Moran's I on ?(relative abundance | raw count) of ?(taxa | OTU | uniq_sequences) to report dispersion of DNA in space? There is a multiple comparison issue and the results are generally not informative to my eye.
 
-To estimate the maximum dissimilarity and the rate of community turnover in space, we modeled community dissimilarity as a function of distance from shore following a Michaelis-Menten relationship:
+To estimate the maximum dissimilarity and the rate of community turnover in space (distance decay), we modeled community dissimilarity as a function of distance from shore following a Michaelis-Menten relationship:
 \begin{equation}\label{MichaelisMenten}
 	com \sim V_{max}[d]/K_{m}[d]
 \end{equation}
@@ -276,8 +274,7 @@ Model fit was assessed using the function nls in R (CITE R).
 
 
 \subsection*{Organismal Life History Data}
-We collated coarse-scale data on life history characteristic for each of the major taxonomic groups recovered,
-including dispersal range of the gametes, larvae, and adults, adult habitat type and selectivity, and adult body size.
+We collated coarse-scale data on life history characteristic for each of the major taxonomic groups recovered, including dispersal range of the gametes, larvae, and adults, adult habitat type and selectivity, and adult body size.
 Dispersal range was given as an order-of-magnitude approximation of the scale of dispersal: for example, internally fertilized species were assigned a gamete range of 0 km, while broadcast spawners were assigned a gamete range of 10 km.
 Similarly, adult range size was approximated as 0 km (sessile), 1 km (motile but not pelagic), or 10 km (highly mobile, pelagic).
 Variables were specified as 'multiple' for groups known to span more than 1 magnitude of range size.
@@ -328,13 +325,14 @@ All value ranges are reported as (mean $\pm$ standard deviation).
 A total of 371,576,190 reads passing filter were generated in each direction, with XXX\% of base calls having a 0.001 or lower probability of incorrect base call (Phred q-score of 30 or higher).
 %XXX % of reads aligned to the PhiX genome
 %and error rate as determined from alignment of PhiX reads to the PhiX genome was low (Read 1: 1.26 \UTF{00EF}\UTF{00BF}\UTF{0153}0.07; Read 2: 1.38 \UTF{00EF}\UTF{00BF}\UTF{0153}0.07)
+Each environmental sample in the present study was represented by no less than 130402 reads.
 There was a very low frequency of cross-contamination from other libraries into those reported here (5e-05$\pm$8e-05; max 0.00034)
 
-PCR replicates were remarkably consistent.
+Sequence abundances across PCR replicates were remarkably consistent.
 92 of the 96 environmental samples had a mean Bray-Curtis dissimilarity $\leq$ 0.052 among PCR replicates.
 1 environmental sample had high dissimilarity (0.341) among PCR replicates before removing a single faulty PCR.
 After removal of this PCR replicate, the highest mean Bray-Curtis dissimilarity among replicates within an environmental sample was 0.034.
-
+Sequences with abundance greater than 178 reads experienced no turnover in presence across PCR replicates within a sample.
 
 \subsection*{Community Analysis}
 Excluding spatially-invariant taxa ?(taxa which occur in only one spatial location) had no discernible effect on the outcome of the PAM analysis (number of clusters, assignment to clusters).
