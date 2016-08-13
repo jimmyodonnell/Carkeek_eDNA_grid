@@ -176,6 +176,23 @@ Finally, all liquid was removed by centrifuging at 14000 rpm for 10 minutes, pou
 DNA was resuspended in 200 microliters of ultrapure water.
 Genomic DNA extracted from tissue of a species absent from the sampled environment (Struthio camelus) served as positive control for the remaining protocols.
 
+\subsection*{PCR Amplification}
+
+From each DNA sample, we amplified an approximately 115 base pair (bp) region of the mitochondrial gene encoding 16S RNA using a two-step polymerase chain reaction (PCR) protocol described by ODONNELL (CITE ODONNELL2016).
+In the first step, primers were identical in every reaction (forward: AGTTACYYTAGGGATAACAGCG; reverse: CCGGTCTGAACTCAGATCAYGT); primers in the second step included these same sequences but with 3 variable nucleotides ('NNN') and an index sequence on the 5PRIME end (see CITE PRIMER TABLE/METADATA).
+We used the program OligoTag \cite{Coissac2012} to generate 30 unique 6 nucleotide index sequences differing by a minimum Hamming distance of 3 (\nameref{primer_table}).
+Indexed primers were assigned to samples randomly, with the identical index sequence on the forward and reverse primer to avoid errors associated with dual-indexed multiplexing (CITE Schnell2015).
+In a UV-sterilized hood, we prepared 25 microliter reactions containing 18.375 microliters ultrapure water, 2.5 microliters 10x buffer, 0.625 microliters deoxynucleotide solution (8 millimolar), 1 microliter each forward and reverse primer (10 micromolar, obtained lyophilized from Integrated DNA Technologies (Coralville, IA, USA)), 0.25 microliters Qiagen HotStar Taq polymerase, and 1.25 microliter genomic eDNA template at 1:100 dilution in ultrapure water.
+PCR thermal profiles began with an initialization step (95C; 15 min) followed by cycles (40 and 20 for the first and second reaction, respectively) of denaturation (95C; 15 sec), annealing (61C; 30 sec), and extension (72C; 30 sec).
+20 identical PCRs were conducted from each DNA extract using non-indexed primers; these were pooled into 4 groups of 5 in order to ensure ample template for the subsequent PCR with indexed primers. % we probably pooled >1 product from PCR1, but figuring this out from our lab notebook would be time consuming and perhaps impossible.
+In order to isolate the fragment of interest from primer dimer and other spurious fragments generated in the first PCR, we used the AxyPrep Mag FragmentSelect-I kit with solid-phase reversible immobilization (SPRI) paramagnetic beads at 2.5x the volume of PCR product (Axygen BioSciences, Corning, NY, USA).
+A 1:5 dilution in ultrapure water of the product was used as template for the second reaction.
+PCR products of the second reaction were purified using the Qiagen MinElute PCR Purification Kit (Qiagen, Hilden, Germany).
+Ultrapure water was used in place of template DNA and run along with each batch of PCRs to serve as a negative control for PCR; none of these produced visible bands on an agarose gel.
+In total, four separate replicates from each of 31 DNA samples were carried through the two-step PCR process for a total of 124 sequenced PCR products.
+These were combined with additional samples from other projects, totaling 345 samples.
+
+
 Pooled libraries were sequenced on the Illumina NextSeq platform at the Stanford Center for Functional Genomics (machine ID: NS50061; run ID: 115; flowcell ID: H3LFLAFXX). Raw sequence data in fastq format is publicly available (see Data Availability).
 
 \subsection*{Data Preparation (Bioinformatics)}
