@@ -234,23 +234,7 @@ Similarly, we repeated analyses using the dataset consolidated at the same taxon
 
 The data for input to further analyses are thus a contingency table of counts of unique sequences, OTUs, or taxa present in each PCR.
 
-We checked for experimental error by evaluating the Bray-Curtis dissimilarity of proportional read abundance among replicate PCRs of the same DNA sample (0.033$\pm$0.063), and excluded one PCR replicate for which the dissimilarities between itself and the other replicates exceeded 1 SD (lib\_B\_tag\_GCGCTC).
-
-
-%RESULTS
-%Reads were of generally high-quality, with XXX% of base calls having a 0.001 or lower probability of incorrect base call (Phred q-score of 30 or higher).
-%Total sequencing clusters passing filter per read: 371,576,190 on NEXTSEQ
-%
-% THESE BELOW ARE FROM A MISEQ RUN
-% reads passing filter, % >= Q30, for each run ( 7,052,307 ; 6,752,829; 97.47 :: 7,052,307 ; 6,752,829 ; 95.50)
-%
-%Cluster density of 358 \UTF{00EF}\UTF{00BF}\UTF{0153}22	clusters per mm^2
-%
-%XXX % of reads aligned to the PhiX genome
-%(31.02 \UTF{00EF}\UTF{00BF}\UTF{0153}0.59	; 29.17 \UTF{00EF}\UTF{00BF}\UTF{0153}0.89)
-%
-%and error rate as determined from alignment of PhiX reads to the PhiX genome was low (Read 1: 1.26 \UTF{00EF}\UTF{00BF}\UTF{0153}0.07; Read 2: 1.38 \UTF{00EF}\UTF{00BF}\UTF{0153}0.07)
-%----------------------------------------------------------------------------
+We checked for experimental error by evaluating the Bray-Curtis dissimilarity of proportional read abundance among replicate PCRs from the same DNA sample (0.033$\pm$0.063), and excluded one PCR replicate for which the dissimilarities between itself and the other replicates exceeded 1 SD.% (lib\_B\_tag\_GCGCTC)
 
 
 To account for variation in the number of sequencing reads (sequencing depth) recovered per sample, we multiplied the within-sample proportional abundance of each OTU by the minimum sequencing depth (130402), and rounded to the nearest integer.
@@ -338,7 +322,10 @@ Where $\beta_0$ is a general intercept across all taxa, $\beta_i$ is a fixed eff
 
 \subsection*{Data Quality (Bioinformatics)}
 Raw sequence data in fastq format is publicly available (see Data Availability).
-All value ranges are reported as (mean $\pm$ standard deviation).\\
+All value ranges are reported as (mean $\pm$ standard deviation).
+A total of 371,576,190 reads passing filter were generated in each direction, with XXX\% of base calls having a 0.001 or lower probability of incorrect base call (Phred q-score of 30 or higher).
+%XXX % of reads aligned to the PhiX genome
+%and error rate as determined from alignment of PhiX reads to the PhiX genome was low (Read 1: 1.26 \UTF{00EF}\UTF{00BF}\UTF{0153}0.07; Read 2: 1.38 \UTF{00EF}\UTF{00BF}\UTF{0153}0.07)
 There was a very low frequency of cross-contamination from other libraries into those reported here (5e-05$\pm$8e-05; max 0.00034)
 
 We assessed the consistency of PCR by conducting 4 replicate PCRs for each environmental sample and calculating the mean pairwise Bray-Curtis dissimilarity of the resulting communities (scaled to minimum read depth per sample).
