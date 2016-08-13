@@ -201,18 +201,38 @@ Fragment size distribution and concentration of each library was quantified usin
 Libraries were pooled in equal concentrations and sequenced for 150 base pairs in both directions (PE150) using an Illumina NextSeq at the Stanford Functional Genomics Facility (machine NS500615, run 115, flowcell H3LFLAFXX), where 20\% PhiX Control v3 was added to act as a sequencing control and to enhance sequencing depth.
 
 
-\subsection*{Data Preparation (Bioinformatics)}
+\subsection*{Sequence Data Handling (Bioinformatics)}
 
 <<Consider: Detailed bioinformatic methods are provided in the supplemental material, and scripts used from raw sequencer output onward can be found in the public project directory (see Data Availability).>>
 
+Reads passing the preliminary Illumina quality filter were demultiplexed on the basis of the adapter index sequence by the sequencing facility.
+We used fastqc to assess the fastq files output from the sequencer for low-quality indications of a problematic run.
+Forward and reverse reads were merged using PEAR v0.9.6 \cite{Zhang2014} and discarded if more than 0.01 of the bases were uncalled.
+If a read contained two consecutive base calls with quality scores less than 15 (i.e. probability of incorrect base call = 0.0316), these bases and all subsequent bases were removed from the read.
+Paired reads for which the probability of matching by chance alone exceeded 0.01 were not assembled and omitted from the analysis.
+Assembled reads were discarded if assembled sequences were not between 50 and 168 bp long, or if reads did not overlap by at least 100 bp.
+
+We used vsearch VSEARCHVERSION (CITE VSEARCH) to discard any merged reads for which the sum of the per-base error probabilities was greater than 0.5 ("expected errors") \cite{Edgar2010}.
+Sequences were demultiplexed on the basis of the primer index sequence at base positions 4-9 at both ends using the programming language AWK.
+Primer sequences were removed using cutadapt v1.7.1 \cite{Martin2011}, allowing for 2 mismatches in the primer sequence.
+Identical duplicate sequences were identified, counted, and removed in python to speed up subsequent steps by eliminating redundancy, and sequences occurring only once were removed.
+We checked for and removed any sequence likely to be a PCR artifact due to incomplete extension and subsequent mis-priming using a method described by Edgar (CITE UCHIME\cite{Edgar2010}) and implemented in vsearch VSEARCHVERSION.
+Sequences were clustered into operational taxonomic units (OTUs) using the single-linkage clustering method implemented by swarm version SWARMVERSION with a local clustering threshold (d) of 1 and fastidious processing (CITE SWARM).
+
+In order to determine the most likely taxon from which each sequence originated, the representative sequence from each OTU was then queried against the NCBI nucleotide database (GenBank; version October 2015) using the blastn command line utility (CITE BLAST).
+In order to maximize the accuracy of this computationally intensive step, we implemented a nested approach whereby each sequence was first queried using strict parameters (e-value = 5e-52), and if no match was found, the query was repeated with decreasingly strict e-values (5e-48 5e-44 5e-40 5e-36 5e-33 5e-29 5e-25 5e-21 5e-17 5e-13).
+Other parameters were unchanged among repetitions (word size: 7; maximum matches: 1000; culling limit: 100; minimum percent identity: 0).
+Each query sequence can be an equally good match to multiple taxa either because of invariability among taxa or errors in the database (e.g. human sequences are commonly attributed to other organisms when they in fact represent lab contamination).
+In order to guard against these spurious results, we used an algorithm to find the lowest common taxon for at least 80\% of the matched taxa, implemented in the R package taxize (CITE TAXIZE VERSION).
+Similarly, we repeated analyses using the dataset consolidated at the same taxonomic rank across all queries, for the rank of both family and order.
+
+The data for input to further analyses are thus a contingency table of counts of unique sequences, OTUs, or taxa present in each PCR.
 
 
 
-%----------------------------------------------------------------------------
+
 %METHODS
-%Sequences passing were demultiplexed on the basis of the ?(8-bp) sequence ligated during library preparation and read during the index read, and filtered for general quality by the sequencing facility.
 %
-%We used fastqc to assess the fastq files output from the sequencer for low-quality indications of a problematic run.
 %
 %Reads that contain primer index sequences (or combinations thereof) that we did not actually use in laboratory procedures are known to ?(be derived from contamination) be a result of processes that leave the same signature as contamination. For example, errors during oligonucleotide synthesis of the indexed primers would cause reads to be erroneously assigned to samples.
 %Because this represents the minimum rate at which we can be certain that sequences from one environmental sample could be erroneously assigned, we considered for further analysis only those reads occurring with greater frequency than this.
