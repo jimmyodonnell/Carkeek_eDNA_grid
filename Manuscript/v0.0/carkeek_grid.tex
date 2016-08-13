@@ -76,6 +76,70 @@ This is the text of the abstract.
 %-------------------------------------------------------------------------------
 \section*{Introduction}
 
+% While ecologists increasingly recognize the importance of ecosystem ?wc ( constituents | components ) across size classes, from viruses to whales,
+No existing biodiversity survey method completely censuses all of the organisms in a given area.
+Towed fishing nets can efficiently sample organisms larger than the mesh and slower than the boat; but ?wc( ignore | overlook | disregard ) viruses and have undesirable effects on charismatic air-breathing species.
+From a boat or aircraft, scientists can visually quantify large whales, but not the krill on which they feed.
+However, DNA-based surveys show great promise as an efficient technique for detecting a previously unthinkable breadth of organisms from a single sample.
+% , from the smallest to the largest
+% are a promising technique for doing so, because they can detect
+
+Microbiologists have used DNA sequencing to quantify the composition of microbial communities in a wide variety of habitats (CITE VENTER, ETC). % nucleic acid sequencing; composition (DNA) and function (RNA)
+A sample of environmental medium (e.g. water) containing microorganisms is collected, their DNA is isolated and sequenced, and the identity and abundance of sequences is considered a direct measure of the identity and abundance of organisms contained in the sample, which indirectly estimates the quantity of organisms in an area.
+Macroorganisms shed DNA-containing cells into the environment (environmental DNA or eDNA) that can be sampled in the same way.
+The organismal breadth of these methods make them extremely appealing for their potentially high efficiency, but the accuracy and reliability of indirect estimates of macroorganismal abundance has been debated because the entire organisms are not contained within the sample.
+Thus, ?wc( hesitation to adopt | concern over the application of | criticisms of )? eDNA methods are generally ?wc( rooted in | grounded in | founded on ) ?wc( concerns regarding ) the uncertainty about the scale of time and space they sample.
+Caution should be used when inferring local presence of an organisms from an environmental sample without knowing how long DNA can persist in that environment and how far it can travel.
+Ultimately, the spatial and temporal scope of an eDNA survey is determined by the rate of DNA degradation and the movement of the environmental medium.
+
+< ? Mention other indirect sampling methods like acoustic monitoring of birds; limits in terms of organismal breadth?>
+
+% Nevertheless, DNA-based surveys ?(of macrofauna?) have been criticized.
+% if citable: (Some of these criticisms are unjustifiable, motivated by reluctance to adapt to changing methodologies.
+% After all, visual methods have been the standard of ecological surveying for arguably thousands of years. (Indeed, even other animals use vision (and other senses) to assess the abundance of, e.g. prey or predators))
+% Other arguments are justified, particularly those that question the ability of environmental surveys to quantify organisms given their indirect nature.
+
+The ability for eDNA communities to reflect local macroorganism communities is most fundamentally mediated by the rate of DNA degradation.
+DNA degradation is accelerated in the environment by biological, chemical, and physical activity (CITE DEGRADATION COMPARISON). % enzymes, sodium hypochlorite, UV/heat
+These factors vary in space and thus DNA degradation rate is dependent on the environmental context:
+DNA is likely to persist in cold environments for longer than it would in hot environments (CITE TEMPERATURE STUDY).
+However, on local scales, or within a single habitat type, environmental conditions are more likely to be consistent, and thus variance among samples is less likely to be attributable to environmental conditions impacting DNA persistence.
+
+<<ASIDE: Similarly, environmental factors can affect detection efficiency even when DNA is known to be present in the environment, by inhibiting lab procedures like PCR (CITE PCR INHIBITION)>>
+
+The relationship between local organismal abundance and DNA abundance is further complicated in habitats where the environmental medium itself may transport eDNA away from its source.
+We know that genetic material moves away from its source precisely because organisms can be detected indirectly without being present in the sample.
+% A whale need not be captured in a sample to recover whale DNA from water--
+eDNA is more likely to travel farther in a highly dynamic fluid such as the open ocean or flowing river than it would through the sediment at the bottom of a stagnant pond.
+(CITE DEINER STREAM EDNA CONVEYER BELTS)
+Yet even studies of extremely dynamic habitats such as coastlines with high wave energy have found remarkable evidence that eDNA transport is limited enough that DNA methods can detect community differences separated by less than 100 meters (CITE Port).
+
+
+Several rigorous studies have investigated the specific effect of various environmental factors on eDNA persistence under controlled laboratory conditions (CITE ENVIRONMENTAL FACTORS ~ DEGRADATION).
+Other studies have investigated the magnitude of environmental movement on the transport of eDNA in specific contexts, such as streams (CITE DEINER STREAM CONVEYER BELT).
+In theory, given enough data from manipulative experiments, it is possible that one could measure environmental variables--temperature, UV intensity, flow, etc--at the time of eDNA sample collection in order to more precisely estimate the origin of eDNA.
+In practice, this approach is unlikely to yield appreciable gains in accuracy because even the most advanced sensors ((thinking of ADCPs here)) and analytical techniques available cannot determine the origin of particles in highly dynamic fluid environments at scales relevant to most ecological questions (CITE PITERBARG2001, more recents??).
+% http://www.rsmas.miami.edu/LAPCOD/research/prediction/
+Further, collecting and analyzing these data along with eDNA sampling efforts would severely limit the scalability of eDNA methods.
+A more practical approach is to compare the spatial distribution of communities of eDNA with expectations based on prior knowledge of the spatial distribution of communities of organisms.
+
+
+Species and the communities they comprise are not homogeneously distributed in space; describing and predicting the spatial heterogeneity of ecosystems is of great interest to ecologists.
+One consistently observed patterns of community spatial heterogeneity is that communities close to one another tend to be more similar than those that are farther apart (CITE NEKOLA1999, BELL 2010, ).
+This decrease in community similarity with increasing spatial separation is called distance decay and has been reported from rainforests (CITE CONDIT2002, CHUST2006), ectomycorrhizal fungi (CITE bahram2013JECO), plant communities (CITE guo2015plosone), and marine microorganisms (CITE Martiny2011PNAS,Chust2013GLOBECOBIO, Wetzel2012plosone). % coral reefs (CITE HUBBELL2001)
+Typically, this relationship is assessed by regressing a measure of community similarity against a measure of spatial separation for a set of sites at which a set of species' presence or abundance is quantified.
+The underlying ?wc( parameter | mechanism ) which is ultimately thought to drive the slope of this relationship is the rate of movement of individuals among sites.
+Because eDNA is shed and transported away from its source, we expect this increased movement of individual eDNA particles to have a homogenizing effect, and thus erode the distance decay relationship of eDNA communities.
+% Because the distribution of eDNA is ?(fundamentally) more diffuse than that of the ?( individuals | organisms ) from which it originated, communities of eDNA should be more homogenous than organisms.
+% no such pattern has been document from indirect sampling methods such as eDNA.
+
+Here, we explored the spatial scope of eDNA methods in a marine environment.
+We used PCR-based methods and massively parallel sequencing to quantify the presence and abundance of DNA from a suite of marine organisms in water samples collected from a grid of sites. % spanning _______ phyla
+We evaluated community similarity in space and tested for a distance decay relationship.
+We estimated the minimum distance over which ( community dissimilarity is / differences in community structure are ) detectable in this habitat.
+Finally, we used an unsupervised classification algorithm to determine how many unique eDNA communities were sampled and to which community was represented at each site.
+% We quantified the relationship between community similarity and distance to estimate the spatial resolution of eDNA in this context, and used unsupervised classification techniques to determine the number  of unique community types and their spatial distribution.
+
 Samples collected of ecological communities may vary in dissimilarity from 0 (completely identical) to 1 (completely different).
 For samples collected from multiple locations, the relationship between their spatial distance and community dissimilarity is of interest because it reflects the amount of community heterogeneity---changes in abundance and composition---over the spatial scale sampled.
 %In general, the relationship between community dissimilarity (0 = identical; 1 = completely different) and spatial distance is expected to be asymptotic, because communities nearer to each other tend to be more similar than those farther apart.
