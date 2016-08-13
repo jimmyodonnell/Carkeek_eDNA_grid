@@ -303,7 +303,7 @@ After removal of this PCR replicate, the highest mean Bray-Curtis dissimilarity 
 Sequences with abundance greater than 178 reads experienced no turnover in presence across PCR replicates within a sample.
 
 \subsection*{Community Analysis}
-Excluding spatially-invariant taxa ?(taxa which occur in only one spatial location) had no discernible effect on the outcome of the PAM analysis (number of clusters, assignment to clusters).
+Excluding spatially-invariant taxa ?(taxa which occur in only one spatial location) had no discernible effect on the outcome of the PAM analysis (number of clusters, assignment to clusters) (CITE FIGUREPAM).
 
 The estimated asymptote of community dissimilarity as a function of spatial distance ($V_m$) was 0.72 ($p <<< 0.05$), and the distance at which half this dissimilarity was accumulated ($K_m$) is 23.8 kilometers ($p = 0.006$).
 Residual standard error of the fit of the model is 0.1563 on 274 degrees of freedom.
@@ -318,7 +318,53 @@ Thus, we are unable to compare the patterns of dispersion for varying life histo
 %----------------------------------DISCUSSION-----------------------------------
 %-------------------------------------------------------------------------------
 \section*{Discussion}
-Boy those results sure are neat. Now, the pressing question becomes: How do you like them apples?
+Indirect surveys of organismal presence are a key development in ecosystem ?(surveillance | monitoring) in the face of increased anthropogenic pressure and dwindling resources for ecological research (is this citable, or even true? Either way, budget constraints drive interest in methods with greater bang per buck).
+Detection of organisms using environmental DNA is an especially promising method, given the ?(rapid pace of technological innovation and cost efficiency | rapid pace of advancement in technological innovation and cost efficiency) in the field of DNA sequencing and quantification.
+To date, little work has ?(specifically | explicitly )? addressed the spatial resolution of DNA in a marine system.
+
+We demonstrate that, despite some expected homogenization of signal compared to known community distributions, a distance-decay relationship exists for eDNA communities in this dynamic environment.
+The distribution of community types did/does not fit our expectations based on known distributions of benthic communities.
+In this area (as in much of Puget Sound), a narrow band of shallow, soft bottom hugs the shoreline and supports eelgrass meadows which harbor diverse epifaunal and infaunal communities, and attract transient species which use the meadows for shelter and to feed on epifaunal biota.
+This shallow habitat quickly gives way to a central depth of approximately 200 meters.
+Intertidal shoreline varies between soft, fine sediment to cobble and boulder rubble.
+Hard intertidal surfaces support a well-documented ?(biota/fauna/community) ?(including/dominated by)? barnacles (Sessilia), mussels (Bivalvia:Mytilidae), anemones (Actinaria), sea stars (Asteroidea), urchins (Echinoidea), Bryzoans (Ectoprocta), and crustaceans (Decapoda).
+Soft intertidal sediments are inhabited by burrowing bivalves (Bivalvia:various families), segmented worms (Annelida), acorn worms (Enteropneusta), and in the lower intertidal and high subtidal ranges by eelgrass ?(beds | meadows).
+Hard bottoms: lower intertidal and high subtidal = macroalgae such as nereocystis etc (check M. Foley's list) which provides habitat for a diverse community of ?(fish and invertebrates)
+
+Our samples were collected at the surface over depths ranging from approximately 2 to 200 meters.
+The benthic habitats directly below each sample point vary from eelgrass meadow to soft-bottom ?( sub-photic? ) habitats.
+At the sampling points over the ?(deepest water/ greatest depth), samples were closer to the bottom than they were to the next closest sampling point.
+However, we found no distinct pattern (/signal) of deep-water communities, indicating (1) the a greater biomass of nearshore (/shallow) organisms results in ?(more recoverable genetic material | greater concentrations of eDNA)? even over long distances.
+
+{ Material from these deep water communities is not transported to the surface in ?(quantities / amounts )? sufficient for detection in sequencing based approaches using general primers, as in the present study.
+
+% We found no evidence for....
+
+Contrary to our ?(perhaps naive) expectations based on well-documented patterns of benthic community distribution, we found no discernible pattern of communitiy turnover as a function of distance from shore, nor did the composition of those communities change as expected.
+The most abundant taxa at sites furthest from shore are taxa whose adult stages are restricted to intertidal hard substrates.
+However, the larvae and gametes of these taxa are pelagic and can be transported long distances by water movement (CITE).
+
+Of the ______________ taxa ?(for which we recovered data | detected by our methods), we were able to confirm only one which lacks any microscopic and potentially dispersive life stage, the Shiner Surfperch (Embiotocidae).
+Adults and juveniles of this species are strictly associated with shallow, near-shore habitats.
+Like all members of the family, they are internal fertilizers that give birth to live young, meaning there are no dispersive gametes or larvae which may travel far from juveniles and adults and be detected by our sampling methods.
+C. aggregata DNA was abundant at sites nearest to shore, (M_____\%+-SD of all sequences,), rare or absent elsewhere (CITE FIG).
+We interpret this as evidence that the chaotic spatial distribution of eDNA communities (CITE FIG PAM) results from our primers' affinity for many species which at some point exist as microscopic pelagic gametes or larvae.
+Communities of microscopic organisms can be exceptionally variable in space over small scales due to oceanographic features such as eddies.
+Such fine-scale variation would be missed by our sampling design; denser sampling in concert with current profiling would ?(_______) the role of ?(ocean movement???) on eDNA dispersal.
+
+Moreover, if entire multicellular individuals (such as larvae) were directly collected in our water samples, community profiles would be further distorted.
+Our sampling bottles excluded particles larger than 500 micrometers, but gametes and very small larvae could have gained entry.
+It is possible that even a single small individual, containing many thousand mitochondria, would overwhelm the signal of another species from which hundreds of cells had been sloughed from many, larger individuals.
+Data on larval size distribution at the time of sampling from each species in our data set would allow us to estimate the frequency of such events.
+Nevertheless, it is precisely the sensitivity to small particles that makes the eDNA approach powerful, so we are reluctant to recommend that aquatic eDNA sampling use finer pre-filtering.
+Instead, we emphasize the importance of designing and selecting primer sets that selectively amplify target organisms.
+In the case of the present study, in order to recover patterns matching our expectations, this would be non-transient, benthic marine organisms lacking any pelagic life stage.
+Likewise, our results highlight the need for curated life-history databases.
+As technological advances increase the speed and throughput of biodiversity surveys, making sense of these data in a timely manner requires that natural history data be stored in standard formats in centralized repositories.
+<< The rate at which we can make sense of high-throughput biodiversity survey methods will be limited by our ability to incoporate external data.
+Some databases like EOL, GBIF, Fishbase, that house records of taxonomy, occurrence, and other basic data types are growing in number of users, support, and maintenance, but there is no centralized, standardized repository for natural history data.
+As NCBI's nucleotide and protein sequence database (GenBank) has facilitated a multitude of transformative studies in diverse fields,
+an ecological analog would ?(be a huge boon for | revolutionize ) biodiversity science.
 
 %-------------------------------ACKNOWLEDGEMENTS--------------------------------
 \section*{Acknowledgements}
