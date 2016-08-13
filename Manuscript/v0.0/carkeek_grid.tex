@@ -140,6 +140,7 @@ We estimated the minimum distance over which ( community dissimilarity is / diff
 Finally, we used an unsupervised classification algorithm to determine how many unique eDNA communities were sampled and to which community was represented at each site.
 % We quantified the relationship between community similarity and distance to estimate the spatial resolution of eDNA in this context, and used unsupervised classification techniques to determine the number  of unique community types and their spatial distribution.
 
+<<< orphaned text but perhaps useful somewhere...>>>
 Samples collected of ecological communities may vary in dissimilarity from 0 (completely identical) to 1 (completely different).
 For samples collected from multiple locations, the relationship between their spatial distance and community dissimilarity is of interest because it reflects the amount of community heterogeneity---changes in abundance and composition---over the spatial scale sampled.
 %In general, the relationship between community dissimilarity (0 = identical; 1 = completely different) and spatial distance is expected to be asymptotic, because communities nearer to each other tend to be more similar than those farther apart.
@@ -151,6 +152,7 @@ A flat relationship indicates that heterogeneity is not assorted spatially, and 
 If the asymptote is close to 1, there is high spatial heterogeneity over the spatial scale of sampling.
 If the asymptote is close 0, all samples are similar, and we infer there is complete community homogeneity over the scale sampled.
 The rate at which community dissimilarity approaches the mean gives an indication of the rate of community turnover.
+<<< end orphan text >>>
 
 %-------------------------------------------------------------------------------
 %-----------------------------------METHODS-------------------------------------
@@ -328,10 +330,10 @@ A total of 371,576,190 reads passing filter were generated in each direction, wi
 %and error rate as determined from alignment of PhiX reads to the PhiX genome was low (Read 1: 1.26 \UTF{00EF}\UTF{00BF}\UTF{0153}0.07; Read 2: 1.38 \UTF{00EF}\UTF{00BF}\UTF{0153}0.07)
 There was a very low frequency of cross-contamination from other libraries into those reported here (5e-05$\pm$8e-05; max 0.00034)
 
-We assessed the consistency of PCR by conducting 4 replicate PCRs for each environmental sample and calculating the mean pairwise Bray-Curtis dissimilarity of the resulting communities (scaled to minimum read depth per sample).
-92 of the 96 amplicon samples had mean Bray-Curtis dissimilarity $\leq$ 0.052; 1 sample had a value of 0.341, which elevates the value of the other replicates.
-After removal of this sample, the highest mean Bray-Curtis dissimilarity among replicates within an environmental sample was 0.034.
-
+PCR replicates were remarkably consistent.
+92 of the 96 environmental samples had a mean Bray-Curtis dissimilarity $\leq$ 0.052 among PCR replicates.
+1 environmental sample had high dissimilarity (0.341) among PCR replicates before removing a single faulty PCR.
+After removal of this PCR replicate, the highest mean Bray-Curtis dissimilarity among replicates within an environmental sample was 0.034.
 
 
 \subsection*{Community Analysis}
