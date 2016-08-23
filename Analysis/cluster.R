@@ -39,8 +39,8 @@ mycolors <- gghue(mypam$nc)
 		labels = 4,
 		color = FALSE,
 		col.p = mycolors[pam_out$clustering],
-		col.txt = mycolors,
-		col.clus = mycolors,
+		col.txt = mycolors, #levels(as.factor(mycolors[pam_out$clustering])),
+		col.clus = mycolors, #levels(as.factor(mycolors[pam_out$clustering])),
 		main = NA
 	)
 # dev.off()
