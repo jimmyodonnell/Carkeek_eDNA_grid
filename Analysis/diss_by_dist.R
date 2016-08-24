@@ -124,7 +124,10 @@ for(i in 1:length(model_out)){
       ), 
   con =  paste("model_output_", names(model_out[i]), ".txt", sep = ""))
 }
-
+# ALT:
+# sink("lm.txt")
+# summary(lm(cars$speed ~ cars$dist))
+# sink()
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
