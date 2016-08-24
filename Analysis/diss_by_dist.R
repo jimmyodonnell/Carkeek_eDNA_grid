@@ -73,8 +73,8 @@ nls_p2 <- nls(
 )
 summary(nls_p2)
 pred_nls_p2 <- predict(nls_p2)
-model_out[["NLS (2 parameters)"]] <- nls_p2
-model_pred[["NLS (2 parameters)"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p2))
+model_out[["NLS-2p"]] <- nls_p2
+model_pred[["NLS-2p"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p2))
 # lines(sort(geo_dist), sort(pred_nls_p2), col = "purple", lty = 3, lwd = 2)
 #-------------------------------------------------------------------------------
 
@@ -86,8 +86,8 @@ nls_p3 <- nls(
 )
 summary(nls_p3)
 pred_nls_p3 <- predict(nls_p3)
-model_out[["NLS (3 parameters)"]] <- nls_p3
-model_pred[["NLS (3 parameters)"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p3))
+model_out[["NLS-3p"]] <- nls_p3
+model_pred[["NLS-3p"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p3))
 # lines(sort(geo_dist), sort(pred_nls_p3), col = "indianred")
 #-------------------------------------------------------------------------------
 
@@ -98,8 +98,8 @@ lm_out <- lm(log(comm_dist)~ geo_dist)
 # Then the regression coefficient is usually used in the literature as the descriptor of distance decay, or the distance at which 50% of the maximum similarity is observed.
 summary(lm_out)
 pred_lm <- predict(lm_out)
-model_out[["Linear Model"]] <- lm_out
-model_pred[["Linear Model"]] <- data.frame(x = sort(geo_dist), y = sort(pred_lm))
+model_out[["Linear"]] <- lm_out
+model_pred[["Linear"]] <- data.frame(x = sort(geo_dist), y = sort(pred_lm))
 # lines(sort(geo_dist), sort(pred_lm), col = "blue")
 #-------------------------------------------------------------------------------
 
@@ -112,6 +112,19 @@ model_pred[["Linear Model"]] <- data.frame(x = sort(geo_dist), y = sort(pred_lm)
 # Generalized Additive Model
 # library(mgcv) #gam 
 # ?gam
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+# SAVE MODEL OUTPUT
+for(i in 1:length(model_out)){
+  writeLines(
+    capture.output(
+      model_out[[i]], 
+      summary(model_out[[i]])
+      ), 
+  con =  paste("model_output_", names(model_out[i]), ".txt", sep = ""))
+}
+
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------

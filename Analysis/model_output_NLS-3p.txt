@@ -1,0 +1,25 @@
+Nonlinear regression model
+  model: comm_dist_v ~ INT + ASY_DIFF * (1 - exp(-RATE * geo_dist_v))
+   data: parent.frame()
+ ASY_DIFF      RATE       INT 
+7.575e-01 7.831e-05 6.182e-01 
+ residual sum-of-squares: 5.604
+
+Number of iterations to convergence: 14 
+Achieved convergence tolerance: 1.031e-06
+
+Formula: comm_dist_v ~ INT + ASY_DIFF * (1 - exp(-RATE * geo_dist_v))
+
+Parameters:
+          Estimate Std. Error t value Pr(>|t|)    
+ASY_DIFF 7.575e-01  2.039e+00   0.372    0.711    
+RATE     7.831e-05  2.517e-04   0.311    0.756    
+INT      6.182e-01  2.670e-02  23.158   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.1433 on 273 degrees of freedom
+
+Number of iterations to convergence: 14 
+Achieved convergence tolerance: 1.031e-06
+
