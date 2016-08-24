@@ -1,0 +1,1 @@
+Distance decay relationship of environmental DNA communities. Each point represents a site sampled along three parallel transects comprising a 3000 by 4000 meter grid. Blue dashed line represents fit to a Michaelis-Menten function

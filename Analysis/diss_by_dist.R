@@ -48,7 +48,7 @@ model_pred <- list()
 
 #-------------------------------------------------------------------------------
 # Michaelis-Menten
-fix_asymptote_1 <- TRUE
+fix_asymptote_1 <- FALSE
 if(fix_asymptote_1){
 	Vm <- 1
 	start_list <- list(Km = max(the_data$comm)/2)
@@ -120,7 +120,14 @@ geo_dist_scaled <- log(geo_dist + 100)
 plot_x <- geo_dist # geo_dist_scaled
 
 if(export_plots){
-  pdf(file = file.path(fig_dir, "diss_by_dist.pdf")) #, width = 8, height = 3
+  plot_base   <- "diss_by_dist"
+  plot_pdf    <- paste(plot_base, ".pdf", sep = "")
+  legend_file <- paste(plot_base, "_legend.txt", sep = "")
+  writeLines(
+"Distance decay relationship of environmental DNA communities. Each point represents a site sampled along three parallel transects comprising a 3000 by 4000 meter grid. Blue dashed line represents fit to a Michaelis-Menten function. Purple dotted line represents nonlinear least squares regression (see Methods).", 
+             con = file.path(fig_dir, legend_file))
+  pdf(file = file.path(fig_dir, plot_pdf)) #, width = 8, height = 3
+  
 }
 par(mar = c(4,5,1,1))
 plot(
@@ -143,13 +150,13 @@ axis(side = 1, lwd = 0, lwd.ticks = 1)
 # abline(v = unique(log(metadata$dist_from_shore + 100)))
 axis(side = 2, lwd = 0, lwd.ticks = 1, las = 1)
 	
-line_colors <- c("#6495ED", "purple") #6495ED, #0084d1
+line_colors <- c("#6495ED", "purple", "red") #6495ED, #0084d1
 line_types <- c(2,3)
-for(model in 1:2) {
+for(model in c(1, 2)) {
 	lines(model_pred[[model]], col = line_colors[model], lwd = 2, lty = line_types[model])
 }
 
-legend("bottomright", legend = names(model_pred)[1:2], bty = "n", lty = line_types, col = line_colors, lwd = 2)
+legend("bottomright", legend = names(model_pred)[c(1,2,4)], bty = "n", lty = line_types, col = line_colors, lwd = 2)
 
 # Add LOESS line
 # smoothed <- loess.smooth(
