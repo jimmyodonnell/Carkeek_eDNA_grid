@@ -171,6 +171,8 @@ for(model in c(1, 2)) {
 
 legend("bottomright", legend = names(model_pred)[c(1,2,4)], bty = "n", lty = line_types, col = line_colors, lwd = 2)
 
+# title(main = "abundance", line = 0.1, adj = 0)
+
 # Add LOESS line
 # smoothed <- loess.smooth(
 				# x = plot_x,
