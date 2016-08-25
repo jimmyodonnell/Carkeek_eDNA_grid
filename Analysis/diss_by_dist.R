@@ -13,7 +13,7 @@ rownames(my_table) # should be e.g. PCT-C-0000 etc, aka "env_sample_name"
 
 library(geosphere) # distm()
 
-export_plots <- FALSE
+export_plots <- TRUE
 
 vegdist_method <- "bray"
 
