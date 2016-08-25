@@ -1,5 +1,5 @@
 # calculate dissimilarity
-find_bad_PCR <- function(my_table, my_metadata,
+find_bad_replicate <- function(my_table, my_metadata,
 	sample_id_column, grouping_column, threshold_sd = 1.5) {
 
 	library(vegan) # vegdist

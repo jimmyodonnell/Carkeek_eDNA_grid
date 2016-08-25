@@ -17,37 +17,8 @@
 # TODO: append tables to a list like so:
 # some_tables[["yet_another"]] <- matrix(data = rnorm(25), nrow = 5)
 
-# this function rescales a numeric vector to 0 and 1
-scale01 <- function (x) {
-  (x-min(x))/(max(x)-min(x))
-}
-
-# this function rescales a matrix to contain only 0 and 1
-as.binary <- function (a_matrix) {
-	bin_mat <- a_matrix
-	bin_mat[bin_mat > 0] <- 1
-	return(bin_mat)
-}
-
-strip_absent <- function(x) {
-# this function removes any columns for which the sum is <= 0
-	return(x[,which(colSums(x) > 0)])
-}
-
-present_in_all_rows <- function(x) {
-# this function removes columns which are not > 0 in all rows
-	return(x[ , colSums(x > 0) >= nrow(x)])
-}
-
-not_in_all_rows <- function(x) {
-# this function removes columns which are > 0 in all rows
-	return(x[ , colSums(x > 0) < nrow(x)])
-}
-
-prop <- function(x) {
-# convert a matrix of counts to proportions of the samples
-	return(x/rowSums(x))
-}
+R_files <- list.files(path = "functions", pattern = "\\.R$", full.names = TRUE)
+sapply(R_files, source)
 
 otu_table_in <- otu_table_raw
 
@@ -59,8 +30,7 @@ otu_table_prop <- otu_table_in/rowSums(otu_table_in)
 CHECK_FOR_OUTLIERS <- TRUE
 # If you'd like to check for and remove inconsistent PCR replicates, go to:
 if(CHECK_FOR_OUTLIERS) {
-  source('dissimilarity.R')
-  cleaned <- find_bad_PCR(
+  cleaned <- find_bad_replicate(
   	my_table = otu_table_in,
   	my_metadata = metadata,
   	sample_id_column = colname_sampleid,
@@ -77,8 +47,6 @@ if(CHECK_FOR_OUTLIERS) {
 # RESCALE TO EQUAL SEQUENCING DEPTHS PER SAMPLE
 RESCALE_SEQUENCING_DEPTH <- TRUE
 
-source("rescale_rowsums.R")
-
 if(RESCALE_SEQUENCING_DEPTH) {
 
 	otu_scaled <- rescale_rowsums(otu_clean)
@@ -90,7 +58,6 @@ if(RESCALE_SEQUENCING_DEPTH) {
 # CALCULATE THRESHOLD AT WHICH THERE IS NO LONGER TURNOVER IN PRESENCE ABSENCE
 # I.E., for replicate PCRs, how many counts can be observed of one OTU 
 # where it is completely absent from another PCR?
-source("no_turnover.R")
 turnover_thresholds <- no_turnover(otu_scaled, metadata_clean[,colname_env_sample])
 (turnover_threshold <- max(turnover_thresholds))
 #-------------------------------------------------------------------------------
@@ -152,7 +119,6 @@ stripchart(as.data.frame(otu_01[,1:20]), pch = 19, col = rgb(0,0,0, alpha = 0.2)
 
 #-------------------------------------------------------------------------------
 # exclude otus that have no spatial variance (occur in only one sample)
-source("rm_single_rows.R")
 otu_spvar <- rm_single_rows(otu_filt)
 dim(otu_spvar)
 #-------------------------------------------------------------------------------

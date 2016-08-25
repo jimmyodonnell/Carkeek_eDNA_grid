@@ -9,7 +9,7 @@
 
 slice_sample <- function(dat, prop_prob = "equal", frac = 1) { # threshold
 	
-	if(class(dat) != "matrix" && class(dat) != "data.frame") {
+	if( class(dat) != "matrix" && class(dat) != "data.frame" ) {
 		stop("'dat' must be a matrix or data frame")
 	}
 	
@@ -44,4 +44,4 @@ slice_sample <- function(dat, prop_prob = "equal", frac = 1) { # threshold
 
 # tests
 # DAT <- matrix(data = rpois(100, lambda = 1), nrow = 10)
-slice_sample(dat = DAT, prop_prob = "equal", frac = 0.5)
+# slice_sample(dat = DAT, prop_prob = "equal", frac = 0.5)
