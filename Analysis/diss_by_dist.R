@@ -61,7 +61,7 @@ mm_fit <- nls(
   start = start_list)
 pred_mm <- predict(mm_fit)
 model_out[["Michaelis-Menten"]] <- mm_fit
-model_pred[["Michaelis-Menten"]] <- data.frame(x = sort(geo_dist), y = sort(pred_mm))
+model_pred[["Michaelis-Menten"]] <- data.frame(x = c(0, sort(geo_dist)), y = c(0, sort(pred_mm)))
 
 #-------------------------------------------------------------------------------
 
@@ -140,9 +140,9 @@ if(export_plots){
   plot_pdf    <- paste(plot_base, ".pdf", sep = "")
   legend_file <- paste(plot_base, "_legend.txt", sep = "")
   writeLines(
-"Distance decay relationship of environmental DNA communities. Each point represents a site sampled along three parallel transects comprising a 3000 by 4000 meter grid. Blue dashed line represents fit to a Michaelis-Menten function. Purple dotted line represents nonlinear least squares regression (see Methods).", 
+"Distance decay relationship of environmental DNA communities. Each point represents a site sampled along three parallel transects comprising a 3000 by 4000 meter grid. Purple dashed line represents nonlinear least squares regression (see Methods). Blue dotted line represents fit to a Michaelis-Menten function.", 
              con = file.path(fig_dir, legend_file))
-  pdf(file = file.path(fig_dir, plot_pdf)) #, width = 8, height = 3
+  pdf(file = file.path(fig_dir, plot_pdf), width = 8, height = 4) #, width = 8, height = 3
   
 }
 par(mar = c(4,5,1,1))
@@ -165,14 +165,18 @@ axis(side = 1, lwd = 0, lwd.ticks = 1)
 #, at = unique(log(metadata$dist_from_shore + 100)), labels = unique(metadata$dist_from_shore)
 # abline(v = unique(log(metadata$dist_from_shore + 100)))
 axis(side = 2, lwd = 0, lwd.ticks = 1, las = 1)
-	
+
+which_models <- c(1,2)
 line_colors <- c("#6495ED", "purple", "red") #6495ED, #0084d1
-line_types <- c(2,3)
-for(model in c(1, 2)) {
-	lines(model_pred[[model]], col = line_colors[model], lwd = 2, lty = line_types[model])
+line_types <- c(3, 2, 1)
+for(model in which_models) {
+	lines(model_pred[[model]], col = line_colors[model], lwd = 3, lty = line_types[model])
 }
 
-legend("bottomright", legend = names(model_pred)[c(1,2,4)], bty = "n", lty = line_types, col = line_colors, lwd = 2)
+legend(
+  "bottomright", 
+  legend = names(model_pred)[which_models], 
+  bty = "n", lty = line_types, col = line_colors, lwd = 3)
 
 # title(main = "abundance", line = 0.1, adj = 0)
 
