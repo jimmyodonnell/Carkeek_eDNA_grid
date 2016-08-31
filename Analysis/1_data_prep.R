@@ -114,7 +114,7 @@ otu_log <- log(otu_filt + 1)
 otu_01 <- apply(otu_filt, MARGIN = 2, FUN = scale01)
 par(mar = c(4,5,1,1))
 stripchart(as.data.frame(otu_01[,1:20]), pch = 19, col = rgb(0,0,0, alpha = 0.2),
-  main = "", las = 1)
+  main = "", las = 1, xlab = "scaled proportion across samples")
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
