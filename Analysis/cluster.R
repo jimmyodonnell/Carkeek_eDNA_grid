@@ -15,19 +15,38 @@ gghue <- function(n){
 }
 
 # choose between using proportional or raw counts
-my_table <- otu_filt # otu_mean, otu_spvar, otu_named, as.binary(otu_mean), [,1:100] , otu_filt
+my_table <- otu_spvar # otu_mean, otu_spvar, otu_named, as.binary(otu_mean), [,1:100] , otu_filt
 my_metadata <- metadata_mean #metadata[!duplicated(metadata[,"env_sample_name"]),]
 
 mydist <- vegdist(my_table, method = "bray", binary = FALSE) # , binary = TRUE
 
-mypam <- pamk(data = mydist, krange = 1:(attributes(mydist)$Size-1)) # to restrict range of Ks considered: , krange = 2:4
+mypam <- pamk(data = mydist, 
+              # criterion="ch", 
+              krange = 1:(attributes(mydist)$Size-1)
+              # krange = 6
+              ) # to restrict range of Ks considered: , krange = 2:4
+
+pam_list <- list()
+for(i in 1:23){
+  pam_list[[i]] <- pamk(data = mydist, krange = i)
+}
+
+sils <- lapply(pam_list[2:length(pam_list)], function(x) silhouette(x$pamobject))
+plot(sapply(lapply(sils, function(x) x[,"sil_width"]), mean), type = "b", ylim = c(0,1))
+
+
 pam_out <- mypam$pamobject
 (K_optim <- mypam$nc) # number of clusters
 
+# make silhouette
+pam_sil <- silhouette(pam_out)
+
+plot(pam_sil)
 # plot(pam(mydist, k = mypam$nc), which.plots = 1)
 
 mycolors <- gghue(mypam$nc)
 
+dev.new()
 # see ?clusplot.default
 # pdf(file = file.path(fig_dir, "pam_plot.pdf"))
 	par(mar = c(5,5,3,1))
