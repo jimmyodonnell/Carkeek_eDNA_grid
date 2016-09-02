@@ -1,0 +1,11 @@
+Yo.  Here my comments.  Big picture: Jimmy, don't feel discouraged by the results.  I can feel your irritation at the paper radiating from the screen when I read this thing.  I actually think the results are pretty cool if confusing. Just a few tweaks here and there and it's gonna be good. Take a step back and appreciate that no one has tried this before... then hammer the reader with this point again and again. I usually start with profanity then delete later.
+
+Next, I'd say be very clear about what each analysis is addressing and you will be led to the right figure to use.  I added a couple of topic sentences here and there but they are mostly suggestions that can be improved and refined with how you view the paper.
+
+I'm also curious about the various subset analyses - do you get similar or different answers with different subsets?  It could easily be brought more into the paper if you choose a couple of subsets (say 3 or 4) and be useful to illustrate which give similar results and which give different results.
+
+I have a few questions / suggestions about the PAM stuff.  I think you can pre-specify the number of groups in the PAM analysis, right? I'd do the analysis with 2 groups, and make the "pam_in_space" plot.  Then with 3 groups, then 4, etc.  I know the program will tell you which is the "best" number of groups.  Ignore the program: computers are dumb, biologists are smart.  There is a value in showing the patterns for a couple of different clustering sizes.  It may well be that the 3 or 4 or 5 clusters looks like it makes biological sense and we can use that.
+
+Finally, I didn't really try and work in the distance from shore plot but I do think it is interesting.  I'll think about it some more.
+
+Give a shout if you wanna chat.
