@@ -9,3 +9,5 @@ If you have input about these, please make edits/comments towards which sections
 As we all appreciate, there are many, many moving parts in these projects, to the extent that we have a very hard time managing them even internally within our lab group.
 At the least, I'd like to keep a full narrative for our own good, but I'd also like to make it a more common practice in papers in the field.
 
+Where does the description of the study site belong -- intro or methods?
+It feels out of place in the methods now that I added an intro paragraph to the methods.
