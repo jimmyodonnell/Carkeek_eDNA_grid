@@ -1,6 +1,9 @@
 # calculate dissimilarity
 find_bad_replicate <- function(my_table, my_metadata,
-	sample_id_column, grouping_column, threshold_sd = 1.5) {
+	sample_id_column, grouping_column, threshold_sd = 1.5, 
+    save_pdf = TRUE, pdf_path = "PCR_consistency.pdf") {
+
+	if(!require(vegan)){stop("vegan package must be installed")}
 
 	library(vegan) # vegdist
 	# rownames must be unique sample IDs. get this from 1_data_prep.R
@@ -14,9 +17,8 @@ find_bad_replicate <- function(my_table, my_metadata,
 	# sample_id_column <- colname_sampleid
 	# grouping_column <- colname_env_sample
 
-	# At how many standard deviations above the mean dissimilarity
+	# threshold_sd: At how many standard deviations above the mean dissimilarity
 	# should a sample be excluded?
-	THRESHOLD_SD <- threshold_sd
 
 	if(!(identical(my_metadata[,sample_id_column], rownames(my_table)))){
 		stop("hold on, the otu and metadata rows are not in the same order; disaster could ensue")
@@ -28,33 +30,28 @@ find_bad_replicate <- function(my_table, my_metadata,
 	group_vector <- my_metadata[, grouping_column]
 
 
-	dis_by_sample <- function(contingency_table, grouping_vector)
-	{
-	dis_by_group <- lapply(
-	      # lapply(
-	        split(as.data.frame(contingency_table), grouping_vector),
-	        # matrix, ncol = ncol(contingency_table)
-	      # ),
-	      vegdist, method = "bray", binary = FALSE, diag = TRUE, upper = TRUE
-	    )
-	  return(dis_by_group)
-	}
+	my_dis <- lapply(
+	  split(as.data.frame(prop_table), group_vector),
+	  vegdist, method = "bray", binary = FALSE, diag = TRUE, upper = TRUE
+	)
 
-	my_dis <- dis_by_sample(prop_table, group_vector)
 	# unlist seems to conveniently remove 0s and redundant values for distance matrices
 	my_dis_v <- unlist(my_dis)
 
 	# calculate mean dissimilarity
-	dis_mean <- mean(my_dis_v)
-	dis_sd <- sd(my_dis_v)
+	dis_mean       <- mean(my_dis_v)
+	dis_mean_round <- round(dis_mean, digits = 3)
+	dis_sd         <- sd(my_dis_v)
+	dis_sd_round   <- round(dis_sd, digits = 3)
 	print(
 		paste(
 			"dissimilarity among replicates within sample (mean, sd):", 
 			paste(
-				round(dis_mean, digits = 3), 
-				round(dis_sd, digits = 3), 
+				dis_mean_round, 
+				dis_sd_round, 
 				collapse = " ")))
-	dissimilarity_cutoff <- dis_mean + (dis_sd * THRESHOLD_SD)
+	dissimilarity_cutoff <- dis_mean + (dis_sd * threshold_sd)
+    dissimilarity_cutoff_round <- round(dissimilarity_cutoff, digits = 3)
 
 	# which sample group contains dissimilarities over the threshold?
 	bad_env_sample <- which(
@@ -71,7 +68,9 @@ find_bad_replicate <- function(my_table, my_metadata,
 	# what is the name of the replicate occuring more than once?
 	bad_replicate_name <- names(table(dis_names))[table(dis_names) > 1]
 
-	# pdf(file = file.path(fig_dir, "BC_before_cleaning.pdf"))
+	if(save_pdf){
+	  pdf(file = pdf_path)
+	}
 	color_vector <- rep(1, length(my_dis))
 	color_vector[bad_env_sample] <- "white"
 	par(mar = c(4,7,1,1))
@@ -95,11 +94,16 @@ find_bad_replicate <- function(my_table, my_metadata,
 	abline(v = c(dis_mean, dissimilarity_cutoff),
 		lty = 2, col = line_colors)
 
-	legend("topright", legend = c("mean", "threshold"),
+	legend("topright", 
+		legend = c(
+			paste("mean =", dis_mean_round), 
+			paste("threshold =", dissimilarity_cutoff_round)),
 		bty = "n", lty = 2, col = line_colors)
 
 	# note high value for sample "lib_B_tag_GCGCTC" in PCT-C-0500
-	# dev.off()
+	if(save_pdf){
+	  dev.off()
+	}
 
 	# remove the bad sample?
 	remove_bad_replicate <- TRUE

@@ -35,7 +35,9 @@ if(CHECK_FOR_OUTLIERS) {
   	my_metadata = metadata,
   	sample_id_column = colname_sampleid,
   	grouping_column = colname_env_sample, 
-  	threshold_sd = 1)
+  	threshold_sd = 1, 
+    save_pdf = TRUE, 
+    pdf_path = file.path(fig_dir, "PCR_consistency.pdf"))
   otu_clean <- strip_absent(cleaned[[1]])
   metadata_clean <- cleaned[[2]]
   rm(cleaned)
