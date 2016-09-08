@@ -1,11 +1,4 @@
 
-REMOVE_HUMAN_DNA <- FALSE
-if(REMOVE_HUMAN_DNA){
-	mytable <- as.matrix(otu_table_raw[,-1])# no human
-} else {
-	mytable <- as.matrix(otu_table_raw) # [,1:200]
-}
-
 if(!identical(rownames(mytable), metadata[,colname_sampleid])){
   warning("the rownames of the table and the sample ID column should be in the same order")
 }
