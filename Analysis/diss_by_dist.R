@@ -23,6 +23,8 @@ distance_name <- switch(vegdist_method,
        jaccard  = "Jaccard", 
        gower    = "Gower")
 
+USE_SIMILARITY <- TRUE # use similarity instead of dissimilarity
+
 # calculate pairwise great circle distance between sampling locations using Haversine method
 geo_dist <- as.dist(distm(x = my_metadata[,c(colname_lon, colname_lat)], fun = distHaversine))
 geo_dist_v <- as.vector(geo_dist)
@@ -31,6 +33,9 @@ geo_dist_v <- as.vector(geo_dist)
 # vegdist_bin <- c(TRUE, FALSE)
 # for(i in 1:length(vegdist_bin)){
 comm_dist <- vegdist(my_table, method = vegdist_method, binary = FALSE) #, diag = TRUE, upper = TRUE
+if(USE_SIMILARITY){
+  comm_dist <- 1- comm_dist
+}
 comm_dist_v <- as.vector(comm_dist)
 
 if(!(identical(dimnames(comm_dist), dimnames(geo_dist)))){
@@ -48,6 +53,7 @@ model_pred <- list()
 
 #-------------------------------------------------------------------------------
 # Michaelis-Menten
+if(!USE_SIMILARITY){
 fix_asymptote_1 <- FALSE
 if(fix_asymptote_1){
 	Vm <- 1
@@ -62,11 +68,12 @@ mm_fit <- nls(
 pred_mm <- predict(mm_fit)
 model_out[["Michaelis-Menten"]] <- mm_fit
 model_pred[["Michaelis-Menten"]] <- data.frame(x = c(0, sort(geo_dist)), y = c(0, sort(pred_mm)))
-
+}
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # Nonlinear Least Squares Regression (2 parameters)
+if(!USE_SIMILARITY){
 nls_p2 <- nls(
 	formula = comm_dist_v ~ 1 - ((1-INT) * exp( -RATE * geo_dist_v )),
 	start = c(RATE = 0.02, INT = 0)
@@ -75,11 +82,13 @@ summary(nls_p2)
 pred_nls_p2 <- predict(nls_p2)
 model_out[["NLS-2p"]] <- nls_p2
 model_pred[["NLS-2p"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p2))
+}
 # lines(sort(geo_dist), sort(pred_nls_p2), col = "purple", lty = 3, lwd = 2)
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # Nonlinear Least Squares Regression (3 parameters)
+if(!USE_SIMILARITY){
 nls_p3 <- nls(
 	formula = comm_dist_v ~ INT + ASY_DIFF * (1 - exp( -RATE * geo_dist_v )),
 	start = c(ASY_DIFF = 1, RATE = 0.02, INT = 0)
@@ -89,17 +98,32 @@ pred_nls_p3 <- predict(nls_p3)
 model_out[["NLS-3p"]] <- nls_p3
 model_pred[["NLS-3p"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p3))
 # lines(sort(geo_dist), sort(pred_nls_p3), col = "indianred")
+}
+if(USE_SIMILARITY){
+nls_p3 <- 
+nls(
+  formula = comm ~ INT - ASY_DIFF * (1 - exp(-RATE * space)), 
+  start = list(INT = 0.5, ASY_DIFF = 0.5, RATE = 0.02), 
+  algorithm = "port",
+  lower = list(INT = 0, ASY_DIFF = 0.1,   RATE = -Inf), 
+  upper = list(INT = 1, ASY_DIFF = 0.5,   RATE = Inf), 
+  data = the_data
+)
+summary(nls_p3)
+pred_nls_p3 <- predict(nls_p3)
+model_out[["NLS-3p"]] <- nls_p3
+model_pred[["NLS-3p"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p3, decreasing = TRUE))
+}
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # Linear Model
 lm_out <- lm(comm_dist ~ geo_dist)
-lm_out <- lm(log(comm_dist)~ geo_dist)
 # Then the regression coefficient is usually used in the literature as the descriptor of distance decay, or the distance at which 50% of the maximum similarity is observed.
 summary(lm_out)
 pred_lm <- predict(lm_out)
 model_out[["Linear"]] <- lm_out
-model_pred[["Linear"]] <- data.frame(x = sort(geo_dist), y = sort(pred_lm))
+model_pred[["Linear"]] <- data.frame(x = sort(geo_dist), y = sort(pred_lm, decreasing = TRUE))
 # lines(sort(geo_dist), sort(pred_lm), col = "blue")
 #-------------------------------------------------------------------------------
 
@@ -140,7 +164,7 @@ if(export_plots){
   plot_pdf    <- paste(plot_base, ".pdf", sep = "")
   legend_file <- paste(plot_base, "_legend.txt", sep = "")
   writeLines(
-"Distance decay relationship of environmental DNA communities. Each point represents a site sampled along three parallel transects comprising a 3000 by 4000 meter grid. Purple dashed line represents nonlinear least squares regression (see Methods). Blue dotted line represents fit to a Michaelis-Menten function.", 
+"Distance decay relationship of environmental DNA communities. Each point represents a site sampled along three parallel transects comprising a 3000 by 4000 meter grid. Blue dashed line represents nonlinear least squares regression (see Methods). Boxplot is comparisons within-sample across PCR replicates, separated by a vertical line at zero, where the central line is the median, the box encompasses the interquartile range, and the lines extend to 1.5 times the interquartile range. Boxplot outliers are omitted for clarity.", 
              con = file.path(fig_dir, legend_file))
   pdf(file = file.path(fig_dir, plot_pdf), width = 8, height = 4) #, width = 8, height = 3
   
@@ -150,33 +174,52 @@ plot(
 	x = plot_x,
 	y = comm_dist,
 	ylim = c(0,1),
+	xlim = c(-500, max(plot_x)), 
 	xaxt = "n",
 	pch = 21,
 	cex = 1,
 	col = hsv(h = 0, s = 1, v = 0, alpha = 0.5),
 	bg = rgb(0,0,0,alpha = 0.1 ), #,alpha = 0.1
 	xlab = "Distance between samples (meters)",
-	ylab = paste("Community dissimilarity (", distance_name, ")", sep = ""), 
+	ylab = paste("Community similarity (", distance_name, ")", sep = ""), 
 	# log = "x", 
 	axes = FALSE,
 	las = 1
 )
-axis(side = 1, lwd = 0, lwd.ticks = 1)
+axis(side = 1, at = c(-350, 50, 1000, 2000, 3000, 4000), labels = c("PCR", 50, 1000, 2000, 3000, 4000), lwd = 0, lwd.ticks = 1)
 #, at = unique(log(metadata$dist_from_shore + 100)), labels = unique(metadata$dist_from_shore)
 # abline(v = unique(log(metadata$dist_from_shore + 100)))
 axis(side = 2, lwd = 0, lwd.ticks = 1, las = 1)
+box()
 
-which_models <- c(1,2)
+# add PCR similarity
+otu_temp <- as.data.frame(otu_clean/rowSums(otu_clean))
+PCR_similarities <- lapply(
+  split(otu_temp, metadata_clean[ , colname_env_sample]), 
+  vegdist, method = vegdist_method
+)
+abline(v = 0)
+boxplot(1 - unlist(PCR_similarities), add = TRUE, 
+  at = -350, 
+  boxwex = 800, 
+  axes = FALSE,
+  outpch = NA, # suppress plotting of outliers
+  boxlwd = 0.5, 
+  medlwd = 0.5, 
+  show.names = FALSE
+)
+
+which_models <- c(1)
 line_colors <- c("#6495ED", "purple", "red") #6495ED, #0084d1
-line_types <- c(3, 2, 1)
+line_types <- c(2)
 for(model in which_models) {
 	lines(model_pred[[model]], col = line_colors[model], lwd = 3, lty = line_types[model])
 }
 
-legend(
-  "bottomright", 
-  legend = names(model_pred)[which_models], 
-  bty = "n", lty = line_types, col = line_colors, lwd = 3)
+# legend(
+  # "bottomright", 
+  # legend = names(model_pred)[which_models], 
+  # bty = "n", lty = line_types, col = line_colors, lwd = 3)
 
 # title(main = "abundance", line = 0.1, adj = 0)
 

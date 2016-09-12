@@ -1,27 +1,27 @@
 
 Call:
-lm(formula = log(comm_dist) ~ geo_dist)
+lm(formula = comm_dist ~ geo_dist)
 
 Coefficients:
 (Intercept)     geo_dist  
- -4.999e-01    7.613e-05  
+  0.3752134   -0.0000501  
 
 
 Call:
-lm(formula = log(comm_dist) ~ geo_dist)
+lm(formula = comm_dist ~ geo_dist)
 
 Residuals:
      Min       1Q   Median       3Q      Max 
--0.89333 -0.11233  0.05574  0.16282  0.38771 
+-0.28539 -0.10044 -0.02958  0.09123  0.40566 
 
 Coefficients:
               Estimate Std. Error t value Pr(>|t|)    
-(Intercept) -4.999e-01  2.478e-02  -20.18  < 2e-16 ***
-geo_dist     7.613e-05  1.182e-05    6.44 5.34e-10 ***
+(Intercept)  3.752e-01  1.533e-02   24.47  < 2e-16 ***
+geo_dist    -5.010e-05  7.314e-06   -6.85 4.85e-11 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.2312 on 274 degrees of freedom
-Multiple R-squared:  0.1315,	Adjusted R-squared:  0.1283 
-F-statistic: 41.47 on 1 and 274 DF,  p-value: 5.34e-10
+Residual standard error: 0.143 on 274 degrees of freedom
+Multiple R-squared:  0.1462,	Adjusted R-squared:  0.1431 
+F-statistic: 46.93 on 1 and 274 DF,  p-value: 4.852e-11
 
