@@ -54,20 +54,40 @@ model_pred <- list()
 #-------------------------------------------------------------------------------
 # Michaelis-Menten
 if(!USE_SIMILARITY){
-fix_asymptote_1 <- FALSE
-if(fix_asymptote_1){
+fix_asymptote <- TRUE
+if(fix_asymptote){
 	Vm <- 1
-	start_list <- list(Km = max(the_data$comm)/2)
+	start_list <- list(Km = max(comm_dist_v)/2)
 } else {
-	start_list <- list(Vm = max(the_data$com), Km = max(the_data$comm)/2)
+	start_list <- list(Vm = max(comm_dist_v), Km = max(comm_dist_v)/2)
 }
 mm_fit <- nls(
-  formula = comm ~ Vm * space/(Km + space),
-  data = the_data,
+  formula = comm_dist_v ~ Vm * geo_dist_v/(Km + geo_dist_v),
   start = start_list)
 pred_mm <- predict(mm_fit)
 model_out[["Michaelis-Menten"]] <- mm_fit
-model_pred[["Michaelis-Menten"]] <- data.frame(x = c(0, sort(geo_dist)), y = c(0, sort(pred_mm)))
+model_pred[["Michaelis-Menten"]] <- data.frame(
+  x = c(0, sort(geo_dist_v)), 
+  y = c(0, sort(pred_mm))
+)
+}
+if(USE_SIMILARITY){
+fix_asymptote <- FALSE
+if(fix_asymptote){
+	Vm <- 1
+	start_list <- list(Km = max(comm_dist_v)/2)
+} else {
+	start_list <- list(Vm = max(comm_dist_v), Km = max(comm_dist_v)/2)
+}
+mm_fit <- nls(
+  formula = comm_dist_v ~ 1 - (Vm * geo_dist_v)/(Km + geo_dist_v),
+  start = start_list)
+pred_mm <- predict(mm_fit)
+model_out[["Michaelis-Menten"]] <- mm_fit
+model_pred[["Michaelis-Menten"]] <- data.frame(
+  x = c(0, sort(geo_dist)), 
+  y = c(1, sort(pred_mm, decreasing = TRUE))
+)
 }
 #-------------------------------------------------------------------------------
 
@@ -84,6 +104,21 @@ model_out[["NLS-2p"]] <- nls_p2
 model_pred[["NLS-2p"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p2))
 }
 # lines(sort(geo_dist), sort(pred_nls_p2), col = "purple", lty = 3, lwd = 2)
+if(USE_SIMILARITY){
+nls_p2 <- nls(
+    formula = comm_dist_v ~ INT/(RATE + geo_dist_v),
+    start   = c(INT = 1000, RATE = 1000)
+	# formula = comm_dist_v ~ (1-INT) * exp( -RATE * geo_dist_v ),
+	# start = c(RATE = 0.02, INT = 0)
+)
+summary(nls_p2)
+pred_nls_p2 <- predict(nls_p2)
+model_out[["NLS-2p"]] <- nls_p2
+model_pred[["NLS-2p"]] <- data.frame(
+  x = sort(geo_dist), 
+  y = sort(pred_nls_p2, decreasing = TRUE)
+)
+}
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
@@ -102,12 +137,14 @@ model_pred[["NLS-3p"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p3))
 if(USE_SIMILARITY){
 nls_p3 <- 
 nls(
-  formula = comm ~ INT - ASY_DIFF * (1 - exp(-RATE * space)), 
-  start = list(INT = 0.5, ASY_DIFF = 0.5, RATE = 0.02), 
-  algorithm = "port",
-  lower = list(INT = 0, ASY_DIFF = 0.1,   RATE = -Inf), 
-  upper = list(INT = 1, ASY_DIFF = 0.5,   RATE = Inf), 
-  data = the_data
+  formula = comm_dist_v ~ INT / (RATE + geo_dist_v),
+  # lower = c(INT = -Inf,   ASY_DIFF = 0, RATE = -Inf),
+  start   = c(INT = 500, RATE = 1000), 
+  # formula = comm_dist_v ~ INT - ASY_DIFF * (1 - exp(-RATE * geo_dist_v)), 
+  # start = list(INT = 0.5, ASY_DIFF = 0.5, RATE = 0.02), 
+  # lower = list(INT = 0, ASY_DIFF = 0.1,   RATE = -Inf), 
+  # upper = list(INT = 1, ASY_DIFF = 0.5,   RATE = Inf), 
+  algorithm = "port"
 )
 summary(nls_p3)
 pred_nls_p3 <- predict(nls_p3)
@@ -118,12 +155,15 @@ model_pred[["NLS-3p"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p3, d
 
 #-------------------------------------------------------------------------------
 # Linear Model
-lm_out <- lm(comm_dist ~ geo_dist)
+lm_out <- lm(comm_dist_v ~ log(geo_dist_v))
 # Then the regression coefficient is usually used in the literature as the descriptor of distance decay, or the distance at which 50% of the maximum similarity is observed.
 summary(lm_out)
 pred_lm <- predict(lm_out)
 model_out[["Linear"]] <- lm_out
-model_pred[["Linear"]] <- data.frame(x = sort(geo_dist), y = sort(pred_lm, decreasing = TRUE))
+model_pred[["Linear"]] <- data.frame(
+  x = sort(geo_dist), 
+  y = sort(pred_lm, decreasing = TRUE)
+)
 # lines(sort(geo_dist), sort(pred_lm), col = "blue")
 #-------------------------------------------------------------------------------
 
