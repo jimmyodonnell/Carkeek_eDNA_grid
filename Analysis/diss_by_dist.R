@@ -10,40 +10,68 @@ my_metadata <- metadata_mean # metadata[!duplicated(metadata[,colname_env_sample
 my_table <- otu_filt # otu_mean, otu_spvar, otu_named, as.binary(otu_mean), otu_log, otu_filt
 rownames(my_table) # should be e.g. PCT-C-0000 etc, aka "env_sample_name"
 
+export_plots <- TRUE
 
 library(geosphere) # distm()
 
-export_plots <- TRUE
+#-------------------------------------------------------------------------------
+# calculate pairwise great circle distance between sampling locations using Haversine method
+geo_dist <- as.dist(distm(x = my_metadata[,c(colname_lon, colname_lat)], fun = distHaversine))
+attr(geo_dist, "Labels") <- my_metadata[, colname_env_sample]
+geo_dist_v <- as.vector(geo_dist)
+# dimnames(geo_dist) <- list(my_metadata$env_sample_name, my_metadata$env_sample_name)
 
+#-------------------------------------------------------------------------------
+# calculate pairwise dis/similarity of ecological communities
 vegdist_method <- "bray"
 
 distance_name <- switch(vegdist_method,
-       bray     = "Bray-Curtis", 
+       bray     = "Bray_Curtis", 
        morisita = "Morisita", 
        jaccard  = "Jaccard", 
        gower    = "Gower")
 
-USE_SIMILARITY <- TRUE # use similarity instead of dissimilarity
+vegdist_methods <- c(
+  "Bray_Curtis" = "bray", 
+  "Morisita"    = "morisita", 
+  "Jaccard"     = "jaccard", 
+  "Gower"       = "gower")
 
-# calculate pairwise great circle distance between sampling locations using Haversine method
-geo_dist <- as.dist(distm(x = my_metadata[,c(colname_lon, colname_lat)], fun = distHaversine))
-geo_dist_v <- as.vector(geo_dist)
-# dimnames(geo_dist) <- list(my_metadata$env_sample_name, my_metadata$env_sample_name)
+USE_SIMILARITY <- TRUE # use similarity instead of dissimilarity
 
 # vegdist_bin <- c(TRUE, FALSE)
 # for(i in 1:length(vegdist_bin)){
-comm_dist <- vegdist(my_table, method = vegdist_method, binary = FALSE) #, diag = TRUE, upper = TRUE
-if(USE_SIMILARITY){
-  comm_dist <- 1- comm_dist
-}
-comm_dist_v <- as.vector(comm_dist)
 
-if(!(identical(dimnames(comm_dist), dimnames(geo_dist)))){
+comm_dist <- list()
+for(i in 1:length(vegdist_methods)){
+  comm_dist[[names(vegdist_methods[i])]] <- vegdist(
+    x = my_table, method = vegdist_methods[i], binary = FALSE)
+}
+for(i in 1:length(vegdist_methods)){
+  comm_dist[[paste(names(vegdist_methods[i]), "bin", sep = "_")]] <- vegdist(
+    x = my_table, method = vegdist_methods[i], binary = TRUE)
+}
+
+if(USE_SIMILARITY){
+  comm_dist <- lapply(comm_dist, function(x) 1 - x)
+}
+
+if(!(identical(attr(comm_dist[[1]], "Labels"), attr(geo_dist, "Labels")))){
 	warning("Whoa there! the row/column names of the two distance matrices do not seem to add up. This is bad.")
 }
 
 # arrange the data for model fitting
-the_data <- data.frame(comm = as.vector(comm_dist), space = as.vector(geo_dist))
+model_data_full <- data.frame(
+  dist2df(geo_dist), 
+  data.frame(lapply(comm_dist, as.vector))
+)
+# order the columns
+model_data_full <- model_data_full[order(model_data_full[,"dist"]), ]
+# write the data
+write.csv(x = model_data_full, file = file.path(data_dir, "model_data_full.csv"), row.names = FALSE)
+
+# subset for a given run of the models
+model_data <- data.frame(x = model_data_full[,"dist"], y = model_data_full[,distance_name])
 
 #-------------------------------------------------------------------------------
 # Fit some models, estimate some parameters
