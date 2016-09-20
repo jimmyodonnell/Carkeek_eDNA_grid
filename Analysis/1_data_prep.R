@@ -20,26 +20,25 @@
 R_files <- list.files(path = "functions", pattern = "\\.R$", full.names = TRUE)
 sapply(R_files, source)
 
-otu_table_in <- otu_table_raw
-
 # calculate proportional abundance of OTUs in each sample
-otu_table_prop <- otu_table_in/rowSums(otu_table_in)
-
+# otu_table[["prop"]] <- otu_table[["raw"]]/rowSums(otu_table[["raw"]])
+# metadata[["prop"]]  <- metadata[["raw"]]
 
 #-------------------------------------------------------------------------------
 CHECK_FOR_OUTLIERS <- TRUE
 # If you'd like to check for and remove inconsistent PCR replicates, go to:
 if(CHECK_FOR_OUTLIERS) {
   cleaned <- find_bad_replicate(
-  	my_table = otu_table_in,
-  	my_metadata = metadata,
+  	my_table         = otu_table[["raw"]],
+  	my_metadata      = metadata[["raw"]],
   	sample_id_column = colname_sampleid,
-  	grouping_column = colname_env_sample, 
-  	threshold_sd = 1, 
-    save_pdf = TRUE, 
-    pdf_path = file.path(fig_dir, "PCR_consistency.pdf"))
-  otu_clean <- strip_absent(cleaned[[1]])
-  metadata_clean <- cleaned[[2]]
+  	grouping_column  = colname_env_sample, 
+  	threshold_sd     = 1, 
+    save_pdf         = TRUE, 
+    pdf_path         = file.path(fig_dir, "PCR_consistency.pdf")
+  )
+  otu_table[["clean"]] <- strip_absent(cleaned[[1]])
+  metadata[["clean"]]  <- cleaned[[2]]
   rm(cleaned)
 }
 #-------------------------------------------------------------------------------
@@ -50,9 +49,8 @@ if(CHECK_FOR_OUTLIERS) {
 RESCALE_SEQUENCING_DEPTH <- TRUE
 
 if(RESCALE_SEQUENCING_DEPTH) {
-
-	otu_scaled <- rescale_rowsums(otu_clean)
-
+	otu_table[["scaled"]] <- rescale_rowsums(otu_table[["clean"]])
+    metadata[["scaled"]]  <- metadata[["clean"]]
 }
 #-------------------------------------------------------------------------------
 
@@ -60,21 +58,12 @@ if(RESCALE_SEQUENCING_DEPTH) {
 # CALCULATE THRESHOLD AT WHICH THERE IS NO LONGER TURNOVER IN PRESENCE ABSENCE
 # I.E., for replicate PCRs, how many counts can be observed of one OTU 
 # where it is completely absent from another PCR?
-turnover_thresholds <- no_turnover(otu_scaled, metadata_clean[,colname_env_sample])
+turnover_thresholds <- no_turnover(otu_table[["scaled"]], metadata[["scaled"]][,colname_env_sample])
 (turnover_threshold <- max(turnover_thresholds))
 #-------------------------------------------------------------------------------
 
-#-------------------------------------------------------------------------------
-# take mean of OTU abundance across replicate PCRs
-otu_mean <- do.call(rbind,
-	lapply(
-		split(as.data.frame(otu_clean), metadata_clean[,colname_env_sample]),
-	colMeans
-	)
-)
-# reduce corresponding metdata
-metadata_mean <- metadata_clean[match(rownames(otu_mean), metadata_clean[,colname_env_sample]),]
-#-------------------------------------------------------------------------------
+# THERE IS SOMETHING TO THIS:
+# boxplot(apply(otu_table[["raw"]][1:4,1:20], 2, scale))
 
 #-------------------------------------------------------------------------------
 # Should OTUs be excluded that occur fewer than a threshold number of times?
@@ -90,37 +79,62 @@ THRESHOLD_LEVEL <- "observation" # "observation" | "all_samples"
 if(EXCLUDE_RARE_OTUs) {
   if(THRESHOLD_LEVEL == "all_samples"){
 	  # how many OTUs will be retained?
-	  sum(colSums(otu_scaled) > abundance_threshold)
+	  sum(colSums(otu_table[["scaled"]]) > abundance_threshold)
 	  # round(colSums(otu_scaled)/sum(otu_scaled)*100, digits = 2)
 	  # plot(colSums(otu_scaled)/sum(otu_scaled), type = "l")
 	  # exclude OTUs that were counted a total of fewer than 100 times across samples
-	  otu_filt <- otu_scaled[,which(colSums(otu_scaled) > abundance_threshold)]
-	  dim(otu_filt)
+	  otu_table[["filt"]] <- otu_table[["scaled"]][ ,
+	      which(colSums(otu_table[["scaled"]]) > abundance_threshold)
+	  ]
+	  metadata[["filt"]] <- metadata[["scaled"]]
   } else if(THRESHOLD_LEVEL == "observation"){
   	# do it on a per-sample basis
-	otu_filt <- otu_mean
-	otu_filt[otu_filt < abundance_threshold] <- 0
-	otu_filt <- strip_absent(otu_filt)
-	dim(otu_filt)
+    otu_table[["filt"]] <- otu_table[["scaled"]]
+    otu_table[["filt"]][otu_table[["filt"]] < abundance_threshold] <- 0
+    otu_table[["filt"]] <- strip_absent(otu_table[["filt"]])
+    metadata[["filt"]]  <- metadata[["scaled"]]
   }
 }
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
+# take mean of OTU abundance across replicate PCRs
+otu_table[["mean"]] <- do.call(rbind,
+	lapply(
+		split(as.data.frame(otu_table[["filt"]]), metadata[["filt"]][,colname_env_sample]),
+	colMeans
+	)
+)
+# reduce corresponding metdata
+metadata[["mean"]] <- metadata[["filt"]][
+   match(rownames(otu_table[["mean"]]), metadata[["filt"]][,colname_env_sample])
+   , ]
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
 # Log transform
-otu_log <- log(otu_filt + 1)
+otu_table[["log"]] <- log(otu_table[["mean"]] + 1)
+metadata[["log"]]  <- metadata[["mean"]]
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # rescale each column to its maximum value, ranging from 0 to 1
-otu_01 <- apply(otu_filt, MARGIN = 2, FUN = scale01)
-par(mar = c(4,5,1,1))
-stripchart(as.data.frame(otu_01[,1:20]), pch = 19, col = rgb(0,0,0, alpha = 0.2),
-  main = "", las = 1, xlab = "scaled proportion across samples")
+otu_table[["scale01"]] <- apply(otu_table[["mean"]], MARGIN = 2, FUN = scale01)
+metadata[["scale01"]]  <- metadata[["mean"]]
+# par(mar = c(4,5,1,1))
+# stripchart(as.data.frame(otu_table[["scale01"]][,1:20]), pch = 19, col = rgb(0,0,0, alpha = 0.2),
+  # main = "", las = 1, xlab = "scaled proportion across samples")
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # exclude otus that have no spatial variance (occur in only one sample)
-otu_spvar <- rm_single_rows(otu_filt)
-dim(otu_spvar)
+otu_table[["spvar"]] <- rm_single_rows(otu_table[["mean"]])
+metadata[["spvar"]]  <- metadata[["mean"]]
 #-------------------------------------------------------------------------------
+
+if(!identical(length(otu_table), length(metadata))){
+	warning("watch out, the number of OTU and metadata tables differs")
+}
+if(!identical(names(otu_table), names(metadata))){
+	warning("watch out, the names of the OTU tables and metadata differ")
+}
