@@ -16,7 +16,12 @@ library(geosphere) # distm()
 
 #-------------------------------------------------------------------------------
 # calculate pairwise great circle distance between sampling locations using Haversine method
-geo_dist <- as.dist(distm(x = my_metadata[,c(colname_lon, colname_lat)], fun = distHaversine))
+geo_dist <- as.dist(
+  distm(
+    x = my_metadata[,c(colname_lon, colname_lat)], 
+    fun = distHaversine
+  )
+)
 attr(geo_dist, "Labels") <- my_metadata[, colname_env_sample]
 geo_dist_v <- as.vector(geo_dist)
 # dimnames(geo_dist) <- list(my_metadata$env_sample_name, my_metadata$env_sample_name)
@@ -68,13 +73,188 @@ model_data_full <- data.frame(
 # order the columns
 model_data_full <- model_data_full[order(model_data_full[,"dist"]), ]
 # write the data
-write.csv(x = model_data_full, file = file.path(data_dir, "model_data_full.csv"), row.names = FALSE)
+write.csv(
+  x = model_data_full, 
+  file = file.path(data_dir, "model_data_full.csv"), 
+  row.names = FALSE
+)
 
 # subset for a given run of the models
-model_data <- data.frame(x = model_data_full[,"dist"], y = model_data_full[,distance_name])
+model_data <- data.frame(
+  x = model_data_full[,"dist"], 
+  y = model_data_full[,distance_name]
+)
+
 
 #-------------------------------------------------------------------------------
 # Fit some models, estimate some parameters
+
+# start a vector to store parameter initialization values (i.e. good guesses)
+init <- list(
+
+# intercept
+intercept = 0.5,
+
+# intercept_mod
+int_mod   = "I don't think I should use this parameter/formulation",
+
+# asymptote
+asymptote = 0,
+
+# halflife
+halflife = max(geo_dist_v)/2,
+
+# delta y
+deltay = 1,
+
+# slope
+slope = -0.001
+
+)
+
+#-------------------------------------------------------------------------------
+# set up formula and equations for each model
+models   <- list()
+
+#===============================================================================
+# Linear Model
+models[["linear"]] <- list(
+  func =
+  function(x, intercept = 0, slope = 1){
+    y <- intercept + slope * x
+    return(y)
+  },
+  form =
+    y  ~ x,
+  init = NA
+)
+
+#===============================================================================
+# Log-Linear Model
+models[["loglinear"]] <- list(
+  func =
+  function(x, intercept = 0, slope = 1){
+    y <- intercept + slope * log(x)
+    return(y)
+  },
+  form =
+    y  ~ log(x),
+  init = NA
+)
+
+#===============================================================================
+# Michaelis-Menten, full
+models[["MM_full"]] <- list(
+  func =
+  function(x, intercept = 1, asymptote = 0, halflife = max(x)/2){
+    int_mod <- intercept * halflife
+    y <- ((intercept * halflife) + asymptote * x)/( halflife + x)
+    return(y)
+    },
+  form =
+    y  ~ ((intercept * halflife) + asymptote * x)/( halflife + x),
+  init =
+    init[c("intercept", "asymptote", "halflife")]
+)
+
+#===============================================================================
+# Michaelis-Menten, intercept = 1
+models[["MM_int1"]] <- list(
+  func =
+  function(x, asymptote = 0, halflife = max(x)/2){
+    y <- (halflife + asymptote * x)/( halflife + x)
+    return(y)
+  },
+  form =
+    y  ~ (halflife + asymptote * x)/( halflife + x),
+  init =
+    init[c("asymptote", "halflife")]
+)
+
+#===============================================================================
+# Michaelis-Menten, asymptote = 0
+models[["MM_asy0"]] <- list(
+  func =
+  function(x, intercept = 1, halflife = max(x)/2){
+    int_mod <- intercept * halflife
+    y <- (intercept * halflife)/(halflife + x)
+    return(y)
+  },
+  form =
+    y  ~ (intercept * halflife)/(halflife + x),
+  init =
+    init[c("intercept", "halflife")]
+)
+
+#===============================================================================
+# Michaelis-Menten, intercept = 1; asymptote = 0
+models[["MM_int1asy0"]] <- list(
+  func =
+  function(x, halflife = max(x)/2){
+    y <- halflife/(halflife + x)
+    return(y)
+  },
+  form =
+    y  ~ halflife/(halflife + x),
+  init =
+    init["halflife"]
+)
+
+#===============================================================================
+# I have no idea what to call this weird looking model
+models[["Harold"]] <- list(
+  func =
+    function(x, intercept = 1, deltay = -1, halflife = max(x)/2){
+    y <- intercept + (deltay*x)/(halflife + x)
+    return(y)
+  },
+  form =
+    y  ~ intercept + (deltay*x)/(halflife + x),
+  init = init[c("deltay", "halflife")]
+)
+
+# distinguish linear from nonlinear
+which_linear    <- c("linear", "loglinear")
+which_nonlinear <- names(models)[!names(models) %in% which_linear]
+
+#-------------------------------------------------------------------------------
+# run the linear models
+for(i in c("linear", "loglinear")){
+  models[[i]]$out <- lm(formula = models[[i]]$form, data = model_data)
+}
+#-------------------------------------------------------------------------------
+# run the nonlinear models
+for(i in which_nonlinear){
+  models[[i]]$out <- nls(
+    formula = models[[i]]$form, 
+    start   = models[[i]]$init, 
+    data    = model_data, 
+    lower   = ???,
+    upper   = ??? 
+  )
+}
+
+#-------------------------------------------------------------------------------
+# summarize the models
+
+lapply(lapply(models, "[[", "out"), summary)
+
+#-------------------------------------------------------------------------------
+# run the predictions
+for(i in 1:length(models)){
+  models[[i]]$pred <- predict(models[[i]]$out)
+}
+
+# add confidence intervals to the predictions
+
+#-------------------------------------------------------------------------------
+# Then the regression coefficient is usually used in the literature as the descriptor of distance decay, or the distance at which 50% of the maximum similarity is observed.
+summary(lm_out)
+model_out[["Linear"]] <- lm_out
+#-------------------------------------------------------------------------------
+
+
+
 model_out <- list()
 model_pred <- list()
 #-------------------------------------------------------------------------------
@@ -181,19 +361,6 @@ model_pred[["NLS-3p"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p3, d
 }
 #-------------------------------------------------------------------------------
 
-#-------------------------------------------------------------------------------
-# Linear Model
-lm_out <- lm(comm_dist_v ~ log(geo_dist_v))
-# Then the regression coefficient is usually used in the literature as the descriptor of distance decay, or the distance at which 50% of the maximum similarity is observed.
-summary(lm_out)
-pred_lm <- predict(lm_out)
-model_out[["Linear"]] <- lm_out
-model_pred[["Linear"]] <- data.frame(
-  x = sort(geo_dist), 
-  y = sort(pred_lm, decreasing = TRUE)
-)
-# lines(sort(geo_dist), sort(pred_lm), col = "blue")
-#-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # Other analyses to consider:
