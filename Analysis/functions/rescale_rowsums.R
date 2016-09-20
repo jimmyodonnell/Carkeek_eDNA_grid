@@ -11,7 +11,7 @@ rescale_rowsums <- function(mat)
 	# otu_scaled[otu_scaled < 0.5] <- 0
 
 	# round to whole numbers
-	scaled <- round(scaled)
+	scaled <- round_right(scaled)
 	dim(scaled)
 
 	# exclude OTUs not found in these samples
