@@ -112,6 +112,20 @@ metadata[["mean"]] <- metadata[["filt"]][
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
+# take mean of unfiltered OTU abundance across replicate PCRs
+otu_table[["mean_unfilt"]] <- do.call(rbind,
+	lapply(
+		split(as.data.frame(prop(otu_table[["clean"]])), metadata[["clean"]][,colname_env_sample]),
+	colMeans
+	)
+)
+# reduce corresponding metdata
+metadata[["mean_unfilt"]] <- metadata[["clean"]][
+   match(rownames(otu_table[["mean"]]), metadata[["clean"]][,colname_env_sample])
+   , ]
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
 # Log transform
 otu_table[["log"]] <- log(otu_table[["mean"]] + 1)
 metadata[["log"]]  <- metadata[["mean"]]
