@@ -18,7 +18,7 @@ library(geosphere) # distm()
 # calculate pairwise great circle distance between sampling locations using Haversine method
 geo_dist <- as.dist(
   distm(
-    x = my_metadata[,c(colname_lon, colname_lat)], 
+    x = my_metadata[,c(colname_lon, colname_lat)],
     fun = distHaversine
   )
 )
@@ -30,17 +30,17 @@ attr(geo_dist, "Labels") <- my_metadata[, colname_env_sample]
 vegdist_method <- "bray"
 
 distance_name <- switch(vegdist_method,
-       bray     = "Bray_Curtis", 
-       morisita = "Morisita", 
-       horn     = "Morisita-Horn", 
-       jaccard  = "Jaccard", 
+       bray     = "Bray_Curtis",
+       morisita = "Morisita",
+       horn     = "Morisita-Horn",
+       jaccard  = "Jaccard",
        gower    = "Gower")
 
 vegdist_methods <- c(
-  "Bray_Curtis"   = "bray", 
-  "Morisita"      = "morisita", 
-  "Morisita_Horn" = "horn", 
-  "Jaccard"       = "jaccard", 
+  "Bray_Curtis"   = "bray",
+  "Morisita"      = "morisita",
+  "Morisita_Horn" = "horn",
+  "Jaccard"       = "jaccard",
   "Gower"         = "gower")
 
 USE_SIMILARITY <- TRUE # use similarity instead of dissimilarity
@@ -69,8 +69,8 @@ if(!(identical(attr(comm_dist[[1]], "Labels"), attr(geo_dist, "Labels")))){
 # calculate replicate PCR similarity
 otu_temp <- as.data.frame(prop(otu_table[["clean"]]))
 PCR_similarities <- lapply(
-  split(otu_temp, metadata[["clean"]][ , colname_env_sample]), 
-  vegdist, method = vegdist_method
+  split(otu_temp, metadata[["clean"]][ , colname_env_sample]),
+  function(x) {1 - vegdist(x, method = vegdist_method)}
 )
 rm(otu_temp)
 
@@ -78,7 +78,7 @@ rm(otu_temp)
 #-------------------------------------------------------------------------------
 # arrange the data for model fitting
 model_data_full <- data.frame(
-  dist2df(geo_dist), 
+  dist2df(geo_dist),
   data.frame(lapply(comm_dist, as.vector))
 )
 # order the columns
@@ -87,15 +87,15 @@ model_data_full <- model_data_full[order(model_data_full[,"dist"]), ]
 if(EXPORT){
 # write the data
   write.csv(
-    x = model_data_full, 
-    file = file.path(data_dir, "model_data_full.csv"), 
+    x = model_data_full,
+    file = file.path(data_dir, "model_data_full.csv"),
     row.names = FALSE
   )
 }
 
 # subset for a given run of the models
 model_data <- data.frame(
-  x = model_data_full[,"dist"], 
+  x = model_data_full[,"dist"],
   y = model_data_full[,distance_name]
 )
 
@@ -103,49 +103,49 @@ model_data <- data.frame(
 #-------------------------------------------------------------------------------
 # Fit some models, estimate some parameters
 
-# start a data frame to store parameter values, 
+# start a data frame to store parameter values,
 # including initialization values (i.e. good guesses)
 params <- data.frame(
 
 # intercept
 intercept = c(
-  min  = 0, 
-  max  = 1, 
+  min  = 0,
+  max  = 1,
   init = 0.5
-), 
+),
 
 # intercept_mod
 int_mod = c( # I don't think I should use this parameter/formulation
-  min  = -Inf, 
-  max  = Inf, 
+  min  = -Inf,
+  max  = Inf,
   init = NA
-), 
+),
 
 # asymptote
-asymptote = c( 
-  min  = 0, 
-  max  = 1, 
+asymptote = c(
+  min  = 0,
+  max  = 1,
   init = 0
 ),
 
 # halflife
 halflife = c(
-  min  = 0, 
-  max  = max(model_data$y), 
+  min  = 0,
+  max  = max(model_data$y),
   init = max(model_data$y)/2
 ),
 
 # delta y
 deltay = c(
-  min  = 0, 
-  max  = 1, 
+  min  = 0,
+  max  = 1,
   init = 1
 ),
 
 # slope
 slope = c(
-  min  = -Inf, 
-  max  = Inf, 
+  min  = -Inf,
+  max  = Inf,
   init = -0.001
 )
 
@@ -252,7 +252,7 @@ models[["Harold"]] <- list(
   },
   form =
     y  ~ intercept + (deltay*x)/(halflife + x),
-  init = 
+  init =
     params["init",c("intercept", "deltay", "halflife")]
 )
 
@@ -269,9 +269,9 @@ for(i in c("linear", "loglinear")){
 # run the nonlinear models
 for(i in which_nonlinear){
   models[[i]]$out <- nls(
-    formula      = models[[i]]$form, 
-    start        = models[[i]]$init, 
-    data         = model_data, 
+    formula      = models[[i]]$form,
+    start        = models[[i]]$init,
+    data         = model_data,
     lower        = params["min",],
     upper        = params["max",],
     algorithm    = "port"
@@ -289,7 +289,7 @@ for(i in 1:length(models)){
 # run the predictions
 x_pred <- seq(from = 0, to = 5000, length = 101)
 for(i in 1:length(models)){
-  models[[i]]$pred <- predict(models[[i]]$out, 
+  models[[i]]$pred <- predict(models[[i]]$out,
     newdata = data.frame(x = x_pred))
 }
 
@@ -304,14 +304,14 @@ for(i in 1:length(models)){
 # mantel(comm_dist, geo_dist, perm = 9999)
 
 # Generalized Additive Model
-# library(mgcv) #gam 
+# library(mgcv) #gam
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # SAVE MODEL OUTPUT
 if(EXPORT){
 writeLines(
-  capture.output(lapply(models, "[", c("out", "summary"))), 
+  capture.output(lapply(models, "[", c("out", "summary"))),
   con =  "model_output.txt"
 )
 }
@@ -323,37 +323,39 @@ writeLines(
 
 #-------------------------------------------------------------------------------
 # PLOTTING
-geo_dist_scaled <- log(geo_dist + 100)
-plot_x <- geo_dist # geo_dist_scaled
+geo_dist_scaled <- log(model_data$x + 100)
+plot_x <- model_data$x # geo_dist_scaled
 
 if(EXPORT){
-  plot_base   <- "diss_by_dist"
+  plot_base   <- "distance_decay"
   plot_pdf    <- paste(plot_base, ".pdf", sep = "")
   legend_file <- paste(plot_base, "_legend.txt", sep = "")
   writeLines(
-"Distance decay relationship of environmental DNA communities. Each point represents a site sampled along three parallel transects comprising a 3000 by 4000 meter grid. Blue dashed line represents nonlinear least squares regression (see Methods). Boxplot is comparisons within-sample across PCR replicates, separated by a vertical line at zero, where the central line is the median, the box encompasses the interquartile range, and the lines extend to 1.5 times the interquartile range. Boxplot outliers are omitted for clarity.", 
+"Distance decay relationship of environmental DNA communities. Each point represents a site sampled along three parallel transects comprising a 3000 by 4000 meter grid. Blue dashed line represents nonlinear least squares regression (see Methods). Boxplot is comparisons within-sample across PCR replicates, separated by a vertical line at zero, where the central line is the median, the box encompasses the interquartile range, and the lines extend to 1.5 times the interquartile range. Boxplot outliers are omitted for clarity.",
              con = file.path(fig_dir, legend_file))
   pdf(file = file.path(fig_dir, plot_pdf), width = 8, height = 4) #, width = 8, height = 3
-  
+
 }
 par(mar = c(4,5,1,1))
 plot(
-	x = plot_x,
-	y = comm_dist,
+	x = model_data$x,
+	y = model_data$y,
 	ylim = c(0,1),
-	xlim = c(-500, max(plot_x)), 
+	xlim = c(-500, max(model_data$x)),
 	xaxt = "n",
 	pch = 21,
 	cex = 1,
 	col = hsv(h = 0, s = 1, v = 0, alpha = 0.5),
 	bg = rgb(0,0,0,alpha = 0.1 ), #,alpha = 0.1
 	xlab = "Distance between samples (meters)",
-	ylab = paste("Community similarity (", distance_name, ")", sep = ""), 
-	# log = "x", 
+	ylab = paste("Community similarity (", distance_name, ")", sep = ""),
+	# log = "x",
 	axes = FALSE,
 	las = 1
 )
-axis(side = 1, at = c(-350, 50, 1000, 2000, 3000, 4000), labels = c("PCR", 50, 1000, 2000, 3000, 4000), lwd = 0, lwd.ticks = 1)
+axis(side = 1, 
+  at      = c(-350, 50, 1000, 2000, 3000, 4000), 
+  labels = c("PCR", 50, 1000, 2000, 3000, 4000), lwd = 0, lwd.ticks = 1)
 #, at = unique(log(metadata$dist_from_shore + 100)), labels = unique(metadata$dist_from_shore)
 # abline(v = unique(log(metadata$dist_from_shore + 100)))
 axis(side = 2, lwd = 0, lwd.ticks = 1, las = 1)
@@ -361,34 +363,36 @@ box()
 
 # add PCR similarity
 abline(v = 0)
-boxplot(1 - unlist(PCR_similarities), add = TRUE, 
-  at = -350, 
-  boxwex = 800, 
+boxplot(unlist(PCR_similarities), add = TRUE,
+  at = -350,
+  boxwex = 800,
   axes = FALSE,
   outpch = NA, # suppress plotting of outliers
-  boxlwd = 0.5, 
-  medlwd = 0.5, 
+  boxlwd = 0.5,
+  medlwd = 0.5,
   show.names = FALSE
 )
 
-which_models <- c(1)
-line_colors <- c("#6495ED", "purple", "red") #6495ED, #0084d1
+# "linear","loglinear","MM_full","MM_int1","MM_asy0","MM_int1asy0","Harold" 
+main_models <- c("MM_asy0") 
+line_colors <- c("#6495ED") #6495ED, #0084d1 , "purple", "red"
 line_types <- c(2)
-for(model in which_models) {
-	lines(model_pred[[model]], col = line_colors[model], lwd = 3, lty = line_types[model])
+for(i in 1:length(main_models)) {
+	lines(x = x_pred, y = models[[main_models[[i]]]]$pred, 
+      col = line_colors[i], lwd = 3, lty = line_types[i])
 }
 
 # legend(
-  # "bottomright", 
-  # legend = names(model_pred)[which_models], 
+  # "topright",
+  # legend = names(model_pred)[which_models],
   # bty = "n", lty = line_types, col = line_colors, lwd = 3)
 
 # title(main = "abundance", line = 0.1, adj = 0)
 
 # Add LOESS line
 # smoothed <- loess.smooth(
-				# x = plot_x,
-				# y = comm_dist,
+				# x = model_data$x,
+				# y = model_data$y,
 				# span = 2/3,
 				# degree = 1,
 				# family = "gaussian"
@@ -398,3 +402,39 @@ if(EXPORT){
   dev.off()
 }
 # }
+
+#===============================================================================
+# plot all models
+if(EXPORT){
+  plot_pdf    <- paste(plot_base, "_all", ".pdf", sep = "")
+  plot_pdf   <- file.path(fig_dir, plot_pdf)
+  pdf(file = plot_pdf, width = 5, height = 5) #, width = 8, height = 3
+}
+for(i in 1:length(models)){
+  par(mar = c(4,5,1,1))
+  plot(
+    x = model_data$x,
+    y = model_data$y,
+    ylim = c(0,1),
+    xlim = c(0, max(model_data$x)),
+    xaxt = "n",
+    pch = 21,
+    cex = 1,
+    col = hsv(h = 0, s = 1, v = 0, alpha = 0.5),
+    bg = rgb(0,0,0,alpha = 0.1 ), #,alpha = 0.1
+    xlab = "Distance between samples (meters)",
+    ylab = paste("Community similarity (", distance_name, ")", sep = ""),
+    # log = "x",
+    axes = FALSE,
+    las = 1
+  )
+  axis(side = 1, lwd = 0, lwd.ticks = 1)
+  axis(side = 2, lwd = 0, lwd.ticks = 1, las = 1)
+  box()
+  lines(x = x_pred, y = models[[i]]$pred, col = "indianred", lwd = 3, lty = 3)
+  legend("topright", legend = names(models)[i],
+    bty = "n", lty = 3, col = "indianred", lwd = 3)
+}
+if(EXPORT){
+  dev.off()
+}
