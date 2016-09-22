@@ -23,7 +23,6 @@ geo_dist <- as.dist(
   )
 )
 attr(geo_dist, "Labels") <- my_metadata[, colname_env_sample]
-geo_dist_v <- as.vector(geo_dist)
 # dimnames(geo_dist) <- list(my_metadata$env_sample_name, my_metadata$env_sample_name)
 
 #-------------------------------------------------------------------------------
@@ -91,28 +90,54 @@ model_data <- data.frame(
 #-------------------------------------------------------------------------------
 # Fit some models, estimate some parameters
 
-# start a vector to store parameter initialization values (i.e. good guesses)
-init <- list(
+# start a data frame to store parameter initialization values (i.e. good guesses)
+params <- data.frame(
 
 # intercept
-intercept = 0.5,
+intercept = c(
+  min  = 0, 
+  max  = 1, 
+  init =   0.5
+), 
 
 # intercept_mod
-int_mod   = "I don't think I should use this parameter/formulation",
+int_mod = c( # I don't think I should use this parameter/formulation
+  min  = -Inf, 
+  max  = Inf, 
+  init = NA
+), 
 
 # asymptote
-asymptote = 0,
+asymptote = c( 
+  min  = 0, 
+  max  = 1, 
+  init =   0
+),
 
 # halflife
-halflife = max(geo_dist_v)/2,
+halflife = c(
+  min  = 0, 
+  max  = max(model_data$y), 
+  init = max(model_data$y)/2
+),
 
 # delta y
-deltay = 1,
+deltay = c(
+  min  = 0, 
+  max  = 1, 
+  init = 1
+),
 
 # slope
-slope = -0.001
+slope = c(
+  min  = -Inf, 
+  max  = Inf, 
+  init = -0.001
+)
 
 )
+
+# start a vector to store parameter minimum values
 
 #-------------------------------------------------------------------------------
 # set up formula and equations for each model
@@ -212,7 +237,7 @@ models[["Harold"]] <- list(
   },
   form =
     y  ~ intercept + (deltay*x)/(halflife + x),
-  init = init[c("deltay", "halflife")]
+  init = init[c("intercept", "deltay", "halflife")]
 )
 
 # distinguish linear from nonlinear
@@ -228,11 +253,12 @@ for(i in c("linear", "loglinear")){
 # run the nonlinear models
 for(i in which_nonlinear){
   models[[i]]$out <- nls(
-    formula = models[[i]]$form, 
-    start   = models[[i]]$init, 
-    data    = model_data, 
-    lower   = ???,
-    upper   = ??? 
+    formula      = models[[i]]$form, 
+    start        = models[[i]]$init, 
+    data         = model_data, 
+    lower        = -Inf,
+    upper        = Inf,
+    algorithm    = "port"
   )
 }
 
@@ -335,7 +361,8 @@ model_pred[["NLS-2p"]] <- data.frame(
 # Nonlinear Least Squares Regression (3 parameters)
 if(!USE_SIMILARITY){
 nls_p3 <- nls(
-	formula = comm_dist_v ~ INT + ASY_DIFF * (1 - exp( -RATE * geo_dist_v )),
+	formula = y ~ INT + ASY_DIFF * (1 - exp( -RATE * x )),
+	data = model_data, 
 	start = c(ASY_DIFF = 1, RATE = 0.02, INT = 0)
 )
 summary(nls_p3)
@@ -347,9 +374,11 @@ model_pred[["NLS-3p"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p3))
 if(USE_SIMILARITY){
 nls_p3 <- 
 nls(
-  formula = comm_dist_v ~ INT / (RATE + geo_dist_v),
+  formula = y ~ intercept / (halflife + x), 
+  data = model_data, 
   # lower = c(INT = -Inf,   ASY_DIFF = 0, RATE = -Inf),
-  start   = c(INT = 500, RATE = 1000), 
+  # start   = c(intercept = 500, halflife = 1000), 
+  start   = params["init",c("intercept", "halflife")], 
   # formula = comm_dist_v ~ INT - ASY_DIFF * (1 - exp(-RATE * geo_dist_v)), 
   # start = list(INT = 0.5, ASY_DIFF = 0.5, RATE = 0.02), 
   # lower = list(INT = 0, ASY_DIFF = 0.1,   RATE = -Inf), 
