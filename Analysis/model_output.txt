@@ -1,0 +1,203 @@
+$linear
+$linear$out
+
+Call:
+lm(formula = models[[i]]$form, data = model_data)
+
+Coefficients:
+(Intercept)            x  
+  3.862e-01   -4.945e-05  
+
+
+$linear$summary
+
+Call:
+lm(formula = models[[i]]$form, data = model_data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.29618 -0.09624 -0.03173  0.09532  0.57072 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  3.862e-01  1.602e-02  24.105  < 2e-16 ***
+x           -4.945e-05  7.642e-06  -6.471 4.47e-10 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.1495 on 274 degrees of freedom
+Multiple R-squared:  0.1326,	Adjusted R-squared:  0.1294 
+F-statistic: 41.87 on 1 and 274 DF,  p-value: 4.472e-10
+
+
+
+$loglinear
+$loglinear$out
+
+Call:
+lm(formula = models[[i]]$form, data = model_data)
+
+Coefficients:
+(Intercept)       log(x)  
+    0.69508     -0.05513  
+
+
+$loglinear$summary
+
+Call:
+lm(formula = models[[i]]$form, data = model_data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.30046 -0.10645 -0.03327  0.10819  0.57533 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  0.69508    0.07393   9.402  < 2e-16 ***
+log(x)      -0.05513    0.01025  -5.380  1.6e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.1526 on 274 degrees of freedom
+Multiple R-squared:  0.09555,	Adjusted R-squared:  0.09225 
+F-statistic: 28.95 on 1 and 274 DF,  p-value: 1.596e-07
+
+
+
+$MM_full
+$MM_full$out
+Nonlinear regression model
+  model: y ~ ((intercept * halflife) + asymptote * x)/(halflife + x)
+   data: model_data
+intercept asymptote  halflife 
+   1.0000    0.2993    1.0000 
+ residual sum-of-squares: 7.025
+
+Algorithm "port", convergence message: both X-convergence and relative convergence (5)
+
+$MM_full$summary
+
+Formula: y ~ ((intercept * halflife) + asymptote * x)/(halflife + x)
+
+Parameters:
+          Estimate Std. Error t value Pr(>|t|)    
+intercept   1.0000   625.4032   0.002    0.999    
+asymptote   0.2993     0.0137  21.841   <2e-16 ***
+halflife    1.0000   906.8419   0.001    0.999    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.1604 on 273 degrees of freedom
+
+Algorithm "port", convergence message: both X-convergence and relative convergence (5)
+
+
+
+$MM_int1
+$MM_int1$out
+Nonlinear regression model
+  model: y ~ (halflife + asymptote * x)/(halflife + x)
+   data: model_data
+asymptote  halflife 
+   0.2789   24.2166 
+ residual sum-of-squares: 6.772
+
+Algorithm "port", convergence message: relative convergence (4)
+
+$MM_int1$summary
+
+Formula: y ~ (halflife + asymptote * x)/(halflife + x)
+
+Parameters:
+          Estimate Std. Error t value Pr(>|t|)    
+asymptote  0.27895    0.01181  23.629  < 2e-16 ***
+halflife  24.21662    8.70025   2.783  0.00575 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.1572 on 274 degrees of freedom
+
+Algorithm "port", convergence message: relative convergence (4)
+
+
+
+$MM_asy0
+$MM_asy0$out
+Nonlinear regression model
+  model: y ~ (intercept * halflife)/(halflife + x)
+   data: model_data
+intercept  halflife 
+   0.4044 4465.4470 
+ residual sum-of-squares: 6.203
+
+Algorithm "port", convergence message: relative convergence (4)
+
+$MM_asy0$summary
+
+Formula: y ~ (intercept * halflife)/(halflife + x)
+
+Parameters:
+           Estimate Std. Error t value Pr(>|t|)    
+intercept 4.044e-01  2.453e-02  16.488  < 2e-16 ***
+halflife  4.465e+03  1.109e+03   4.026 7.34e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.1505 on 274 degrees of freedom
+
+Algorithm "port", convergence message: relative convergence (4)
+
+
+
+$MM_int1asy0
+$MM_int1asy0$out
+Nonlinear regression model
+  model: y ~ halflife/(halflife + x)
+   data: model_data
+halflife 
+       1 
+ residual sum-of-squares: 31.69
+
+Algorithm "port", convergence message: relative convergence (4)
+
+$MM_int1asy0$summary
+
+Formula: y ~ halflife/(halflife + x)
+
+Parameters:
+         Estimate Std. Error t value Pr(>|t|)
+halflife    1.000      6.946   0.144    0.886
+
+Residual standard error: 0.3394 on 275 degrees of freedom
+
+Algorithm "port", convergence message: relative convergence (4)
+
+
+
+$Harold
+$Harold$out
+Nonlinear regression model
+  model: y ~ intercept + (deltay * x)/(halflife + x)
+   data: model_data
+intercept    deltay  halflife 
+   1.0000   -0.7007    1.0000 
+ residual sum-of-squares: 7.025
+
+Algorithm "port", convergence message: both X-convergence and relative convergence (5)
+
+$Harold$summary
+
+Formula: y ~ intercept + (deltay * x)/(halflife + x)
+
+Parameters:
+          Estimate Std. Error t value Pr(>|t|)
+intercept   1.0000   625.4218   0.002    0.999
+deltay     -0.7007   625.4135  -0.001    0.999
+halflife    1.0000   906.8689   0.001    0.999
+
+Residual standard error: 0.1604 on 273 degrees of freedom
+
+Algorithm "port", convergence message: both X-convergence and relative convergence (5)
+
+
+

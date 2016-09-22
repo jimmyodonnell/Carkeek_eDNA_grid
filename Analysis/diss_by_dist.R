@@ -66,6 +66,16 @@ if(!(identical(attr(comm_dist[[1]], "Labels"), attr(geo_dist, "Labels")))){
 	warning("Whoa there! the row/column names of the two distance matrices do not seem to add up. This is bad.")
 }
 
+# calculate replicate PCR similarity
+otu_temp <- as.data.frame(prop(otu_table[["clean"]]))
+PCR_similarities <- lapply(
+  split(otu_temp, metadata[["clean"]][ , colname_env_sample]), 
+  vegdist, method = vegdist_method
+)
+rm(otu_temp)
+
+
+#-------------------------------------------------------------------------------
 # arrange the data for model fitting
 model_data_full <- data.frame(
   dist2df(geo_dist), 
@@ -140,6 +150,9 @@ slope = c(
 )
 
 )
+
+# This statement was under the linear model; can't remember where I got it
+# "Then the regression coefficient is usually used in the literature as the descriptor of distance decay, or the distance at which 50% of the maximum similarity is observed."
 
 #-------------------------------------------------------------------------------
 # set up formula and equations for each model
@@ -274,128 +287,14 @@ for(i in 1:length(models)){
 
 #-------------------------------------------------------------------------------
 # run the predictions
+x_pred <- seq(from = 0, to = 5000, length = 101)
 for(i in 1:length(models)){
-  models[[i]]$pred <- predict(models[[i]]$out)
+  models[[i]]$pred <- predict(models[[i]]$out, 
+    newdata = data.frame(x = x_pred))
 }
 
 # add confidence intervals to the predictions
 
-#-------------------------------------------------------------------------------
-# Then the regression coefficient is usually used in the literature as the descriptor of distance decay, or the distance at which 50% of the maximum similarity is observed.
-summary(lm_out)
-model_out[["Linear"]] <- lm_out
-#-------------------------------------------------------------------------------
-
-
-
-model_out <- list()
-model_pred <- list()
-#-------------------------------------------------------------------------------
-
-#-------------------------------------------------------------------------------
-# Michaelis-Menten
-if(!USE_SIMILARITY){
-fix_asymptote <- TRUE
-if(fix_asymptote){
-	Vm <- 1
-	start_list <- list(Km = max(comm_dist_v)/2)
-} else {
-	start_list <- list(Vm = max(comm_dist_v), Km = max(comm_dist_v)/2)
-}
-mm_fit <- nls(
-  formula = comm_dist_v ~ Vm * geo_dist_v/(Km + geo_dist_v),
-  start = start_list)
-pred_mm <- predict(mm_fit)
-model_out[["Michaelis-Menten"]] <- mm_fit
-model_pred[["Michaelis-Menten"]] <- data.frame(
-  x = c(0, sort(geo_dist_v)), 
-  y = c(0, sort(pred_mm))
-)
-}
-if(USE_SIMILARITY){
-fix_asymptote <- FALSE
-if(fix_asymptote){
-	Vm <- 1
-	start_list <- list(Km = max(comm_dist_v)/2)
-} else {
-	start_list <- list(Vm = max(comm_dist_v), Km = max(comm_dist_v)/2)
-}
-mm_fit <- nls(
-  formula = comm_dist_v ~ 1 - (Vm * geo_dist_v)/(Km + geo_dist_v),
-  start = start_list)
-pred_mm <- predict(mm_fit)
-model_out[["Michaelis-Menten"]] <- mm_fit
-model_pred[["Michaelis-Menten"]] <- data.frame(
-  x = c(0, sort(geo_dist)), 
-  y = c(1, sort(pred_mm, decreasing = TRUE))
-)
-}
-#-------------------------------------------------------------------------------
-
-#-------------------------------------------------------------------------------
-# Nonlinear Least Squares Regression (2 parameters)
-if(!USE_SIMILARITY){
-nls_p2 <- nls(
-	formula = comm_dist_v ~ 1 - ((1-INT) * exp( -RATE * geo_dist_v )),
-	start = c(RATE = 0.02, INT = 0)
-)
-summary(nls_p2)
-pred_nls_p2 <- predict(nls_p2)
-model_out[["NLS-2p"]] <- nls_p2
-model_pred[["NLS-2p"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p2))
-}
-# lines(sort(geo_dist), sort(pred_nls_p2), col = "purple", lty = 3, lwd = 2)
-if(USE_SIMILARITY){
-nls_p2 <- nls(
-    formula = comm_dist_v ~ INT/(RATE + geo_dist_v),
-    start   = c(INT = 1000, RATE = 1000)
-	# formula = comm_dist_v ~ (1-INT) * exp( -RATE * geo_dist_v ),
-	# start = c(RATE = 0.02, INT = 0)
-)
-summary(nls_p2)
-pred_nls_p2 <- predict(nls_p2)
-model_out[["NLS-2p"]] <- nls_p2
-model_pred[["NLS-2p"]] <- data.frame(
-  x = sort(geo_dist), 
-  y = sort(pred_nls_p2, decreasing = TRUE)
-)
-}
-#-------------------------------------------------------------------------------
-
-#-------------------------------------------------------------------------------
-# Nonlinear Least Squares Regression (3 parameters)
-if(!USE_SIMILARITY){
-nls_p3 <- nls(
-	formula = y ~ INT + ASY_DIFF * (1 - exp( -RATE * x )),
-	data = model_data, 
-	start = c(ASY_DIFF = 1, RATE = 0.02, INT = 0)
-)
-summary(nls_p3)
-pred_nls_p3 <- predict(nls_p3)
-model_out[["NLS-3p"]] <- nls_p3
-model_pred[["NLS-3p"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p3))
-# lines(sort(geo_dist), sort(pred_nls_p3), col = "indianred")
-}
-if(USE_SIMILARITY){
-nls_p3 <- 
-nls(
-  formula = y ~ intercept / (halflife + x), 
-  data = model_data, 
-  # lower = c(INT = -Inf,   ASY_DIFF = 0, RATE = -Inf),
-  # start   = c(intercept = 500, halflife = 1000), 
-  start   = params["init",c("intercept", "halflife")], 
-  # formula = comm_dist_v ~ INT - ASY_DIFF * (1 - exp(-RATE * geo_dist_v)), 
-  # start = list(INT = 0.5, ASY_DIFF = 0.5, RATE = 0.02), 
-  # lower = list(INT = 0, ASY_DIFF = 0.1,   RATE = -Inf), 
-  # upper = list(INT = 1, ASY_DIFF = 0.5,   RATE = Inf), 
-  algorithm = "port"
-)
-summary(nls_p3)
-pred_nls_p3 <- predict(nls_p3)
-model_out[["NLS-3p"]] <- nls_p3
-model_pred[["NLS-3p"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p3, decreasing = TRUE))
-}
-#-------------------------------------------------------------------------------
 
 
 #-------------------------------------------------------------------------------
@@ -406,18 +305,15 @@ model_pred[["NLS-3p"]] <- data.frame(x = sort(geo_dist), y = sort(pred_nls_p3, d
 
 # Generalized Additive Model
 # library(mgcv) #gam 
-# ?gam
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # SAVE MODEL OUTPUT
-for(i in 1:length(model_out)){
-  writeLines(
-    capture.output(
-      model_out[[i]], 
-      summary(model_out[[i]])
-      ), 
-  con =  paste("model_output_", names(model_out[i]), ".txt", sep = ""))
+if(EXPORT){
+writeLines(
+  capture.output(lapply(models, "[", c("out", "summary"))), 
+  con =  "model_output.txt"
+)
 }
 # ALT:
 # sink("lm.txt")
@@ -464,11 +360,6 @@ axis(side = 2, lwd = 0, lwd.ticks = 1, las = 1)
 box()
 
 # add PCR similarity
-otu_temp <- as.data.frame(otu_clean/rowSums(otu_clean))
-PCR_similarities <- lapply(
-  split(otu_temp, metadata_clean[ , colname_env_sample]), 
-  vegdist, method = vegdist_method
-)
 abline(v = 0)
 boxplot(1 - unlist(PCR_similarities), add = TRUE, 
   at = -350, 
