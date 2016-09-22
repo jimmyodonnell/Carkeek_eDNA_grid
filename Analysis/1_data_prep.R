@@ -1,22 +1,4 @@
 
-# holy macaroni, we need to decide on a standard orientation.
-# "OTUs_fam_w30_top10.csv" is in rows=OTU, cols=SAMPLES
-# YOU SHOULD PROBABLY DO THIS: start with script '0_load_data.R',
-# use the resulting object 'otu_filt' in place of table_transposed
-# OR use t(otu_filt) as object 'table_full'
-
-# filename_orig <- file.path(data_dir, "OTUs_fam_w30_top10.csv")
-# filename_out <- file.path(data_dir, "OTUs_top10.csv")
-
-# table_full <- read.csv(filename_orig, row.names = 1)
-# maybe ? table_full <- t(otu_filt)
-
-# write the file
-# write.csv(x = table_restricted, file = filename_out, quote = FALSE)
-
-# TODO: append tables to a list like so:
-# some_tables[["yet_another"]] <- matrix(data = rnorm(25), nrow = 5)
-
 R_files <- list.files(path = "functions", pattern = "\\.R$", full.names = TRUE)
 sapply(R_files, source)
 
