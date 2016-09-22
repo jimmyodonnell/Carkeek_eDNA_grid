@@ -10,7 +10,7 @@ my_metadata <- metadata[["mean"]] # metadata[!duplicated(metadata[,colname_env_s
 my_table <- otu_table[["mean"]] # mean, mean_unfilt, spvar, otu_named, as.binary(otu_mean), log, filt
 rownames(my_table) # should be e.g. PCT-C-0000 etc, aka "env_sample_name"
 
-export_plots <- TRUE
+EXPORT <- FALSE # export plots/files?
 
 library(geosphere) # distm()
 
@@ -73,12 +73,15 @@ model_data_full <- data.frame(
 )
 # order the columns
 model_data_full <- model_data_full[order(model_data_full[,"dist"]), ]
+
+if(EXPORT){
 # write the data
-write.csv(
-  x = model_data_full, 
-  file = file.path(data_dir, "model_data_full.csv"), 
-  row.names = FALSE
-)
+  write.csv(
+    x = model_data_full, 
+    file = file.path(data_dir, "model_data_full.csv"), 
+    row.names = FALSE
+  )
+}
 
 # subset for a given run of the models
 model_data <- data.frame(
@@ -90,14 +93,15 @@ model_data <- data.frame(
 #-------------------------------------------------------------------------------
 # Fit some models, estimate some parameters
 
-# start a data frame to store parameter initialization values (i.e. good guesses)
+# start a data frame to store parameter values, 
+# including initialization values (i.e. good guesses)
 params <- data.frame(
 
 # intercept
 intercept = c(
   min  = 0, 
   max  = 1, 
-  init =   0.5
+  init = 0.5
 ), 
 
 # intercept_mod
@@ -111,7 +115,7 @@ int_mod = c( # I don't think I should use this parameter/formulation
 asymptote = c( 
   min  = 0, 
   max  = 1, 
-  init =   0
+  init = 0
 ),
 
 # halflife
@@ -136,8 +140,6 @@ slope = c(
 )
 
 )
-
-# start a vector to store parameter minimum values
 
 #-------------------------------------------------------------------------------
 # set up formula and equations for each model
@@ -181,7 +183,7 @@ models[["MM_full"]] <- list(
   form =
     y  ~ ((intercept * halflife) + asymptote * x)/( halflife + x),
   init =
-    init[c("intercept", "asymptote", "halflife")]
+    params["init",c("intercept", "asymptote", "halflife")]
 )
 
 #===============================================================================
@@ -195,7 +197,7 @@ models[["MM_int1"]] <- list(
   form =
     y  ~ (halflife + asymptote * x)/( halflife + x),
   init =
-    init[c("asymptote", "halflife")]
+    params["init",c("asymptote", "halflife")]
 )
 
 #===============================================================================
@@ -210,7 +212,7 @@ models[["MM_asy0"]] <- list(
   form =
     y  ~ (intercept * halflife)/(halflife + x),
   init =
-    init[c("intercept", "halflife")]
+    params["init", c("intercept", "halflife")]
 )
 
 #===============================================================================
@@ -224,7 +226,7 @@ models[["MM_int1asy0"]] <- list(
   form =
     y  ~ halflife/(halflife + x),
   init =
-    init["halflife"]
+    c(halflife = params["init", "halflife"]) # required to get name
 )
 
 #===============================================================================
@@ -237,7 +239,8 @@ models[["Harold"]] <- list(
   },
   form =
     y  ~ intercept + (deltay*x)/(halflife + x),
-  init = init[c("intercept", "deltay", "halflife")]
+  init = 
+    params["init",c("intercept", "deltay", "halflife")]
 )
 
 # distinguish linear from nonlinear
@@ -256,16 +259,18 @@ for(i in which_nonlinear){
     formula      = models[[i]]$form, 
     start        = models[[i]]$init, 
     data         = model_data, 
-    lower        = -Inf,
-    upper        = Inf,
+    lower        = params["min",],
+    upper        = params["max",],
     algorithm    = "port"
   )
 }
 
 #-------------------------------------------------------------------------------
 # summarize the models
-
-lapply(lapply(models, "[[", "out"), summary)
+# lapply(lapply(models, "[[", "out"), summary)
+for(i in 1:length(models)){
+  models[[i]]$summary <- summary(models[[i]]$out)
+}
 
 #-------------------------------------------------------------------------------
 # run the predictions
@@ -425,7 +430,7 @@ for(i in 1:length(model_out)){
 geo_dist_scaled <- log(geo_dist + 100)
 plot_x <- geo_dist # geo_dist_scaled
 
-if(export_plots){
+if(EXPORT){
   plot_base   <- "diss_by_dist"
   plot_pdf    <- paste(plot_base, ".pdf", sep = "")
   legend_file <- paste(plot_base, "_legend.txt", sep = "")
@@ -498,7 +503,7 @@ for(model in which_models) {
 				# family = "gaussian"
 				# )
 # lines(smoothed, col="red", lwd=2)
-if(export_plots){
+if(EXPORT){
   dev.off()
 }
 # }
