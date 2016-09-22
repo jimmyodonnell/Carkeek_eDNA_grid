@@ -1,4 +1,6 @@
 
+EXPORT <- FALSE # export figures to files?
+
 R_files <- list.files(path = "functions", pattern = "\\.R$", full.names = TRUE)
 sapply(R_files, source)
 
@@ -9,6 +11,9 @@ sapply(R_files, source)
 #-------------------------------------------------------------------------------
 CHECK_FOR_OUTLIERS <- TRUE
 # If you'd like to check for and remove inconsistent PCR replicates, go to:
+if(EXPORT){
+  pdf(file = file.path(fig_dir, "PCR_consistency.pdf"))
+}
 if(CHECK_FOR_OUTLIERS) {
   cleaned <- find_bad_replicate(
   	my_table         = otu_table[["raw"]],
@@ -16,12 +21,14 @@ if(CHECK_FOR_OUTLIERS) {
   	sample_id_column = colname_sampleid,
   	grouping_column  = colname_env_sample, 
   	threshold_sd     = 1, 
-    save_pdf         = TRUE, 
-    pdf_path         = file.path(fig_dir, "PCR_consistency.pdf")
+    plot_results     = TRUE
   )
   otu_table[["clean"]] <- strip_absent(cleaned[[1]])
   metadata[["clean"]]  <- cleaned[[2]]
   rm(cleaned)
+}
+if(EXPORT){
+  dev.off()
 }
 #-------------------------------------------------------------------------------
 

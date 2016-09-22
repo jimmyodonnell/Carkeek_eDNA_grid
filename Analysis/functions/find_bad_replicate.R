@@ -1,7 +1,7 @@
 # calculate dissimilarity
 find_bad_replicate <- function(my_table, my_metadata,
 	sample_id_column, grouping_column, threshold_sd = 1.5, 
-    save_pdf = TRUE, pdf_path = "PCR_consistency.pdf") {
+    plot_results = TRUE) {
 
 	if(!require(vegan)){stop("vegan package must be installed")}
 
@@ -68,42 +68,38 @@ find_bad_replicate <- function(my_table, my_metadata,
 	# what is the name of the replicate occuring more than once?
 	bad_replicate_name <- names(table(dis_names))[table(dis_names) > 1]
 
-	if(save_pdf){
-	  pdf(file = pdf_path)
+	if(plot_results){
+		color_vector <- rep(1, length(my_dis))
+		color_vector[bad_env_sample] <- "white"
+		par(mar = c(4,7,1,1))
+		stripchart(my_dis, method = "jitter", pch = 21, xlim = c(0,1),
+		           xlab = "Pairwise Bray-Curtis Dissimilarity",
+		           bg = rgb(0,0,0,alpha = 0.2), #col = color_vector,
+		           las = 1)
+	    abline(h = seq(from = 0.5, to = 60.5, by = 1), col = "gray")
+	
+		# attempting to color the points red over the threshold
+		# bad_x <- as.vector(my_dis[[bad_env_sample]])
+		# bad_y <- rep(bad_env_sample, length(temp))
+		# points(jitter(bad_x), jitter(bad_y), col = (as.numeric(bad_x > dissimilarity_cutoff) + 1))
+	
+		# plot all
+		# plot(my_dis_v, ylim = c(0,1),
+			# ylab = "Within-sample dissimilarity (Bray-Curtis)",
+			# xlab = "arbitrary sample index",
+			# las = 1)
+		line_colors <- c("black", "red")
+		abline(v = c(dis_mean, dissimilarity_cutoff),
+			lty = 2, col = line_colors)
+	
+		legend("topright", 
+			legend = c(
+				paste("mean =", dis_mean_round), 
+				paste("threshold =", dissimilarity_cutoff_round)),
+			bty = "n", lty = 2, col = line_colors)
 	}
-	color_vector <- rep(1, length(my_dis))
-	color_vector[bad_env_sample] <- "white"
-	par(mar = c(4,7,1,1))
-	stripchart(my_dis, method = "jitter", pch = 21, xlim = c(0,1),
-	           xlab = "Pairwise Bray-Curtis Dissimilarity",
-	           bg = rgb(0,0,0,alpha = 0.2), #col = color_vector,
-	           las = 1)
-    abline(h = seq(from = 0.5, to = 60.5, by = 1), col = "gray")
-
-	# attempting to color the points red over the threshold
-	# bad_x <- as.vector(my_dis[[bad_env_sample]])
-	# bad_y <- rep(bad_env_sample, length(temp))
-	# points(jitter(bad_x), jitter(bad_y), col = (as.numeric(bad_x > dissimilarity_cutoff) + 1))
-
-	# plot all
-	# plot(my_dis_v, ylim = c(0,1),
-		# ylab = "Within-sample dissimilarity (Bray-Curtis)",
-		# xlab = "arbitrary sample index",
-		# las = 1)
-	line_colors <- c("black", "red")
-	abline(v = c(dis_mean, dissimilarity_cutoff),
-		lty = 2, col = line_colors)
-
-	legend("topright", 
-		legend = c(
-			paste("mean =", dis_mean_round), 
-			paste("threshold =", dissimilarity_cutoff_round)),
-		bty = "n", lty = 2, col = line_colors)
 
 	# note high value for sample "lib_B_tag_GCGCTC" in PCT-C-0500
-	if(save_pdf){
-	  dev.off()
-	}
 
 	# remove the bad sample?
 	remove_bad_replicate <- TRUE
