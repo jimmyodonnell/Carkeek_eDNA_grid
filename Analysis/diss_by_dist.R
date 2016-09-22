@@ -5,9 +5,9 @@
 
 # REQUIRES:
 # 1. dataframe called "metadata" with unique sequenced samples given in column "sample_id"
-my_metadata <- metadata_mean # metadata[!duplicated(metadata[,colname_env_sample]),]
+my_metadata <- metadata[["mean"]] # metadata[!duplicated(metadata[,colname_env_sample]),]
 # 2. OTU table with rownames that correspond to aforementioned column "sample_id"
-my_table <- otu_filt # otu_mean, otu_spvar, otu_named, as.binary(otu_mean), otu_log, otu_filt
+my_table <- otu_table[["mean"]] # mean, mean_unfilt, spvar, otu_named, as.binary(otu_mean), log, filt
 rownames(my_table) # should be e.g. PCT-C-0000 etc, aka "env_sample_name"
 
 export_plots <- TRUE
@@ -33,14 +33,16 @@ vegdist_method <- "bray"
 distance_name <- switch(vegdist_method,
        bray     = "Bray_Curtis", 
        morisita = "Morisita", 
+       horn     = "Morisita-Horn", 
        jaccard  = "Jaccard", 
        gower    = "Gower")
 
 vegdist_methods <- c(
-  "Bray_Curtis" = "bray", 
-  "Morisita"    = "morisita", 
-  "Jaccard"     = "jaccard", 
-  "Gower"       = "gower")
+  "Bray_Curtis"   = "bray", 
+  "Morisita"      = "morisita", 
+  "Morisita_Horn" = "horn", 
+  "Jaccard"       = "jaccard", 
+  "Gower"         = "gower")
 
 USE_SIMILARITY <- TRUE # use similarity instead of dissimilarity
 
