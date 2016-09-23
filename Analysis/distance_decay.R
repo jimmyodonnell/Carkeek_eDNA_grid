@@ -10,7 +10,7 @@ my_metadata <- metadata[["mean"]] # metadata[!duplicated(metadata[,colname_env_s
 my_table <- otu_table[["mean"]] # mean, mean_unfilt, spvar, otu_named, as.binary(otu_mean), log, filt
 rownames(my_table) # should be e.g. PCT-C-0000 etc, aka "env_sample_name"
 
-EXPORT <- TRUE # export plots/files?
+EXPORT <- FALSE # export plots/files?
 
 library(geosphere) # distm()
 library(vegan) # vegdist()
@@ -357,15 +357,15 @@ plot_x <- model_data$x # geo_dist_scaled
 
 if(EXPORT){
   plot_base   <- "distance_decay"
-  plot_pdf    <- paste(plot_base, ".pdf", sep = "")
-  legend_file <- paste(plot_base, "_legend.txt", sep = "")
+  pdf_file    <- file.path(fig_dir, paste(plot_base, ".pdf", sep = ""))
+  legend_file <- file.path(fig_dir, paste(plot_base, "_legend.txt", sep = ""))
   writeLines(
-"Distance decay relationship of environmental DNA communities. Each point represents a site sampled along three parallel transects comprising a 3000 by 4000 meter grid. Blue dashed line represents nonlinear least squares regression (see Methods). Boxplot is comparisons within-sample across PCR replicates, separated by a vertical line at zero, where the central line is the median, the box encompasses the interquartile range, and the lines extend to 1.5 times the interquartile range. Boxplot outliers are omitted for clarity.",
-             con = file.path(fig_dir, legend_file))
-  pdf(file = file.path(fig_dir, plot_pdf), width = 8, height = 4) #, width = 8, height = 3
+"Distance decay relationship of environmental DNA communities. Each point represents the Bray-Curtis similarity of a site sampled along three parallel transects comprising a 3000 by 4000 meter grid. Blue dashed line represents fit of a nonlinear least squares regression (see Methods), and shading denotes the 95% confidence interval. Boxplot is comparisons within-sample across PCR replicates, separated by a vertical line at zero, where the central line is the median, the box encompasses the interquartile range, and the lines extend to 1.5 times the interquartile range. Boxplot outliers are omitted for clarity.",
+  con = legend_file)
+  pdf(file = pdf_file, width = 8, height = 4) #, width = 8, height = 3
 
 }
-par(mar = c(4,5,1,1))
+par(mar = c(4,4,1,1))
 plot(
 	x = model_data$x,
 	y = model_data$y,
@@ -377,7 +377,7 @@ plot(
 	col = hsv(h = 0, s = 1, v = 0, alpha = 0.5),
 	bg = rgb(0,0,0,alpha = 0.1 ), #,alpha = 0.1
 	xlab = "Distance between samples (meters)",
-	ylab = paste("Community similarity (", distance_name, ")", sep = ""),
+	ylab = "Community similarity", #paste(,"(", distance_name, ")", sep = ""),
 	# log = "x",
 	axes = FALSE,
 	las = 1
@@ -442,7 +442,6 @@ for(i in 1:length(main_models)) {
 if(EXPORT){
   dev.off()
 }
-# }
 
 #===============================================================================
 # plot all models
@@ -464,7 +463,7 @@ for(i in 1:length(models)){
     col = hsv(h = 0, s = 1, v = 0, alpha = 0.5),
     bg = rgb(0,0,0,alpha = 0.1 ), #,alpha = 0.1
     xlab = "Distance between samples (meters)",
-    ylab = paste("Community similarity (", distance_name, ")", sep = ""),
+	ylab = "Community similarity", #paste(,"(", distance_name, ")", sep = ""),
     # log = "x",
     axes = FALSE,
     las = 1
