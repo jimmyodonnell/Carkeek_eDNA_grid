@@ -16,6 +16,8 @@ my_metadata <- metadata[["mean"]] #metadata[!duplicated(metadata[,"env_sample_na
 
 mydist <- vegdist(my_table, method = "bray", binary = FALSE) # , binary = TRUE
 
+# or use `comm_dist` list of distance matrices (from distance_decay.R)
+
 max_clusters <- nrow(my_table)-1
 
 mypam <- pamk(data = mydist, 
@@ -24,17 +26,20 @@ mypam <- pamk(data = mydist,
               # krange = 6
               ) # to restrict range of Ks considered: , krange = 2:4
 
+# run pam at each of a set of K (don't let it chose the best)
 pam_list <- list()
 for(i in 1:max_clusters){
   pam_list[[i]] <- pamk(data = mydist, krange = i)
 }
 
+# extract the silhouette data
 sils <- lapply(
   pam_list[2:length(pam_list)], 
   function(x) silhouette(x$pamobject)
 )
 names(sils) <- as.character(2:length(pam_list))
 
+# extract just the silhouette widths
 sil_width <- lapply(
   sils, function(x) x[ , "sil_width"]
 )
@@ -44,21 +49,26 @@ if(EXPORT){
   pdf_file    <- file.path(fig_dir, paste(plot_base, ".pdf", sep = ""))
   legend_file <- file.path(fig_dir, paste(plot_base, "_legend.txt", sep = ""))
   writeLines(
-"Silhouette widths of PAM analysis. Points are the width of the PAM silhouette of each sample at each number of clusters (K). Red line is the mean, blue line is the median. Boxplot central line is the median, the box encompasses the interquartile range, and the lines extend to 1.5 times the interquartile range. Boxplot outliers are omitted for clarity.",
+"Silhouette widths of PAM analysis. Points are the width of the PAM silhouette of each sample at each number of clusters (K). Red line is the mean, blue line is the median. Boxes encompass the interquartile range with a line at the median, and the whiskers extend to 1.5 times the interquartile range. Boxplot outliers are omitted for clarity.",
   con = legend_file)
   pdf(file = pdf_file, width = 8, height = 4) #, width = 8, height = 3
 }
-par(mar = c(4,5,1,1))
+par(mar = c(4,4,1,1))
 boxplot(sil_width, 
   outpch = NA, # suppress plotting of outliers
+  xaxt = "n",
+  las  = 1, 
   xlab = "Number of Clusters", ylab = "Silhouette Width")
+xaxis_lab <- names(sil_width)
+xaxis_lab[seq(from = 2, to = length(xaxis_lab), by = 2)] <- ""
+axis(1, at = seq_along(sil_width), labels = xaxis_lab)
 stripchart(sil_width, 
   method = "jitter", 
   pch = 21, col = "maroon", bg = hsv(1,0.5,1, alpha = 0.2), 
   add = TRUE, 
   vertical = TRUE)
-lines(sapply(sil_width, mean), col = "red", lwd = 2)
-lines(sapply(sil_width, median), col = "blue", lwd = 2)
+lines(sapply(sil_width, mean), col = "red", lwd = 3)
+lines(sapply(sil_width, median), col = "blue", lwd = 3)
 if(EXPORT){
   dev.off()
 }
@@ -66,19 +76,8 @@ if(EXPORT){
 # alternate plot:
 # plot(sapply(sil_width, mean), type = "b")
 
-
-plot(
-  type = "b")
-
-
 pam_out <- mypam$pamobject
 (K_optim <- mypam$nc) # number of clusters
-
-# make silhouette
-pam_sil <- silhouette(pam_out)
-
-plot(pam_sil)
-# plot(pam(mydist, k = mypam$nc), which.plots = 1)
 
 mycolors <- gghue(mypam$nc)
 
