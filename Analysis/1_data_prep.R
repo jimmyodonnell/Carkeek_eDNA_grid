@@ -49,6 +49,7 @@ if(RESCALE_SEQUENCING_DEPTH) {
 # where it is completely absent from another PCR?
 turnover_thresholds <- no_turnover(otu_table[["scaled"]], metadata[["scaled"]][,colname_env_sample])
 (turnover_threshold <- max(turnover_thresholds))
+(turnover_proportion <- round(turnover_threshold/min(rowSums(otu_table[["raw"]])), digits = 4))
 #-------------------------------------------------------------------------------
 
 # THERE IS SOMETHING TO THIS:
