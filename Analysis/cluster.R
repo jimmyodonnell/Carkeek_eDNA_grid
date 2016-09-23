@@ -4,21 +4,19 @@
 # Only single digits can be used as symbols in base plotting
 #-------------------------------------------------------------------------------
 
+EXPORT <- FALSE
+
 library(fpc) #pamk()
 library(cluster) #pam
 library(vegan) # vegdist()
 
-# function for plot colors (sorta like ggplot)
-gghue <- function(n){
-	hues = seq(15, 375, length = n+1)
-	hcl(h = hues, l = 65, c = 100)[1:n]
-}
-
 # choose between using proportional or raw counts
-my_table <- otu_spvar # otu_mean, otu_spvar, otu_named, as.binary(otu_mean), [,1:100] , otu_filt
-my_metadata <- metadata_mean #metadata[!duplicated(metadata[,"env_sample_name"]),]
+my_table <- otu_table[["mean"]] # otu_mean, otu_spvar, otu_named, as.binary(otu_mean), [,1:100] , otu_filt
+my_metadata <- metadata[["mean"]] #metadata[!duplicated(metadata[,"env_sample_name"]),]
 
 mydist <- vegdist(my_table, method = "bray", binary = FALSE) # , binary = TRUE
+
+max_clusters <- nrow(my_table)-1
 
 mypam <- pamk(data = mydist, 
               # criterion="ch", 
@@ -27,12 +25,50 @@ mypam <- pamk(data = mydist,
               ) # to restrict range of Ks considered: , krange = 2:4
 
 pam_list <- list()
-for(i in 1:23){
+for(i in 1:max_clusters){
   pam_list[[i]] <- pamk(data = mydist, krange = i)
 }
 
-sils <- lapply(pam_list[2:length(pam_list)], function(x) silhouette(x$pamobject))
-plot(sapply(lapply(sils, function(x) x[,"sil_width"]), mean), type = "b", ylim = c(0,1))
+sils <- lapply(
+  pam_list[2:length(pam_list)], 
+  function(x) silhouette(x$pamobject)
+)
+names(sils) <- as.character(2:length(pam_list))
+
+sil_width <- lapply(
+  sils, function(x) x[ , "sil_width"]
+)
+
+if(EXPORT){
+  plot_base   <- "pam_sil"
+  pdf_file    <- file.path(fig_dir, paste(plot_base, ".pdf", sep = ""))
+  legend_file <- file.path(fig_dir, paste(plot_base, "_legend.txt", sep = ""))
+  writeLines(
+"Silhouette widths of PAM analysis. Points are the width of the PAM silhouette of each sample at each number of clusters (K). Red line is the mean, blue line is the median. Boxplot central line is the median, the box encompasses the interquartile range, and the lines extend to 1.5 times the interquartile range. Boxplot outliers are omitted for clarity.",
+  con = legend_file)
+  pdf(file = pdf_file, width = 8, height = 4) #, width = 8, height = 3
+}
+par(mar = c(4,5,1,1))
+boxplot(sil_width, 
+  outpch = NA, # suppress plotting of outliers
+  xlab = "Number of Clusters", ylab = "Silhouette Width")
+stripchart(sil_width, 
+  method = "jitter", 
+  pch = 21, col = "maroon", bg = hsv(1,0.5,1, alpha = 0.2), 
+  add = TRUE, 
+  vertical = TRUE)
+lines(sapply(sil_width, mean), col = "red", lwd = 2)
+lines(sapply(sil_width, median), col = "blue", lwd = 2)
+if(EXPORT){
+  dev.off()
+}
+
+# alternate plot:
+# plot(sapply(sil_width, mean), type = "b")
+
+
+plot(
+  type = "b")
 
 
 pam_out <- mypam$pamobject
