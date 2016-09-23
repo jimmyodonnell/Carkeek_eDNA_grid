@@ -76,6 +76,25 @@ PCR_similarities <- lapply(
 )
 rm(otu_temp)
 
+#-------------------------------------------------------------------------------
+# compare similarities of PCR replicates to environmental samples
+PCR_mean <- round(mean(unlist(PCR_similarities)), digits = 3)
+PCR_sd   <- round(  sd(unlist(PCR_similarities)), digits = 3)
+env_mean <- round(mean(unlist(comm_dist["Bray_Curtis"])), digits = 3)
+env_sd   <- round(  sd(unlist(comm_dist["Bray_Curtis"])), digits = 3)
+
+text_similarity <- paste(
+"PCR replicates within an environmental sample were extremely similar (",
+PCR_mean, " plusminus ", PCR_sd,
+") and far more similar than environmental samples (",
+env_mean, " plusminus ", env_sd, ").",
+sep = "")
+par(mar = c(2,4,1,1))
+boxplot(
+list(PCR = unlist(PCR_similarities), environment = unlist(comm_dist["Bray_Curtis"])), 
+las = 1, ylab = "Similarity"
+)
+
 
 #-------------------------------------------------------------------------------
 # arrange the data for model fitting
