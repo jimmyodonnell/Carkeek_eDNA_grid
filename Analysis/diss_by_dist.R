@@ -10,9 +10,11 @@ my_metadata <- metadata[["mean"]] # metadata[!duplicated(metadata[,colname_env_s
 my_table <- otu_table[["mean"]] # mean, mean_unfilt, spvar, otu_named, as.binary(otu_mean), log, filt
 rownames(my_table) # should be e.g. PCT-C-0000 etc, aka "env_sample_name"
 
-EXPORT <- FALSE # export plots/files?
+EXPORT <- TRUE # export plots/files?
 
 library(geosphere) # distm()
+library(vegan) # vegdist()
+library(propagate) # predictNLS
 
 #-------------------------------------------------------------------------------
 # calculate pairwise great circle distance between sampling locations using Haversine method
@@ -262,7 +264,7 @@ which_nonlinear <- names(models)[!names(models) %in% which_linear]
 
 #-------------------------------------------------------------------------------
 # run the linear models
-for(i in c("linear", "loglinear")){
+for(i in which_linear){
   models[[i]]$out <- lm(formula = models[[i]]$form, data = model_data)
 }
 #-------------------------------------------------------------------------------
@@ -294,6 +296,33 @@ for(i in 1:length(models)){
 }
 
 # add confidence intervals to the predictions
+# for the linear models
+for(i in which_linear){
+  models[[i]]$conf <- predict(
+    object   = models[[i]]$out, 
+    newdata  = data.frame(x = x_pred), 
+    interval = "confidence", 
+    level    = 0.95
+  )
+}
+#-------------------------------------------------------------------------------
+# and for the nonlinear models
+# I can't get predictNLS to work for nonlinear model with single parameter.
+which_pred <- which_nonlinear[which_nonlinear != "MM_int1asy0"]
+for(i in which_pred){
+  temp <- predictNLS(
+    model    = models[[i]]$out,
+    newdata  = data.frame(x = x_pred),
+    interval = "confidence",
+    alpha    = 0.05
+  )$summary # the output of predictNLS is huge, just keep the summary
+  models[[i]]$conf <- data.frame(
+    fit = temp[,"Prop.Mean.1"], 
+    lwr = temp[,5], # "Prop.2.5%", but varies depending on alpha level
+    upr = temp[,6]  # "Prop.97.5%" 
+  )
+  rm(temp)
+}
 
 
 
@@ -373,12 +402,24 @@ boxplot(unlist(PCR_similarities), add = TRUE,
   show.names = FALSE
 )
 
-# "linear","loglinear","MM_full","MM_int1","MM_asy0","MM_int1asy0","Harold" 
 main_models <- c("MM_asy0") 
+
+# add confidence band
+x_bounds <- c(x_pred, rev(x_pred))
+conf     <- models[[main_models]]$conf
+y_bounds <- c(conf[,"lwr"], rev(conf[,"upr"]))
+polygon(
+  x = x_bounds, 
+  y = y_bounds,
+  col = hsv(h = 1, s = 1, v = 0.1, alpha = 0.2), 
+  border = NA
+)
+
+# "linear","loglinear","MM_full","MM_int1","MM_asy0","MM_int1asy0","Harold" 
 line_colors <- c("#6495ED") #6495ED, #0084d1 , "purple", "red"
 line_types <- c(2)
 for(i in 1:length(main_models)) {
-	lines(x = x_pred, y = models[[main_models[[i]]]]$pred, 
+	lines(x = x_pred, y = models[[main_models[[i]]]]$conf[,"fit"], 
       col = line_colors[i], lwd = 3, lty = line_types[i])
 }
 
@@ -431,6 +472,21 @@ for(i in 1:length(models)){
   axis(side = 1, lwd = 0, lwd.ticks = 1)
   axis(side = 2, lwd = 0, lwd.ticks = 1, las = 1)
   box()
+
+# add confidence band
+  if(length(models[[i]]$conf) > 0){
+    x_bounds <- c(x_pred, rev(x_pred))
+    conf     <- models[[i]]$conf
+    y_bounds <- c(conf[,"lwr"], rev(conf[,"upr"]))
+    polygon(
+      x = x_bounds, 
+      y = y_bounds,
+      col = hsv(h = 1, s = 1, v = 0.1, alpha = 0.2), 
+      border = NA
+    )
+  }
+
+  # add fit line
   lines(x = x_pred, y = models[[i]]$pred, col = "indianred", lwd = 3, lty = 3)
   legend("topright", legend = names(models)[i],
     bty = "n", lty = 3, col = "indianred", lwd = 3)
