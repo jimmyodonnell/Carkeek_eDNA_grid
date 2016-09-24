@@ -1,0 +1,1 @@
+Two-dimensional representation of PAM results. This plot is not really informative.
