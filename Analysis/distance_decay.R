@@ -152,7 +152,7 @@ asymptote = c(
 # halflife
 halflife = c(
   min  = 0,
-  max  = max(model_data$y),
+  max  = Inf,
   init = max(model_data$y)/2
 ),
 
