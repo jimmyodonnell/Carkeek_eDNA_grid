@@ -28,7 +28,7 @@ attr(geo_dist, "Labels") <- my_metadata[, colname_env_sample]
 # dimnames(geo_dist) <- list(my_metadata$env_sample_name, my_metadata$env_sample_name)
 
 #-------------------------------------------------------------------------------
-# calculate pairwise dis/similarity of ecological communities
+# calculate pairwise similarity of ecological communities
 vegdist_method <- "bray"
 
 distance_name <- switch(vegdist_method,
@@ -45,26 +45,19 @@ vegdist_methods <- c(
   "Jaccard"       = "jaccard",
   "Gower"         = "gower")
 
-USE_SIMILARITY <- TRUE # use similarity instead of dissimilarity
-
-# vegdist_bin <- c(TRUE, FALSE)
-# for(i in 1:length(vegdist_bin)){
-
-comm_dist <- list()
+comm_sim <- list()
 for(i in 1:length(vegdist_methods)){
-  comm_dist[[names(vegdist_methods[i])]] <- vegdist(
+  comm_sim[[names(vegdist_methods[i])]] <- vegdist(
     x = my_table, method = vegdist_methods[i], binary = FALSE)
 }
 for(i in 1:length(vegdist_methods)){
-  comm_dist[[paste(names(vegdist_methods[i]), "bin", sep = "_")]] <- vegdist(
+  comm_sim[[paste(names(vegdist_methods[i]), "bin", sep = "_")]] <- vegdist(
     x = my_table, method = vegdist_methods[i], binary = TRUE)
 }
 
-if(USE_SIMILARITY){
-  comm_dist <- lapply(comm_dist, function(x) 1 - x)
-}
+comm_sim <- lapply(comm_sim, function(x) 1 - x)
 
-if(!(identical(attr(comm_dist[[1]], "Labels"), attr(geo_dist, "Labels")))){
+if(!(identical(attr(comm_sim[[1]], "Labels"), attr(geo_dist, "Labels")))){
 	warning("Whoa there! the row/column names of the two distance matrices do not seem to add up. This is bad.")
 }
 
@@ -80,8 +73,8 @@ rm(otu_temp)
 # compare similarities of PCR replicates to environmental samples
 PCR_mean <- round(mean(unlist(PCR_similarities)), digits = 3)
 PCR_sd   <- round(  sd(unlist(PCR_similarities)), digits = 3)
-env_mean <- round(mean(unlist(comm_dist["Bray_Curtis"])), digits = 3)
-env_sd   <- round(  sd(unlist(comm_dist["Bray_Curtis"])), digits = 3)
+env_mean <- round(mean(unlist(comm_sim["Bray_Curtis"])), digits = 3)
+env_sd   <- round(  sd(unlist(comm_sim["Bray_Curtis"])), digits = 3)
 
 text_similarity <- paste(
 "PCR replicates within an environmental sample were extremely similar (",
@@ -91,7 +84,7 @@ env_mean, " plusminus ", env_sd, ").",
 sep = "")
 par(mar = c(2,4,1,1))
 boxplot(
-list(PCR = unlist(PCR_similarities), environment = unlist(comm_dist["Bray_Curtis"])), 
+list(PCR = unlist(PCR_similarities), environment = unlist(comm_sim["Bray_Curtis"])), 
 las = 1, ylab = "Similarity"
 )
 
@@ -100,7 +93,7 @@ las = 1, ylab = "Similarity"
 # arrange the data for model fitting
 model_data_full <- data.frame(
   dist2df(geo_dist),
-  data.frame(lapply(comm_dist, as.vector))
+  data.frame(lapply(comm_sim, as.vector))
 )
 # order the columns
 model_data_full <- model_data_full[order(model_data_full[,"dist"]), ]
@@ -349,7 +342,7 @@ for(i in which_pred){
 # Other analyses to consider:
 
 # Mantel Test
-# mantel(comm_dist, geo_dist, perm = 9999)
+# mantel(comm_sim, geo_dist, perm = 9999)
 
 # Generalized Additive Model
 # library(mgcv) #gam
