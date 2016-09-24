@@ -67,7 +67,7 @@ legend_text[plot_name] <- "Silhouette widths from PAM analysis. Points are the w
 if(EXPORT){
   pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
   legend_file <- file.path(fig_dir, paste(plot_name, "_legend.txt", sep = ""))
-  writeLines(legend_text[plot_name], con = legend_file)
+  writeLines(legend_text[[plot_name]], con = legend_file)
   pdf(file = pdf_file, width = 8, height = 4) #, width = 8, height = 3
 }
 par(mar = c(4,4,1,1))
@@ -99,7 +99,7 @@ legend_text[plot_name] <- "Two-dimensional representation of PAM results. This p
 if(EXPORT){
   pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
   legend_file <- file.path(fig_dir, paste(plot_name, "_legend.txt", sep = ""))
-  writeLines(legend_text[plot_name], con = legend_file)
+  writeLines(legend_text[[plot_name]], con = legend_file)
   pdf(file = pdf_file, width = 5, height = 5)
 }
 
@@ -133,7 +133,7 @@ legend_text[plot_name] <- "Cluster membership of sampled sites. Distance from on
 if(EXPORT){
   pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
   legend_file <- file.path(fig_dir, paste(plot_name, "_legend.txt", sep = ""))
-  writeLines(legend_text[plot_name], con = legend_file)
+  writeLines(legend_text[[plot_name]], con = legend_file)
   pdf(file = pdf_file, width = 5, height = 7)
 }
 
@@ -194,7 +194,7 @@ legend_text[plot_name] <- "Cluster membership of sampled sites. Distance from on
 if(EXPORT){
   pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
   legend_file <- file.path(fig_dir, paste(plot_name, "_legend.txt", sep = ""))
-  writeLines(legend_text[plot_name], con = legend_file)
+  writeLines(legend_text[[plot_name]], con = legend_file)
   pdf(file = pdf_file, width = 10, height = 7)
 }
 
