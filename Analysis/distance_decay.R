@@ -367,15 +367,20 @@ writeLines(
 geo_dist_scaled <- log(model_data$x + 100)
 plot_x <- model_data$x # geo_dist_scaled
 
-if(EXPORT){
-  plot_base   <- "distance_decay"
-  pdf_file    <- file.path(fig_dir, paste(plot_base, ".pdf", sep = ""))
-  legend_file <- file.path(fig_dir, paste(plot_base, "_legend.txt", sep = ""))
-  writeLines(
-"Distance decay relationship of environmental DNA communities. Each point represents the Bray-Curtis similarity of a site sampled along three parallel transects comprising a 3000 by 4000 meter grid. Blue dashed line represents fit of a nonlinear least squares regression (see Methods), and shading denotes the 95% confidence interval. Boxplot is comparisons within-sample across PCR replicates, separated by a vertical line at zero, where the central line is the median, the box encompasses the interquartile range, and the lines extend to 1.5 times the interquartile range. Boxplot outliers are omitted for clarity.",
-  con = legend_file)
-  pdf(file = pdf_file, width = 8, height = 4) #, width = 8, height = 3
+# initiate a list to store legend text if it doesn't already exist
+if(!exists("legend_text")){
+  legend_text <- list()
+}
 
+plot_name   <- "distance_decay"
+
+legend_text[plot_name] <- "Distance decay relationship of environmental DNA communities. Each point represents the Bray-Curtis similarity of a site sampled along three parallel transects comprising a 3000 by 4000 meter grid. Blue dashed line represents fit of a nonlinear least squares regression (see Methods), and shading denotes the 95% confidence interval. Boxplot is comparisons within-sample across PCR replicates, separated by a vertical line at zero, where the central line is the median, the box encompasses the interquartile range, and the lines extend to 1.5 times the interquartile range. Boxplot outliers are omitted for clarity."
+
+if(EXPORT){
+  pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
+  legend_file <- file.path(fig_dir, paste(plot_name, "_legend.txt", sep = ""))
+  writeLines(legend_text[[plot_name]], con = legend_file)
+  pdf(file = pdf_file, width = 8, height = 4) #, width = 8, height = 3
 }
 par(mar = c(4,4,1,1))
 plot(
@@ -457,51 +462,20 @@ if(EXPORT){
 
 #===============================================================================
 # plot all models
+plot_name   <- "distance_decay_all"
+
 if(EXPORT){
-  plot_pdf    <- paste(plot_base, "_all", ".pdf", sep = "")
-  plot_pdf   <- file.path(fig_dir, plot_pdf)
-  pdf(file = plot_pdf, width = 5, height = 5) #, width = 8, height = 3
+  pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
+  pdf(file = pdf_file, width = 5, height = 5) #, width = 8, height = 3
 }
+
 for(i in 1:length(models)){
-  par(mar = c(4,5,1,1))
-  plot(
-    x = model_data$x,
-    y = model_data$y,
-    ylim = c(0,1),
-    xlim = c(0, max(model_data$x)),
-    xaxt = "n",
-    pch = 21,
-    cex = 1,
-    col = hsv(h = 0, s = 1, v = 0, alpha = 0.5),
-    bg = rgb(0,0,0,alpha = 0.1 ), #,alpha = 0.1
-    xlab = "Distance between samples (meters)",
-	ylab = "Community similarity", #paste(,"(", distance_name, ")", sep = ""),
-    # log = "x",
-    axes = FALSE,
-    las = 1
-  )
-  axis(side = 1, lwd = 0, lwd.ticks = 1)
-  axis(side = 2, lwd = 0, lwd.ticks = 1, las = 1)
-  box()
+  plot_points(model_data$x, model_data$y)
 
-# add confidence band
-  if(length(models[[i]]$conf) > 0){
-    x_bounds <- c(x_pred, rev(x_pred))
-    conf     <- models[[i]]$conf
-    y_bounds <- c(conf[,"lwr"], rev(conf[,"upr"]))
-    polygon(
-      x = x_bounds, 
-      y = y_bounds,
-      col = hsv(h = 1, s = 1, v = 0.1, alpha = 0.2), 
-      border = NA
-    )
-  }
-
-  # add fit line
-  lines(x = x_pred, y = models[[i]]$pred, col = "indianred", lwd = 3, lty = 3)
-  legend("topright", legend = names(models)[i],
-    bty = "n", lty = 3, col = "indianred", lwd = 3)
+# add confidence band and fit line of model
+  plot_model(models[[i]], pred_vec = x_pred)
 }
+
 if(EXPORT){
   dev.off()
 }
