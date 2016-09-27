@@ -378,11 +378,18 @@ par(
   oma = c(2,2,2,2), # set outer margins
   mfrow = c(length(many_models), length(dist_met)) # set dimensions
 )
+plot_lim <- par("usr")
 for(subset in 1:length(many_models)){
   for(metric in 1:length(dist_met)){
     plot_points_nolab(
       x = many_models[[subset]]$model_data[,"dist"], 
       y = many_models[[subset]]$model_data[,dist_met[metric]]
+    )
+    plot_model(
+      model_list_item = many_models[[subset]][[dist_met[metric]]][["linear"]], 
+      pred_vec = x_pred, 
+      line_color = hsv(0.6,1,1), 
+      band_color = hsv(0.6,1,1, alpha = 0.3) 
     )
     plot_model(
       model_list_item = many_models[[subset]][[dist_met[metric]]][["MM_asy0"]], 
@@ -396,6 +403,13 @@ for(subset in 1:length(many_models)){
     if(metric == length(dist_met)){
       mtext(subset_names[subset], side = 4, line = 1)
     }
+  # legend("topright", 
+    # legend = letters[length(dist_met)*(subset-1) + metric], bty = "n", 
+      # xjust = 0, yjust = 1, cex = 2)
+  text(x = plot_lim[2]*0.85, y = plot_lim[4]*0.85,
+    labels = letters[length(dist_met)*(subset-1) + metric], 
+    adj = c(0,0), cex = 2
+  )
   }
 }
 
@@ -403,12 +417,6 @@ par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(4, 4, 1, 4), new = TRUE)
 plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n", ann = FALSE)
 mtext("Community Similarity", side = 2, line = 2, cex = 1.5)
 mtext("Distance between samples (meters) ", side = 1, line = 3, cex = 1.5)
-
-
-# legend(
-  # "topright",
-  # legend = names(model_pred)[which_models],
-  # bty = "n", lty = line_types, col = line_colors, lwd = 3)
 
 if(EXPORT){
   dev.off()
