@@ -78,7 +78,9 @@ levelplot(
 ) + 
 layer(sp.points(mypoints, col = "orangered", pch = 4))
 
-dev.off()
+if(EXPORT){
+  dev.off()
+}
 
 # plot raster arguments:
 # function (x, col, add = FALSE, legend = TRUE, horizontal = FALSE, 
