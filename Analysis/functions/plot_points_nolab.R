@@ -15,7 +15,8 @@ plot_points_nolab <- function(x,y){
     axes = FALSE,
     las = 1
   )
-  axis(side = 1, lwd = 0, lwd.ticks = 1)
+  axis(side = 1, at = c(0, 1000, 2000, 3000, 4000), 
+    labels = c(0, "", 2000, "", 4000), lwd = 0, lwd.ticks = 1)
   axis(side = 2, lwd = 0, lwd.ticks = 1, las = 1)
   box()
 }
