@@ -1,5 +1,6 @@
 plot_model <- function(model_list_item, pred_vec, 
   line_color = "indianred", 
+  line_type  = 3, 
   band_color = hsv(h = 1, s = 1, v = 0.1, alpha = 0.2)
   ){
   if(length(model_list_item$conf) > 0) {
@@ -17,5 +18,5 @@ plot_model <- function(model_list_item, pred_vec,
   }
     # add fit line
     lines(x = x_pred, y = model_list_item$pred, 
-        col = line_color, lwd = 3, lty = 3)
+        col = line_color, lwd = 3, lty = line_type)
 }
