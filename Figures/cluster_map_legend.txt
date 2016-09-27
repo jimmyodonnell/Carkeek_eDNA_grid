@@ -1,0 +1,4 @@
+Map of study area with sites colored by ecological community identity. 
+Depth in meters below sea level is indicated by shading and 25 meter contours. 
+Sampled locations are colored and labeled by their membership to clusters 
+identified by PAM analysis (see Methods).
