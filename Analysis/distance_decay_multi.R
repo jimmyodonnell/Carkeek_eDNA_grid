@@ -355,11 +355,21 @@ if(!exists("legend_text")){
 }
 
 
-legend_text[plot_name] <- "
-Distance decay relationship of environmental DNA communities using a variety of models, metrics, and data subsets.
+legend_text[plot_name] <- {
+"Distance decay relationship of environmental DNA communities using a variety of models, metrics, and data subsets.
 Each point represents the similarity of a site sampled along three parallel transects comprising a 3000 by 4000 meter grid.
-Rows of plots represent different data subsets, while columns represent different similarity metrics.
+Each row of plots represents a different data subset indicated in the right margin, including
+the final filtered data reported in the main text (a-d),
+the unfiltered data including all rare OTUs (e-h), 
+log-transformed (log(x+1)) data (i-l), 
+OTU abundance scaled relative to within-taxon maximum (m-p), 
+and exclusion of OTUs found at only one site (q-t).
+Columns indicate the similarity index used (Bray Curtis or Morisita-Horn) and
+whether the input was full abundance data or binary (0,1) transformed data. 
+Lines and bands illustrate the fit and 95% confidence interval of both the 
+main nonlinear model (red, dashed line) and a simple linear model (blue, solid line).
 Results using the Jaccard distance are omitted because of its similarity to Bray-Curtis."
+}
 
 if(EXPORT){
   pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
@@ -375,10 +385,9 @@ metric_names <- c("Bray-Curtis", "Bray-Curtis (binary)",
   "Morisita-Horn", "Morisita-Horn (binary)")
 
 par(
-  oma = c(2,2,2,2), # set outer margins
+  oma = c(2.5,2,2,2), # set outer margins
   mfrow = c(length(many_models), length(dist_met)) # set dimensions
 )
-plot_lim <- par("usr")
 for(subset in 1:length(many_models)){
   for(metric in 1:length(dist_met)){
     plot_points_nolab(
@@ -389,6 +398,7 @@ for(subset in 1:length(many_models)){
       model_list_item = many_models[[subset]][[dist_met[metric]]][["linear"]], 
       pred_vec = x_pred, 
       line_color = hsv(0.6,1,1), 
+      line_type  = 1, 
       band_color = hsv(0.6,1,1, alpha = 0.3) 
     )
     plot_model(
@@ -406,9 +416,10 @@ for(subset in 1:length(many_models)){
   # legend("topright", 
     # legend = letters[length(dist_met)*(subset-1) + metric], bty = "n", 
       # xjust = 0, yjust = 1, cex = 2)
+  plot_lim <- par("usr")
   text(x = plot_lim[2]*0.85, y = plot_lim[4]*0.85,
     labels = letters[length(dist_met)*(subset-1) + metric], 
-    adj = c(0,0), cex = 2
+    cex = 2
   )
   }
 }
@@ -416,7 +427,7 @@ for(subset in 1:length(many_models)){
 par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(4, 4, 1, 4), new = TRUE)
 plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n", ann = FALSE)
 mtext("Community Similarity", side = 2, line = 2, cex = 1.5)
-mtext("Distance between samples (meters) ", side = 1, line = 3, cex = 1.5)
+mtext("Distance between samples (meters) ", side = 1, line = 2.5, cex = 1.5)
 
 if(EXPORT){
   dev.off()
