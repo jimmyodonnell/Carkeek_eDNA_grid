@@ -1,5 +1,13 @@
-
 Distance decay relationship of environmental DNA communities using a variety of models, metrics, and data subsets.
 Each point represents the similarity of a site sampled along three parallel transects comprising a 3000 by 4000 meter grid.
-Rows of plots represent different data subsets, while columns represent different similarity metrics.
+Each row of plots represents a different data subset indicated in the right margin, including
+the final filtered data reported in the main text (a-d),
+the unfiltered data including all rare OTUs (e-h), 
+log-transformed (log(x+1)) data (i-l), 
+OTU abundance scaled relative to within-taxon maximum (m-p), 
+and exclusion of OTUs found at only one site (q-t).
+Columns indicate the similarity index used (Bray Curtis or Morisita-Horn) and
+whether the input was full abundance data or binary (0,1) transformed data. 
+Lines and bands illustrate the fit and 95% confidence interval of both the 
+main nonlinear model (red, dashed line) and a simple linear model (blue, solid line).
 Results using the Jaccard distance are omitted because of its similarity to Bray-Curtis.
