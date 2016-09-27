@@ -45,18 +45,26 @@ col_depth[length(col_depth)] <- "cornsilk3" # set the color of the land
 # plot(r, col = col_depth)
 
 # set points to add
-mypoints <- SpatialPoints(cbind(metadata[,colname_lon], metadata[,colname_lat]))
+mypoints <- SpatialPoints(cbind(metadata[["mean"]][,colname_lon], metadata[["mean"]][,colname_lat]))
 
-export_plots <- TRUE
-if(export_plots){
-  plot_base   <- "site_map"
-  plot_pdf    <- paste(plot_base, ".pdf", sep = "")
-  legend_file <- paste(plot_base, "_legend.txt", sep = "")
-  writeLines(
-"Map of study area. Depth in meters below sea level is indicated by shading and 25 meter contours. Sampled locations are indicated by red points.", 
-             con = file.path(fig_dir, legend_file))
-  pdf(file = file.path(fig_dir, plot_pdf), width = 6, height = 5) #, width = 8, height = 3
-  
+#-------------------------------------------------------------------------------
+# PLOTTING
+plot_name   <- "site_map"
+
+if(!exists("legend_text")){
+  legend_text <- list()
+}
+
+legend_text[plot_name] <- {
+"Map of study area. Depth in meters below sea level is indicated by shading and 25 meter contours. Sampled locations are indicated by red points."
+}
+
+EXPORT <- FALSE
+if(EXPORT){
+  pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
+  legend_file <- file.path(fig_dir, paste(plot_name, "_legend.txt", sep = ""))
+  writeLines(legend_text[[plot_name]], con = legend_file)
+  pdf(file = file.path(fig_dir, plot_pdf), width = 6, height = 5) #, width = 8, height = 3  
 }
 par(mar = c(5,6,1,4))
 
