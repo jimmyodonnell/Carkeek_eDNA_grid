@@ -54,7 +54,7 @@ fanny_sil <- lapply(
 )
 names(fanny_sil) <- as.character(2:length(fanny_list))
 
-fanny_choice <- which.max(sapply(sil_width, mean))
+fanny_choice <- which.max(sapply(fanny_sil, mean))
 
 
 # pick a silhouette output to plot
