@@ -1,0 +1,3 @@
+Similarity of environmental DNA communities by distance from and along shore. 
+Each point represents the Bray-Curtis similarity among sites at the same distance along three parallel transects comprising a 3000 by 4000 meter grid, and red diamonds represent within-distance means.
+A linear model of the log-transformed distance could not distinguish from a slope of 0.

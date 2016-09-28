@@ -1,0 +1,1 @@
+Variance among transects with distance from shore for each OTU.
