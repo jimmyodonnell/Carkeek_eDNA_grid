@@ -15,11 +15,14 @@ if(!exists("legend_text")){
 library(cluster) #pam
 library(vegan) # vegdist()
 
-# choose between using proportional or raw counts
-my_table    <- otu_table[["mean"]] # mean, spvar, mean_unfilt, scale01, [,1:100]
-my_metadata <- metadata[["mean"]]
+# choose which dataset to use
+# from names(otu_table), (mean, spvar, mean_unfilt, scale01)
+dataset     <- "mean"
+use_binary  <- FALSE
+my_table    <- otu_table[[dataset]]
+my_metadata <- metadata[[dataset]]
 
-mydist <- vegdist(my_table, method = "bray", binary = FALSE) # , binary = TRUE
+mydist <- vegdist(my_table, method = "bray", binary = use_binary)
 
 # or convert similarity to dissimilarity from `comm_dist`, 
 # a list of distance matrices (from distance_decay.R)
