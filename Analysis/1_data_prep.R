@@ -136,6 +136,16 @@ otu_table[["spvar"]] <- rm_single_rows(otu_table[["mean"]])
 metadata[["spvar"]]  <- metadata[["mean"]]
 #-------------------------------------------------------------------------------
 
+#-------------------------------------------------------------------------------
+# add taxon names from blast output
+otu_table[["taxon"]] <- add_names(
+  otu_table = otu_table[["mean"]], 
+  blast_file = file.path(data_dir, "query_hit_LCA.csv"), 
+  taxon_column = "LCA_name_beste"
+)
+metadata[["taxon"]] <- metadata[["mean"]]
+#-------------------------------------------------------------------------------
+
 if(!identical(length(otu_table), length(metadata))){
 	warning("watch out, the number of OTU and metadata tables differs")
 }
