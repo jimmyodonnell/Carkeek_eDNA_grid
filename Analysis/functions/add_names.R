@@ -58,7 +58,6 @@ return(taxon_table)
 
 # GO TO life_history.R
 
-stop()
 
 # columns in the blast_df with taxon_id
 # as.character(blast_df$LCA_id_all)
