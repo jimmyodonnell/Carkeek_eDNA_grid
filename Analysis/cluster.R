@@ -1,7 +1,5 @@
 
 # INPUT COMES FROM SCRIPT "load_data.r"
-# Watch out: if number of clusters is >9, the plotting will look funky
-# Only single digits can be used as symbols in base plotting
 #-------------------------------------------------------------------------------
 
 EXPORT <- FALSE
