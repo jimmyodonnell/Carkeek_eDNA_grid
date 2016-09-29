@@ -1,5 +1,5 @@
 # add organism names to an otu table
-the_otu_table <- otu_filt
+the_table <- otu_table[["mean"]]
 
 # specify filename of blast output
 blast_file <- "query_hit_LCA.csv"
@@ -15,21 +15,21 @@ blast_df$query_seq <- gsub(pattern = ";size=.*", replacement = "", blast_df$quer
 head(blast_df)
 
 # make a vector to link OTUs to their corresponding row in blast_df
-taxa_vector <- match(colnames(the_otu_table), blast_df$query_seq)
+taxa_vector <- match(colnames(the_table), blast_df$query_seq)
 nrow(blast_df)
 
 # which taxa are not in the blast file?
-(not_in_blastfile <- colnames(the_otu_table)[
-	!colnames(the_otu_table) %in% blast_df$query_seq
+(not_in_blastfile <- colnames(the_table)[
+	!colnames(the_table) %in% blast_df$query_seq
 	])
 
 # how abundant are they?
-round(colSums(the_otu_table)[!colnames(the_otu_table) %in% blast_df$query_seq] / sum(the_otu_table), digits = 3)
+round(colSums(the_table)[!colnames(the_table) %in% blast_df$query_seq] / sum(the_table), digits = 3)
 
 # plot
 # plot(
-  # colSums(the_otu_table),
-  # col = as.numeric(!colnames(the_otu_table) %in% blast_df$query_seq) + 1,
+  # colSums(the_table),
+  # col = as.numeric(!colnames(the_table) %in% blast_df$query_seq) + 1,
   # log = "y", ylab = "", las = 1
 # )
 
@@ -39,7 +39,7 @@ taxon_column <- "LCA_name_beste"
 
 taxa_by_otu <- blast_df[taxa_vector, taxon_column]
 source("aggregate_cols.R")
-taxon_table <- aggregate_cols(the_otu_table, col_groups = taxa_by_otu)
+taxon_table <- aggregate_cols(the_table, col_groups = taxa_by_otu)
 
 # GO TO life_history.R
 
