@@ -1,30 +1,47 @@
+add_names <- function(
 # add organism names to an otu table
-the_table <- otu_table[["mean"]]
+# requires:
+  otu_table = otu_table[["mean"]], 
+  blast_file = file.path(data_dir, "query_hit_LCA.csv"), 
+  taxon_column = "LCA_name_beste"
+){
 
-# specify filename of blast output
-blast_file <- "query_hit_LCA.csv"
+# specify which column to get taxon names from
+# other taxon columns to use:
+# LCA_name_all   | class_all   | order_all   | family_all
+# LCA_name_beste | class_beste | order_beste | family_beste
+
+the_table <- otu_table
 
 blast_df <- read.csv(
-  file = file.path(data_dir, blast_file),
+  file = blast_file,
   stringsAsFactors = FALSE
 )
 head(blast_df)
 
 # remove abundance annotation from query sequence names
-blast_df$query_seq <- gsub(pattern = ";size=.*", replacement = "", blast_df$query_seq)
-head(blast_df)
+blast_df$query_seq <- gsub(
+  pattern = ";size=.*", replacement = "", blast_df$query_seq)
+# head(blast_df)
+# nrow(blast_df)
 
 # make a vector to link OTUs to their corresponding row in blast_df
 taxa_vector <- match(colnames(the_table), blast_df$query_seq)
-nrow(blast_df)
 
 # which taxa are not in the blast file?
-(not_in_blastfile <- colnames(the_table)[
+not_in_blastfile <- colnames(the_table)[
 	!colnames(the_table) %in% blast_df$query_seq
-	])
+	]
 
-# how abundant are they?
-round(colSums(the_table)[!colnames(the_table) %in% blast_df$query_seq] / sum(the_table), digits = 3)
+# how abundant are they, in percent of the total reads
+percents <- round(colSums(the_table)[!colnames(the_table) %in% blast_df$query_seq] / sum(the_table), digits = 3)*100
+percent_unaccounted <- data.frame(
+  otu_name   = names(percents),
+  percentage = paste(as.character(percents), "%", sep = "")
+)
+warning_msg <- "The following OTUs are missing from the blast results:"
+
+for(i in list(warning_msg, percent_unaccounted)){print(i)}
 
 # plot
 # plot(
@@ -33,13 +50,11 @@ round(colSums(the_table)[!colnames(the_table) %in% blast_df$query_seq] / sum(the
   # log = "y", ylab = "", las = 1
 # )
 
-taxon_column <- "LCA_name_beste"
-# LCA_name_all   | class_all   | order_all   | family_all
-# LCA_name_beste | class_beste | order_beste | family_beste
-
 taxa_by_otu <- blast_df[taxa_vector, taxon_column]
-source("aggregate_cols.R")
 taxon_table <- aggregate_cols(the_table, col_groups = taxa_by_otu)
+return(taxon_table)
+
+}
 
 # GO TO life_history.R
 
