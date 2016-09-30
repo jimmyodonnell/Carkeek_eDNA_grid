@@ -2,6 +2,8 @@ library(vegan)
 
 # requires a list of OTU tables and a list of corresponding metadata
 
+EXPORT <- FALSE
+
 div_metrics <- list()
 
 div_metrics[["Shannon"]] <- lapply(otu_table, diversity, index = "shannon") 
