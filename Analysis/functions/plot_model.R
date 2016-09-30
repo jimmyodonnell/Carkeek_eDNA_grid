@@ -17,6 +17,6 @@ plot_model <- function(model_list_item, pred_vec,
     warning("Object you pointed to does not have confidence bounds")
   }
     # add fit line
-    lines(x = x_pred, y = model_list_item$pred, 
+    lines(x = x_pred, y = model_list_item$conf[,"fit"], 
         col = line_color, lwd = 3, lty = line_type)
 }
