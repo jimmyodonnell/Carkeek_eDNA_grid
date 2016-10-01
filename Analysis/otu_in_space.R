@@ -42,11 +42,12 @@ for(i in c(1:10)){
 colnames(my_table)
 select_taxa <- c(
   "Embiotocidae", # surfperch
+  "Cupolaconcha meroclista", # vermetid
   "Thysanoessa raschii", # krill
   "Mytilus", # mussel
   "Sessilia" # barnacle
 )
-
+# "Cupolaconcha meroclista"
 some_more <- c(
   "Chthamalus", # barnacle
   "Modiolus modiolus", # mussel
@@ -60,8 +61,7 @@ some_more <- c(
   "Elysia pusilla", # slug
   "Homo sapiens" # humans
 )
-single_otu <- "Sus scrofa" # 
-single_otu <- interesting_taxa[3]
+single_otu <- "Cupolaconcha meroclista" # 
 
 
 # Plot in Lat/Lon space
@@ -106,7 +106,7 @@ if(EXPORT){
   pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
   legend_file <- file.path(fig_dir, paste(plot_name, "_legend.txt", sep = ""))
   writeLines(legend_text[[plot_name]], con = legend_file)
-  pdf(file = pdf_file, width = 8, height = 4)
+  pdf(file = pdf_file, width = 10, height = 4)
 }
 
 par(mfrow = c(1,length(select_taxa)))
