@@ -50,7 +50,7 @@ mypoints <- SpatialPoints(cbind(metadata[["mean"]][,colname_lon], metadata[["mea
 
 #-------------------------------------------------------------------------------
 # PLOTTING
-plot_name   <- "cluster_map"
+plot_name   <- "site_clusters"
 
 if(!exists("legend_text")){
   legend_text <- list()
