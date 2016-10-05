@@ -64,7 +64,7 @@ if(EXPORT){
   pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
   legend_file <- file.path(fig_dir, paste(plot_name, "_legend.txt", sep = ""))
   writeLines(legend_text[[plot_name]], con = legend_file)
-  pdf(file = file.path(fig_dir, plot_pdf), width = 6, height = 5) #, width = 8, height = 3  
+  pdf(file = pdf_file, width = 6, height = 5)
 }
 par(mar = c(5,6,1,4))
 
