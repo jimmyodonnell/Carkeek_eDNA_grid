@@ -156,6 +156,13 @@ deltay = c(
   init = 1
 ),
 
+# rate
+rate = c(
+  min  = -Inf,
+  max  = Inf,
+  init = -0.001
+),
+
 # slope
 slope = c(
   min  = -Inf,
@@ -196,6 +203,20 @@ models[["loglinear"]] <- list(
   form =
     y  ~ log(x),
   init = NA
+)
+
+#===============================================================================
+# Exponential
+models[["exponential"]] <- list(
+  func =
+  function(x, deltay = 1, asymptote = 0, rate = -0.001){
+    y <- asymptote + deltay * exp(rate * x)
+    return(y)
+    },
+  form =
+    y  ~ asymptote + deltay * exp(rate * x),
+  init =
+    params["init",c("deltay", "asymptote", "rate")]
 )
 
 #===============================================================================
