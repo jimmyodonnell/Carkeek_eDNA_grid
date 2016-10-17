@@ -189,7 +189,8 @@ models[["linear"]] <- list(
   },
   form =
     y  ~ x,
-  init = NA
+  params = 
+    c("intercept", "slope")
 )
 
 #===============================================================================
@@ -202,7 +203,8 @@ models[["loglinear"]] <- list(
   },
   form =
     y  ~ log(x),
-  init = NA
+  params = 
+    c("intercept", "slope")
 )
 
 #===============================================================================
@@ -215,8 +217,8 @@ models[["exponential"]] <- list(
     },
   form =
     y  ~ asymptote + deltay * exp(rate * x),
-  init =
-    params["init",c("deltay", "asymptote", "rate")]
+  params =
+    c("deltay", "asymptote", "rate")
 )
 
 #===============================================================================
@@ -230,8 +232,8 @@ models[["MM_full"]] <- list(
     },
   form =
     y  ~ ((intercept * halflife) + asymptote * x)/( halflife + x),
-  init =
-    params["init",c("intercept", "asymptote", "halflife")]
+  params =
+    c("intercept", "asymptote", "halflife")
 )
 
 #===============================================================================
@@ -244,8 +246,8 @@ models[["MM_int1"]] <- list(
   },
   form =
     y  ~ (halflife + asymptote * x)/( halflife + x),
-  init =
-    params["init",c("asymptote", "halflife")]
+  params = 
+    c("asymptote", "halflife")
 )
 
 #===============================================================================
@@ -259,8 +261,8 @@ models[["MM_asy0"]] <- list(
   },
   form =
     y  ~ (intercept * halflife)/(halflife + x),
-  init =
-    params["init", c("intercept", "halflife")]
+  params = 
+    c("intercept", "halflife")
 )
 
 #===============================================================================
@@ -273,8 +275,8 @@ models[["MM_int1asy0"]] <- list(
   },
   form =
     y  ~ halflife/(halflife + x),
-  init =
-    c(halflife = params["init", "halflife"]) # required to get name
+  params = 
+    c("halflife")
 )
 
 #===============================================================================
@@ -287,8 +289,8 @@ models[["Harold"]] <- list(
   },
   form =
     y  ~ intercept + (deltay*x)/(halflife + x),
-  init =
-    params["init",c("intercept", "deltay", "halflife")]
+  params = 
+    c("intercept", "deltay", "halflife")
 )
 
 # distinguish linear from nonlinear
@@ -305,10 +307,10 @@ for(i in which_linear){
 for(i in which_nonlinear){
   models[[i]]$out <- nls(
     formula      = models[[i]]$form,
-    start        = models[[i]]$init,
     data         = model_data,
-    lower        = params["min",],
-    upper        = params["max",],
+    start        = params["init",][models[[i]]$params],
+    lower        = params["min", ][models[[i]]$params],
+    upper        = params["max", ][models[[i]]$params],
     algorithm    = "port"
   )
 }
