@@ -497,6 +497,10 @@ for(i in 1:length(models)){
 
 # add confidence band and fit line of model
   plot_model(models[[i]], pred_vec = x_pred)
+
+# add model name
+  legend("topright", legend = names(models)[i], bty = "n")
+
 }
 
 if(EXPORT){
