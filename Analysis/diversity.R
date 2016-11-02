@@ -6,7 +6,7 @@ EXPORT <- FALSE
 
 div_metrics <- list()
 
-div_metrics[["Shannon"]] <- lapply(otu_table, diversity, index = "shannon") 
+# div_metrics[["Shannon"]] <- lapply(otu_table, diversity, index = "shannon") 
 div_metrics[["Simpson"]] <- lapply(otu_table, diversity, index = "simpson") 
 div_metrics[["Richness"]] <- lapply(otu_table, function(x) {rowSums(x > 0)})
 
@@ -41,7 +41,7 @@ if(require(viridis)){
 
 colorified <- colorpalette(n_colors)[cut(plot_dat, breaks = n_colors)]
 
-y_for_plotting <- as.numeric(as.factor(my_metadata[ , colname_ycoord]))
+y_for_plotting <- as.numeric(as.factor(metadata[[which_data]][ , colname_ycoord]))
 
 par(mar = c(4,5,3,3))
 plot(
@@ -58,7 +58,7 @@ plot(
 )
 if(i == 1){
   axis(side = 2, at = unique(y_for_plotting), 
-    labels = unique(my_metadata[,colname_ycoord]), las = 1)
+    labels = unique(metadata[[which_data]][,colname_ycoord]), las = 1)
   title(ylab = "Distance from 0 (meters)")
 }
 
