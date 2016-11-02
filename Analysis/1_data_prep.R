@@ -38,7 +38,7 @@ if(EXPORT){
 RESCALE_SEQUENCING_DEPTH <- TRUE
 
 if(RESCALE_SEQUENCING_DEPTH) {
-	otu_table[["scaled"]] <- rescale_rowsums(otu_table[["clean"]])
+	otu_table[["scaled"]] <- rrarefy(otu_table[["clean"]], sample = min(rowSums(otu_table[["clean"]])))
     metadata[["scaled"]]  <- metadata[["clean"]]
 }
 #-------------------------------------------------------------------------------
