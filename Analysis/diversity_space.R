@@ -7,13 +7,15 @@ dataset <- "mean"
 
 my_metadata <- metadata[[dataset]]
 
+target_data <- which(sapply(otu_table, nrow) <= 24)
+
 # grab diversity data
 temp <- do.call(
   "cbind.data.frame",  
   lapply(
     div_metrics, 
     function(x) {
-      cbind.data.frame(x[5:length(x)])
+      cbind.data.frame(x[target_data])
     } # select only datasets of same length
   )
 )
@@ -72,10 +74,10 @@ if(EXPORT){
   pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
   legend_file <- file.path(fig_dir, paste(plot_name, "_legend.txt", sep = ""))
   writeLines(legend_text[[plot_name]], con = legend_file)
-  pdf(file = pdf_file, width = 16, height = 8)
+  pdf(file = pdf_file, width = 16, height = 8*(2/3))
 }
-par(mfrow = c(3, 6))
-for(i in 5:22){
+par(mfrow = c(length(div_metrics), length(target_data)))
+for(i in 5:ncol(my_data)){
 par(mar = c(4,4,1,1))
 div_dist[[colnames(my_data)[i]]] <- lm(
   my_data[,i] ~ my_data$dist
@@ -114,34 +116,43 @@ if(EXPORT){
   pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
   legend_file <- file.path(fig_dir, paste(plot_name, "_legend.txt", sep = ""))
   writeLines(legend_text[[plot_name]], con = legend_file)
-  pdf(file = pdf_file, width = 8, height = 2.5)
+  pdf(file = pdf_file, width = 10, height = 5)
 }
 
 par(mfrow = c(1, length(col_sub)))
 
 for(i in 1:length(col_sub)){
 par(mar = c(4,4,1,1))
-temp_dat <- data.frame(x = my_data$dist, y = my_data[,col_sub[i]])
+temp_dat <- data.frame(x = my_data$dist, logx = log(my_data$dist + 1), y = my_data[,col_sub[i]])
 metric_name <- strsplit(colnames(my_data)[col_sub[i]], "\\.")[[1]][1]
 
 div_dist[[metric_name]] <- list()
 div_dist[[metric_name]]$out <- lm(
-  y ~ log(x + 1), data = temp_dat
-)
-plot(x = temp_dat$x, y = temp_dat$y,
-  log = "x", 
-  xlab = "Distance from shore (meters)", 
-  ylab = metric_name
+  y ~ logx, data = temp_dat
 )
 
 x_pred <- seq(from = 0, to = 5000, length = 101)
 
 div_dist[[metric_name]]$conf <- predict(
     object   = div_dist[[metric_name]]$out, 
-    newdata  = data.frame(x = x_pred), 
+    newdata  = data.frame(logx = x_pred), 
     interval = "confidence", 
     level    = 0.95
 )
+
+ylims <- range(c(range(div_dist[[metric_name]]$conf), range(temp_dat$y)))
+plot(x = temp_dat$logx, y = temp_dat$y,
+  xlab = "Distance from shore (meters)", 
+  ylab = metric_name, 
+  axes = FALSE
+)
+
+tick_x <- c(0,50,250,500,1000,2000,4000)
+axis(1, at = log(tick_x + 1), labels = tick_x)
+
+axis(2)
+
+box()
 
 plot_model(div_dist[[metric_name]], x_pred, line_type = 2)
 # abline(div_dist[[colnames(my_data[,col_sub])[i]]], col = "red")
