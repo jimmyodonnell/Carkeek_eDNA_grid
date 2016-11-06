@@ -319,7 +319,7 @@ for(i in which_pred){
 many_models[[data_set[dat]]][[dist_met[metric]]] <- models
 
   } # for(metric in 1:length(dist_met))
-  
+
   many_models[[data_set[dat]]]$model_data <- model_data_full
 
 } # for(dat in 1:length(data_set)){
@@ -360,13 +360,13 @@ legend_text[plot_name] <- {
 Each point represents the similarity of a site sampled along three parallel transects comprising a 3000 by 4000 meter grid.
 Each row of plots represents a different data subset indicated in the right margin, including
 the final filtered data reported in the main text (a-d),
-the unfiltered data including all rare OTUs (e-h), 
-log-transformed (log(x+1)) data (i-l), 
-OTU abundance scaled relative to within-taxon maximum (m-p), 
+the unfiltered data including all rare OTUs (e-h),
+log-transformed (log(x+1)) data (i-l),
+OTU abundance scaled relative to within-taxon maximum (m-p),
 and exclusion of OTUs found at only one site (q-t).
 Columns indicate the similarity index used (Bray Curtis or Morisita-Horn) and
-whether the input was full abundance data or binary (0,1) transformed data. 
-Lines and bands illustrate the fit and 95% confidence interval of both the 
+whether the input was full abundance data or binary (0,1) transformed data.
+Lines and bands illustrate the fit and 95% confidence interval of both the
 main nonlinear model (red, dashed line) and a simple linear model (blue, solid line).
 Results using the Jaccard distance are omitted because of its similarity to Bray-Curtis."
 }
@@ -378,10 +378,10 @@ if(EXPORT){
   pdf(file = pdf_file, width = 8, height = 10)
 }
 
-subset_names <- c("Filtered", "Unfiltered", "Log", "Scaled {0,1}", 
+subset_names <- c("Filtered", "Unfiltered", "Log", "Scaled {0,1}",
   "Spatially Variable")
 
-metric_names <- c("Bray-Curtis", "Bray-Curtis (binary)", 
+metric_names <- c("Bray-Curtis", "Bray-Curtis (binary)",
   "Morisita-Horn", "Morisita-Horn (binary)")
 
 par(
@@ -391,21 +391,21 @@ par(
 for(subset in 1:length(many_models)){
   for(metric in 1:length(dist_met)){
     plot_points_nolab(
-      x = many_models[[subset]]$model_data[,"dist"], 
+      x = many_models[[subset]]$model_data[,"dist"],
       y = many_models[[subset]]$model_data[,dist_met[metric]]
     )
     plot_model(
-      model_list_item = many_models[[subset]][[dist_met[metric]]][["linear"]], 
-      pred_vec = x_pred, 
-      line_color = hsv(0.6,1,1), 
-      line_type  = 1, 
-      band_color = hsv(0.6,1,1, alpha = 0.3) 
+      model_list_item = many_models[[subset]][[dist_met[metric]]][["linear"]]$conf,
+      pred_vec = x_pred,
+      line_color = hsv(0.6,1,1),
+      line_type  = 1,
+      band_color = hsv(0.6,1,1, alpha = 0.3)
     )
     plot_model(
-      model_list_item = many_models[[subset]][[dist_met[metric]]][["MM_asy0"]], 
-      pred_vec = x_pred, 
-      line_color = hsv(1,1,1), 
-      band_color = hsv(1,1,1, alpha = 0.3) 
+      model_list_item = many_models[[subset]][[dist_met[metric]]][["MM_asy0"]]$conf,
+      pred_vec = x_pred,
+      line_color = hsv(1,1,1),
+      band_color = hsv(1,1,1, alpha = 0.3)
     )
     if(subset == 1){
       mtext(metric_names[metric], side = 3, line = 1)
@@ -413,12 +413,12 @@ for(subset in 1:length(many_models)){
     if(metric == length(dist_met)){
       mtext(subset_names[subset], side = 4, line = 1)
     }
-  # legend("topright", 
-    # legend = letters[length(dist_met)*(subset-1) + metric], bty = "n", 
+  # legend("topright",
+    # legend = letters[length(dist_met)*(subset-1) + metric], bty = "n",
       # xjust = 0, yjust = 1, cex = 2)
   plot_lim <- par("usr")
   text(x = plot_lim[2]*0.85, y = plot_lim[4]*0.85,
-    labels = letters[length(dist_met)*(subset-1) + metric], 
+    labels = letters[length(dist_met)*(subset-1) + metric],
     cex = 2
   )
   }
