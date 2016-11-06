@@ -10,7 +10,7 @@ my_metadata <- metadata[["mean"]] # metadata[!duplicated(metadata[,colname_env_s
 my_table <- otu_table[["mean"]] # mean, mean_unfilt, spvar, otu_named, as.binary(otu_mean), log, filt
 rownames(my_table) # should be e.g. PCT-C-0000 etc, aka "env_sample_name"
 
-EXPORT <- TRUE # export plots/files?
+EXPORT <- FALSE # export plots/files?
 
 library(geosphere) # distm()
 library(vegan) # vegdist()
