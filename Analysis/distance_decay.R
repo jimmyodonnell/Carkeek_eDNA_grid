@@ -84,7 +84,7 @@ env_mean, " plusminus ", env_sd, ").",
 sep = "")
 par(mar = c(2,4,1,1))
 boxplot(
-list(PCR = unlist(PCR_similarities), environment = unlist(comm_sim["Bray_Curtis"])), 
+list(PCR = unlist(PCR_similarities), environment = unlist(comm_sim["Bray_Curtis"])),
 las = 1, ylab = "Similarity"
 )
 
@@ -189,7 +189,7 @@ models[["linear"]] <- list(
   },
   form =
     y  ~ x,
-  params = 
+  params =
     c("intercept", "slope")
 )
 
@@ -203,7 +203,7 @@ models[["loglinear"]] <- list(
   },
   form =
     y  ~ log(x),
-  params = 
+  params =
     c("intercept", "slope")
 )
 
@@ -246,7 +246,7 @@ models[["MM_int1"]] <- list(
   },
   form =
     y  ~ (halflife + asymptote * x)/( halflife + x),
-  params = 
+  params =
     c("asymptote", "halflife")
 )
 
@@ -261,7 +261,7 @@ models[["MM_asy0"]] <- list(
   },
   form =
     y  ~ (intercept * halflife)/(halflife + x),
-  params = 
+  params =
     c("intercept", "halflife")
 )
 
@@ -275,7 +275,7 @@ models[["MM_int1asy0"]] <- list(
   },
   form =
     y  ~ halflife/(halflife + x),
-  params = 
+  params =
     c("halflife")
 )
 
@@ -289,7 +289,7 @@ models[["Harold"]] <- list(
   },
   form =
     y  ~ intercept + (deltay*x)/(halflife + x),
-  params = 
+  params =
     c("intercept", "deltay", "halflife")
 )
 
@@ -334,9 +334,9 @@ for(i in 1:length(models)){
 # for the linear models
 for(i in which_linear){
   models[[i]]$conf <- predict(
-    object   = models[[i]]$out, 
-    newdata  = data.frame(x = x_pred), 
-    interval = "confidence", 
+    object   = models[[i]]$out,
+    newdata  = data.frame(x = x_pred),
+    interval = "confidence",
     level    = 0.95
   )
 }
@@ -352,9 +352,9 @@ for(i in which_pred){
     alpha    = 0.05
   )$summary # the output of predictNLS is huge, just keep the summary
   models[[i]]$conf <- data.frame(
-    fit = temp[,"Prop.Mean.1"], 
+    fit = temp[,"Prop.Mean.1"],
     lwr = temp[,5], # "Prop.2.5%", but varies depending on alpha level
-    upr = temp[,6]  # "Prop.97.5%" 
+    upr = temp[,6]  # "Prop.97.5%"
   )
   rm(temp)
 }
@@ -422,8 +422,8 @@ plot(
 	axes = FALSE,
 	las = 1
 )
-axis(side = 1, 
-  at      = c(-350, 50, 1000, 2000, 3000, 4000), 
+axis(side = 1,
+  at      = c(-350, 50, 1000, 2000, 3000, 4000),
   labels = c("PCR", 50, 1000, 2000, 3000, 4000), lwd = 0, lwd.ticks = 1)
 #, at = unique(log(metadata$dist_from_shore + 100)), labels = unique(metadata$dist_from_shore)
 # abline(v = unique(log(metadata$dist_from_shore + 100)))
@@ -442,24 +442,24 @@ boxplot(unlist(PCR_similarities), add = TRUE,
   show.names = FALSE
 )
 
-main_models <- c("MM_asy0") 
+main_models <- c("MM_asy0")
 
 # add confidence band
 x_bounds <- c(x_pred, rev(x_pred))
 conf     <- models[[main_models]]$conf
 y_bounds <- c(conf[,"lwr"], rev(conf[,"upr"]))
 polygon(
-  x = x_bounds, 
+  x = x_bounds,
   y = y_bounds,
-  col = hsv(h = 1, s = 1, v = 0.1, alpha = 0.2), 
+  col = hsv(h = 1, s = 1, v = 0.1, alpha = 0.2),
   border = NA
 )
 
-# "linear","loglinear","MM_full","MM_int1","MM_asy0","MM_int1asy0","Harold" 
+# "linear","loglinear","MM_full","MM_int1","MM_asy0","MM_int1asy0","Harold"
 line_colors <- c("#6495ED") #6495ED, #0084d1 , "purple", "red"
 line_types <- c(2)
 for(i in 1:length(main_models)) {
-	lines(x = x_pred, y = models[[main_models[[i]]]]$conf[,"fit"], 
+	lines(x = x_pred, y = models[[main_models[[i]]]]$conf[,"fit"],
       col = line_colors[i], lwd = 3, lty = line_types[i])
 }
 
@@ -496,7 +496,7 @@ for(i in 1:length(models)){
   plot_points(model_data$x, model_data$y)
 
 # add confidence band and fit line of model
-  plot_model(models[[i]], pred_vec = x_pred)
+  plot_model(models[[i]]$conf, pred_vec = x_pred)
 
 # add model name
   legend("topright", legend = names(models)[i], bty = "n")
