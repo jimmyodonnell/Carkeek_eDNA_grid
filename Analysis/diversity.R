@@ -2,7 +2,7 @@ library(vegan)
 
 # requires a list of OTU tables and a list of corresponding metadata
 
-EXPORT <- TRUE
+EXPORT <- FALSE
 
 div_metrics <- list()
 
