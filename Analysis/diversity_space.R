@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 # Diversity in Space
 #-------------------------------------------------------------------------------
-EXPORT <- FALSE
+EXPORT <- TRUE
 
 dataset <- "mean"
 
@@ -62,13 +62,58 @@ sapply(moran_out, "[[", "p.value")
 #-------------------------------------------------------------------------------
 # model and plot diversity as a function of distance from shore (full)
 
+# set values for which we'd like to generate predictions
+x_pred <- seq(from = 0, to = 5000, length = 101)
+
+data_names <- colnames(my_data)[5:ncol(my_data)]
+
 div_dist <- list()
+
+for(i in 1:length(data_names)){
+
+	div_dist[[data_names[i]]]$dat <- data.frame(
+	  x = my_data$dist, 
+	  logx = log(my_data$dist + 1), 
+	  y = my_data[,data_names[i]]
+	)
+
+	div_dist[[data_names[i]]]$out <- lm(
+	  y ~ x, 
+      data = div_dist[[data_names[i]]]$dat
+	)
+
+	div_dist[[data_names[i]]]$conf <- predict(
+	    object   = div_dist[[data_names[i]]]$out, 
+	    newdata  = data.frame(x = x_pred), 
+	    interval = "confidence", 
+	    level    = 0.95
+	)
+
+	div_dist[[data_names[i]]]$outlog <- lm(
+	  y ~ logx, 
+      data = div_dist[[data_names[i]]]$dat
+	)
+
+	div_dist[[data_names[i]]]$conflog <- predict(
+	    object   = div_dist[[data_names[i]]]$outlog, 
+	    newdata  = data.frame(logx = x_pred), 
+	    interval = "confidence", 
+	    level    = 0.95
+	)
+
+}
+
+# plot diversity as a function of distance from shore (full)
 
 plot_name <- "diversity_distance_all"
 
 if(!exists("legend_text")){ legend_text <- list()}
 legend_text[plot_name] <- {
-"Legend text goes here."
+"Aggregate diversity metrics of each site plotted against distance from shore.
+Both Simpson's Index (top) and richness (bottom) are shown for a variety of data subsets and transformations (left to right: mean, unfiltered mean, log(x + 1), transformed, scaled, spatially variable, and taxon clustered). 
+Lines and bands illustrate the fit and 95% confidence interval of a linear model.
+See methods text for detailed data descriptions."
+
 }
 if(EXPORT){
   pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
@@ -77,17 +122,15 @@ if(EXPORT){
   pdf(file = pdf_file, width = 16, height = 8*(2/3))
 }
 par(mfrow = c(length(div_metrics), length(target_data)))
-for(i in 5:ncol(my_data)){
-par(mar = c(4,4,1,1))
-div_dist[[colnames(my_data)[i]]] <- lm(
-  my_data[,i] ~ my_data$dist
-)
-plot(x = my_data$dist, y = my_data[,i],
-  # log = "x", 
-  xlab = "Distance from shore (meters)", 
-  ylab = colnames(my_data)[i]
-)
-abline(div_dist[[colnames(my_data)[i]]], col = "red")
+for(i in 1:length(div_dist)){
+	par(mar = c(4,4,1,1))
+	plot(x = div_dist[[i]]$dat$x, y = div_dist[[i]]$dat$y,
+	  # log = "x", 
+	  xlab = "Distance from shore (meters)", 
+	  ylab = names(div_dist)[i]
+	)
+	plot_model(div_dist[[i]]$conf, x_pred, line_type = 2)
+	# abline(div_dist[[i]]$out, col = "red")
 }
 if(EXPORT){
   dev.off()
@@ -99,18 +142,19 @@ dataset <- grep(".mean$", names(div_dist))
 
 
 #-------------------------------------------------------------------------------
-# model and plot diversity as a function of distance from shore, but
-# focus on only a single dataset ("mean")
+# plot diversity as a function of distance from shore, 
+# for only a single dataset ("mean")
 
-col_sub <- grep(".mean$", colnames(my_data))
-
-div_dist <- list()
+col_sub <- grep(".mean$", names(div_dist))
 
 plot_name <- "diversity_distance"
 
 if(!exists("legend_text")){ legend_text <- list()}
 legend_text[plot_name] <- {
-"Legend text goes here."
+"Aggregate diversity metrics of each site plotted against distance from shore.
+Both Simpson's Index (left) and richness (right) are shown, and have been computed from the mean abundance of unique DNA sequences found across 4 PCR replicates at each of 24 sites.
+Lines and bands illustrate the fit and 95% confidence interval of a linear model.
+"
 }
 if(EXPORT){
   pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
@@ -122,40 +166,29 @@ if(EXPORT){
 par(mfrow = c(1, length(col_sub)))
 
 for(i in 1:length(col_sub)){
-par(mar = c(4,4,1,1))
-temp_dat <- data.frame(x = my_data$dist, logx = log(my_data$dist + 1), y = my_data[,col_sub[i]])
-metric_name <- strsplit(colnames(my_data)[col_sub[i]], "\\.")[[1]][1]
 
-div_dist[[metric_name]] <- list()
-div_dist[[metric_name]]$out <- lm(
-  y ~ logx, data = temp_dat
-)
+	par(mar = c(4,4,1,1))
 
-x_pred <- seq(from = 0, to = 5000, length = 101)
+	metric_name <- strsplit(names(div_dist)[col_sub[i]], "\\.")[[1]][1]
+	
+	# ylims <- range(c(range(div_dist[[metric_name]]$conf), range(temp_dat$y)))
 
-div_dist[[metric_name]]$conf <- predict(
-    object   = div_dist[[metric_name]]$out, 
-    newdata  = data.frame(logx = x_pred), 
-    interval = "confidence", 
-    level    = 0.95
-)
+	plot(x = div_dist[[col_sub[i]]]$dat$x, y = div_dist[[col_sub[i]]]$dat$y,
+	  # log = "x", 
+	  # axes = FALSE,
+	  xlab = "Distance from shore (meters)", 
+	  ylab = metric_name
+	)
 
-ylims <- range(c(range(div_dist[[metric_name]]$conf), range(temp_dat$y)))
-plot(x = temp_dat$logx, y = temp_dat$y,
-  xlab = "Distance from shore (meters)", 
-  ylab = metric_name, 
-  axes = FALSE
-)
+	# tick_x <- c(0,50,250,500,1000,2000,4000)
+	# axis(1, at = log(tick_x + 1), labels = tick_x)
+	
+	# axis(2)
+	
+	# box()
 
-tick_x <- c(0,50,250,500,1000,2000,4000)
-axis(1, at = log(tick_x + 1), labels = tick_x)
+	plot_model(div_dist[[col_sub[i]]]$conf, x_pred, line_type = 2)
 
-axis(2)
-
-box()
-
-plot_model(div_dist[[metric_name]], x_pred, line_type = 2)
-# abline(div_dist[[colnames(my_data[,col_sub])[i]]], col = "red")
 }
 if(EXPORT){
   dev.off()
