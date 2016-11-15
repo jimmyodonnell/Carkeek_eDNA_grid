@@ -103,6 +103,18 @@ for(i in 1:length(data_names)){
 
 }
 
+summary(div_dist$Richness.mean$out)
+at0_rich  <- div_dist$Richness.mean$conf[1,]
+at4k_rich <- div_dist$Richness.mean$conf[which(x_pred == 4000),]
+pm_rich0 <- at0_rich[1] - at0_rich[2]
+pm_rich4k <- at4k_rich[1] - at4k_rich[2]
+
+summary(div_dist$Simpson.mean$out)
+at0_simp  <- div_dist$Simpson.mean$conf[1,]
+at4k_simp <- div_dist$Simpson.mean$conf[which(x_pred == 4000),]
+pm_simp0 <- at0_simp[1] - at0_simp[2]
+pm_simp4k <- at4k_simp[1] - at4k_simp[2]
+
 # plot diversity as a function of distance from shore (full)
 
 plot_name <- "diversity_distance_all"

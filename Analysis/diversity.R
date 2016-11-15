@@ -2,12 +2,13 @@ library(vegan)
 
 # requires a list of OTU tables and a list of corresponding metadata
 
-EXPORT <- FALSE
+EXPORT <- TRUE
 
 div_metrics <- list()
 
 # div_metrics[["Shannon"]] <- lapply(otu_table, diversity, index = "shannon") 
-div_metrics[["Simpson"]] <- lapply(otu_table, diversity, index = "simpson") 
+div_metrics[["Simpson"]] <- lapply(otu_table, function(x){
+  1 - diversity(x, index = "simpson")})
 div_metrics[["Richness"]] <- lapply(otu_table, function(x) {rowSums(x > 0)})
 
 which_data <- "mean"
