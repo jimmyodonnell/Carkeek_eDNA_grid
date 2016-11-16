@@ -8,6 +8,6 @@ OTU abundance scaled relative to within-taxon maximum (m-p),
 and exclusion of OTUs found at only one site (q-t).
 Columns indicate the similarity index used (Bray Curtis or Morisita-Horn) and
 whether the input was full abundance data or binary (0,1) transformed data. 
-Lines and bands illustrate the fit and 95% confidence interval of both the 
+Lines and bands illustrate the fit and 95\% confidence interval of both the 
 main nonlinear model (red, dashed line) and a simple linear model (blue, solid line).
 Results using the Jaccard distance are omitted because of its similarity to Bray-Curtis.
