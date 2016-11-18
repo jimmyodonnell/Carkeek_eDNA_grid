@@ -7,7 +7,7 @@ EXPORT <- TRUE
 div_metrics <- list()
 
 # div_metrics[["Shannon"]] <- lapply(otu_table, diversity, index = "shannon") 
-div_metrics[["Simpson"]] <- lapply(otu_table, function(x){
+div_metrics[["Evenness"]] <- lapply(otu_table, function(x){
   1 - diversity(x, index = "simpson")})
 div_metrics[["Richness"]] <- lapply(otu_table, function(x) {rowSums(x > 0)})
 
