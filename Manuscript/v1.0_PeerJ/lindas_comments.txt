@@ -1,0 +1,25 @@
+
+================================================================================
+Linda's Comments:
+
+I think the eDNA field definitely needs to take a hard look at some of the things mentioned in the paper.  I mentioned to Jimmy that the resolution of the primers he was using as well as the incompleteness of available species data might confound your measures of diversity (e.g. can you tell the difference between a site with one barnacle species vs 6 barnacle species and  if the resolution is different within/among different taxa does that matter to your calculations?) and that would be worth mentioning in the discussion.
+
+re: water sampling--you don't say how far apart in time the water samples were all collected, nor how they were collected (diver?).  i.e. were tidal/current conditions changing over the course of the entire collection or were you able to get all of the samples relatively quickly so that this was not a concern?
+
+I am trying to follow your description of all of the sampling/indexing and I think I'm missing something.  You collected 24 water samples and also 3 control replicates (27 total).  But you later talk about 31 DNA samples.  Where did the other 4 come from?  Are these other downstream controls?  You also mention you have 30 unique index sequences, but that you use the same index for forward and reverse primers in a given sample, so it seems the max you can label at this step is 30 samples.  But how are you labeling 31 samples then?  Does one just lack index codes completely?  I'm thinking that this all taken care of by the additional index codes on the sequencing adapters, but the way it reads to me right now, everything is pooled into 30 pools before library prep (line 187: PCR products were pooled according to their primer index...and 150 ng was prepared for library sequencing).
+
+What is the average taxonomic specificity you got down to for the OTUs identified?  For instance your 16S primers do not distinguish between the salmon species at all.  If most taxa are identified to only Class or Family, either because the sequence level resolution isn't there or representative sequences don't exist in Genbank, how well are you truly assessing differences in communities?  Can you tell if 6 barnacle species are present in one sample but only 1 species is present in another and if not, does it matter?   I think the degree that taxonomic resolution affects (or doesn't) your conclusion is at least worth a mention.
+
+I noticed a few typos in the beginning but I kinda stopped writing them down because I was looking at it on my iPad, not a hard copy
+
+[X] line 27: not sure a semicolon is appropriate here.  
+
+[X] line 33/34: subject of the sentence is "a sample" so "their DNA or RNA is isolated" isn't quite right.  
+
+[X] line 51: genetic material *can move* away from...
+
+[X] line 190: sequencing adapter*s* includ*ed* 
+
+
+
+
