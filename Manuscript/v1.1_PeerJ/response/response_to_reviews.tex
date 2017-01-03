@@ -1,0 +1,90 @@
+\documentclass{article}
+\usepackage{changepage}% \adjustwidth{<leftskip>}{<rightskip>} http://ctan.org/pkg/changepage
+\usepackage{lipsum}% http://ctan.org/pkg/lipsum
+\usepackage[margin=1in]{geometry} % make the margins 1 inch on all sides of the document
+
+% The following four lines prevent indentation unless it is invoked with \indent
+\newlength\tindent
+\setlength{\tindent}{\parindent}
+\setlength{\parindent}{0pt}
+\renewcommand{\indent}{\hspace*{\tindent}}
+
+\title{Response to Reviews}
+
+% You can make your own environment 
+\newenvironment{response}
+	{
+	\begin{adjustwidth}{1cm}{0cm}
+	\itshape % make italic
+	}
+	{
+	\end{adjustwidth}
+	}
+
+\begin{document}
+
+\maketitle
+
+
+\noindent
+{\large
+Manuscript Title: 
+A general theory for worm swarms
+\\
+Journal: 
+Nature
+\\
+Manuscript ID: 
+1-800-COOL-ICE
+\\
+Authors: Mr. Cool Ice, Dinild Trimp, Daffy Duck, Dr. Seuss
+\\
+}
+
+We are grateful to the editor and reviewers for their insightful feedback. 
+Reviewer feedback is below in normal font, with our responses in indented italics. 
+Additional changes to the manuscript independent of the reviews are presented at the end of this document.
+
+%------------------------------------EDITOR-------------------------------------
+\subsection*{Topic Editor}
+Here's some stuff filled with lipsum from the package lipsum. \lipsum[2]
+\begin{response}
+  That is a great point. \\
+\end{response}
+
+
+Here's some stuff filled with lipsum from the package lipsum. \lipsum[2]
+
+\begin{response}
+  We made this change. \\
+\end{response}
+
+
+%------------------------------------REVIEWER1----------------------------------
+\subsection*{Reviewer 1}
+Here's some stuff filled with lipsum from the package lipsum. \lipsum[2]
+\begin{response}
+  That is a great point. \\
+\end{response}
+
+Here's some stuff filled with lipsum from the package lipsum. \lipsum[2]
+
+\begin{response}
+  We made this change. \\
+\end{response}
+
+%------------------------------------REVIEWER2----------------------------------
+\subsection*{Reviewer 2}
+Here's some stuff filled with lipsum from the package lipsum. \lipsum[2]
+\begin{response}
+  That is a great point. \\
+\end{response}
+
+
+Here's some stuff filled with lipsum from the package lipsum. \lipsum[2]
+
+\begin{response}
+  We made this change. \\
+\end{response}
+
+\end{document}
