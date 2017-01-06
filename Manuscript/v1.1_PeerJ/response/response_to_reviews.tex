@@ -1,7 +1,26 @@
 \documentclass{article}
 \usepackage{changepage}% \adjustwidth{<leftskip>}{<rightskip>} http://ctan.org/pkg/changepage
-\usepackage{lipsum}% http://ctan.org/pkg/lipsum
+\usepackage[T1]{fontenc} % Choose an output font encoding (T1) that has support for the accented characters used by the most widespread European languages
+\usepackage[utf8x]{inputenc} % Allow input of accented characters (and more...)
+\usepackage[usenames, dvipsnames]{xcolor} % to use color
 \usepackage[margin=1in]{geometry} % make the margins 1 inch on all sides of the document
+
+% font:
+% Chivo
+% \usepackage[familydefault,light]{Chivo}
+
+% Carlito:
+% \usepackage[sfdefault,lf]{carlito}
+%% The 'lf' option for lining figures
+%% The 'sfdefault' option to make the base font sans serif
+% \renewcommand*\oldstylenums[1]{\carlitoOsF #1}
+
+% roboto
+% \usepackage[sfdefault]{roboto}  %% Option 'sfdefault' only if the base font of the document is to be sans serif
+
+% Nimbus sans
+\usepackage{nimbussans}
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
 
 % The following four lines prevent indentation unless it is invoked with \indent
 \newlength\tindent
@@ -9,13 +28,15 @@
 \setlength{\parindent}{0pt}
 \renewcommand{\indent}{\hspace*{\tindent}}
 
-\title{Response to Reviews}
+% define a new color
+\definecolor{peerjBlue}{RGB}{0,144,255} % also try G=167
 
-% You can make your own environment
+% Make your own environment for responses
 \newenvironment{response}
 	{
 	\begin{adjustwidth}{1cm}{0cm}
-	\itshape % make italic
+	\color{peerjBlue}
+	% \itshape % make italic
 	}
 	{
 	\end{adjustwidth}
@@ -23,33 +44,40 @@
 
 \begin{document}
 
+
+\title{Response to Reviews}
+
 \maketitle
 
 
-\noindent
-{
-Manuscript Title:
+% \noindent
+% {
+\begin{tabular}{ l l }
+Manuscript Title: &
 Spatial distribution of environmental DNA in a nearshore marine habitat
 \\
-Journal:
+Journal: &
 PeerJ
 \\
-Manuscript ID:
+Manuscript ID: &
 14649
 \\
-Authors:
-James L. O'Donnell,
-Ryan P. Kelly,
-Andrew O. Shelton,
-Jameal F. Samhouri,
-Natalie C. Lowell,
-Gregory D. Williams
+Authors: &
+O'Donnell JL,
+Kelly RP,
+Shelton AO,
+Samhouri JF,
+Lowell NC,
+Williams GD
 \\
-}
+\end{tabular}
+
+\bigskip
+% }
 
 We are grateful to the editor and reviewers for their insightful feedback.
-Reviewer feedback is below in normal font, with our responses in indented italics.
-Additional changes to the manuscript independent of the reviews are presented at the end of this document.
+Reviewer feedback is below in regular typeface, with our responses indented and colored.
+% Additional changes to the manuscript independent of the reviews are presented at the end of this document.
 
 %------------------------------------EDITOR-------------------------------------
 \subsection*{Editor}
@@ -71,20 +99,36 @@ Both reviewers commented favourably on this manuscript and have made some useful
 
 \subsubsection*{Basic reporting}
 The article is well written. The structure is correct. The introduction and the material and methods sections are a little bit long, but can be easily improved by deleting some sentences (detailed below in this review). The references used are relevant and updated. The raw data and the analysis scripts are all publicly available.
+\begin{response}
+	Thank you for the positive feedback.
+	We feel the introduction is appropriately detailed to put our study in the context of both the field of metabarcoding and the field of spatial ecology.
+	We strove for excruciating detail in the methods section as a counter to the chronic under-reporting of details in the metabarcoding field, which hinders reproducible research.
+	We took your later suggestions into account, but please note that the other reviewer requested more analytical detail in the methods.
+	We would happily move extraneous details to the supplement if the editor feels that manuscript length is an issue as written (e.g. molecular laboratory details such as PCR parameters).\\
+\end{response}
 
 \subsubsection*{Experimental design}
 The objectives are clearly established and the experimental design is perfect for addressing the proposed questions. The laboratory methods are rigorous and the analysis pipeline includes steps for assuring excellent quality of the resulting data set.
+\begin{response}
+	Thank you; we agree.\\
+\end{response}
 
 \subsubsection*{Validity of the findings}
 The findings are very robust. The high level of replication in the PCR analyses and the high-standards bioinformatic filtering steps used for removing any sequence attributable to possible contamination assure an excellent resulting data set to work with. The statistical analysis of the data are very clearly explained and the results are highly trustworthy.
+\begin{response}
+	Thank you; we agree.\\
+\end{response}
 
 \subsubsection*{Comments for the Author}
 The manuscript is, in general, very well written and the robust results obtained from the enhanced laboratory procedures and bioinformatic pipelines used are presented in a clear manner. I think that the introduction and material and methods sections are a little too long, but they can be enhanced by deleting some sentences (detailed below).
+\begin{response}
+	Thank you; please see our previous comment on manuscript length, as well as our responses to your specific comments on extraneous details.\\
+\end{response}
+
 
 I think that it would be informative to add a paragraph in the discussion section commenting the caveats of using 16S as metabarcoding marker for taxonomic assignment of the MOTUs (i.e. the issues with the assignment of many sequences which can be assigned only to the family or lower levels), compared to other more variable markers with denser reference databases, such as COI, which, in most cases, allow assignments to the genus or species level.
-
 \begin{response}
-	We agree with your point that a locus with only coarse-scale resolution (16S) may obfuscate patterns of diversity compared to a locus with fine-scale resolution (CO1). A subset of us has recently published an in-depth comparison of multiple loci for metabarcoding, and TODO: we have added a more substantial comment on this and referenced to this now-published work.
+	We agree with your point that a locus with only coarse-scale resolution (16S) may obfuscate patterns of diversity compared to a locus with fine-scale resolution. A subset of us has recently published an in-depth comparison of multiple loci for metabarcoding, and we have added a more substantial comment on this and referenced to this now-published work.
 \\
 \end{response}
 
@@ -113,18 +157,23 @@ L93: ``which provide''
 
 L94: The microscopic plankton is not composed just by ``diatoms and larvae''. Many important holoplanktonic organisms (e.g. copepods) could be mentioned here.
 \begin{response}
-  We did not state that the microscopic plankton is composed solely of diatoms and larve, we made a  statement and qualified it with two examples to give meaning and context: `a diverse assemblage of microscopic plankton including diatoms and larvae'. We mention diatoms because they are a widely-known, numerically abundant, and ecologically important group that falls outside the scope of this study on metazoans. We mention larvae because it subtly hints at our major finding that our samples captured many organisms best known for their sessile, benthic stages (e.g. barnacles). Yes, we could add copepods to this list if you would like, but what qualifies a group for inclusion? Numerical abundance? Biomass?\\
+  We did not mean to imply that the microscopic plankton is composed solely of diatoms and larve, we made a  statement and qualified it with two examples to give meaning and context: `a diverse assemblage of microscopic plankton including diatoms and larvae'.
+	We mention diatoms because they are a widely-known, numerically abundant, and ecologically important group that falls outside the scope of this study on metazoans.
+	We mention larvae because it subtly hints at our major finding that our samples captured many organisms best known for their sessile, benthic stages (e.g. barnacles).
+	Yes, we could add copepods to this list if you would like, but what qualifies a group for inclusion? Numerical abundance? Biomass?
+	Still, if you think the statement is somehow misleading as written, we prefer to omit any examples.\\
 \end{response}
 
 L100: I am not sure that this is ``the first explicitly spatial analysis of eDNA-derived community similarity'', since some other papers have been published which reported patterns of spatial variability in marine systems (although using less quantitative approaches); e.g. De Vargas et al. 2015. I think that the authors should change this to ``an explicitly spatial analysis of eDNA-derived community similarity''.
 \begin{response}
   Indeed, our wording did not clearly convey our meaning. Our intent was to indicate the novelty of the experimental design which was intended to capture variability in transport of eDNA. We have made the suggested change.\\
-	% TODO: Comment on the novelty of this study in the context of refs: Fonseca et al. 2014, Guardiola et al. 2015 (PLOSONE), Lallias et a. 2015, De Vargas et al. 2015, Hanfling 2016, Guardiola 2016 PeerJ e.g. `while other studies have documented the spatial diversity of meiofauna (Fonseca 2014), '
+	% TODO: Comment on the novelty of this study in the context of refs: Fonseca et al. 2014, Guardiola et al. 2015 (PLOSONE), Lallias et a. 2015, De Vargas et al. 2015, Hanfling 2016, Guardiola 2016 PeerJ e.g. `While other studies have documented the spatial diversity of meiofauna in sediments (Fonseca 2014), '
 \end{response}
 
 L117 to 122. This whole paragraph can be deleted. This methodology and the steps involved are now commonplace among aquatic biodiversity researchers and need not be enumerated.
 \begin{response}
-  We appreciate this perspective, but disagree that the method is commonplace to the extent that it can be omitted. Our perspective is that few ecologists understand eDNA methodology, and will likely skip the details we outline in the methods. We include this very brief overview for those readers in order to give perspective to the complicated methodology.\\
+  We appreciate this perspective, but disagree that the method is commonplace to the extent that it can be omitted. Our perspective is that few ecologists understand eDNA methodology, and will likely skip the details we outline in the methods.
+	We include this very brief overview for those readers in order to give perspective to the complicated methodology.\\
 \end{response}
 
 L166 to 170. Why not use ``µl'' instead of ``microliter''?
@@ -144,12 +193,15 @@ L171 to 172. Use ``95 ºC'' instead of ``95C''.
 
 L195. ``(machine NS500615, run 115, flowcell H3LFLAFXX)''. I don't think we need to know these details!
 \begin{response}
-  While this does seem like overkill, it is not unheard of for machines or sequencing facilities to develop problems that can bias data, and we included this with the intent of being as transparent as possible. Nevertheless, we made this change.\\
+  While this does seem like overkill, it is not unheard of for machines or sequencing facilities to develop problems that can bias data, and we included this with the intent of being as transparent as possible. Nevertheless, we removed this information.\\
 \end{response}
 
 L196. ``to enhance sequencing depth''. PhiX is added ``to increase sequence diversity'' and not to enhance sequencing depth. Actually, the more PhiX is spiked-in, the less amplicon reads will be obtained, thus decreasing (not enhancing) sequencing depth.
 \begin{response}
-  We are grateful to have a reviewer reading with such a careful eye! We believe both statements are correct, though subtly so. Because PhiX increases sequence diversity, its effect is to increase the number of clusters which can be correctly differentiated from one another on the flowcell, thus increasing sequencing depth. Similar to your statement, the \textbf{less} PhiX is spiked-in, the fewer clusters will be correctly differentiated from one another, and the fewer reads passing filter will be obtained, thus also decreasing sequencing depth.\\
+  We are grateful that you have read the manuscript with such a careful eye!
+	Both statements are correct for subtle reasons, and we have incorporated your phrasing to our explanation.
+	Because PhiX increases sequence diversity, its effect is to increase the number of clusters which can be correctly differentiated from one another on the flowcell, thus increasing sequencing depth.
+	Similar to your statement, the \textbf{less} PhiX is spiked-in, the fewer clusters will be correctly differentiated from one another, and the fewer reads passing filter will be obtained, thus also decreasing sequencing depth.\\
 \end{response}
 
 L223. Delete ``a'' in ``This allows for a samples''.
@@ -159,7 +211,14 @@ L223. Delete ``a'' in ``This allows for a samples''.
 
 L270-272. I think that these sentences may be confusing due to the use of some terms related to ``dispersal range'', ``type of fertilization'' and ``type of larval development''. Some ``internally fertilized species'' may have larvae with planktonic development and long dispersal capacity (e.g. some barnacles), whereas some broadcast spawners (e.g. some gorgonians) may be surface brooders with low dispersal ability. I think that the main traits affecting ``dispersal range'' is the type of larval development (planktonic or benthic) and the total planktonic larval duration (PLD), and not the type of fertilization or the strategy for gamete releasing, per se. I think that ``internally fertilized species'' in L271 could be changed to ``benthic brooding species'' and ``broadcast spawners'' could be changed to ``species with long planktonic larval development''. Anyway, this semi-quantitative life-history information recorded by the authors in their data tables does not seem to have been used in their further analyses (since only qualitative considerations regarding two brooding species are discussed below).
 \begin{response}
-  You have made an excellent point that we were not clear in our wording. \\
+  You make an excellent point that we were not clear in our wording.
+	We did not mean to suggest that we made only one general estimate of dispersal per taxon; rather, we made separate estimates for each stage.
+	That is, even if a species (e.g. Balanus glandula) is internally fertilized and has sessile adults in the intertidal, if it has a larval stage with high potential for dispersal, we cannot rule out an expectation that it will be most abundant in the sequence data from samples far from shore due to larval abundance.
+	We have attempted to clarify this in the text.
+	That said, you are also correct that this data is almost unused except to single out Cymatogaster aggregata and Cupolaconcha meroclista as taxa for which an a priori expectation based on adult distribution should be met.
+	We added a concluding sentence to the paragraph to explain the reason for these data.
+	We chose to keep the description here to show that we have been diligent in investigating potential factors obscuring taxon-specific patterns.
+	\\
 \end{response}
 
 L285. ``333,537.9 ± 112,200.5''. It looks somehow awkward to use decimal values for numbers of reads here. You could round the values to ``333,538 ± 112,200''
@@ -174,7 +233,8 @@ L314-315. You can delete ``the probability that two reads chosen at random from 
 
 L344. ``For the first time in a marine environment, we document four key patterns''. The authors should definitely use a more modest sentence here. At least the first two patterns they claim to report ``for the first time'' have been already reported previously in several works in the marine environment. E.g.: Fonseca et al. 2014, Guardiola et al. 2015, Lallias et a. 2015, De Vargas et al. 2015, etc., although possibly never with a sampling design specifically designed to get a quantitative assessment of distance decay.
 \begin{response}
-  Our intent was to convey the novelty of the sampling design. We have clarified the novelty of our study in the context of recently published work in the introduction.\\
+  Our intent was to convey the novelty of the sampling design.
+	We removed `For the first time in a marine environment', and we have clarified the novelty of our study in the context of recently published work in the introduction.\\
 	% TODO: Comment on the novelty of this study in the context of refs: Fonseca et al. 2014, Guardiola et al. 2015 (PLOSONE), Lallias et a. 2015, De Vargas et al. 2015, Hanfling 2016, Guardiola 2016 PeerJ
 \end{response}
 
@@ -183,9 +243,16 @@ L344. ``For the first time in a marine environment, we document four key pattern
 %------------------------------------REVIEWER2----------------------------------
 \subsection*{Reviewer 2 (Stephen Moss)}
 \subsubsection*{Basic reporting}
-There were a couple of minor grammatical errors in the manuscript. 1) The final sentence (L292-294) of the ``Sequence Data Processing (Bioinformatics)'' paragraph on page 12 in the Results section. 2) The first sentence (L359) of the ``Communities far from one another tend to be less similar than those that are nearby'' paragraph on page 15 of the Discussion section.
+There were a couple of minor grammatical errors in the manuscript. 1) The final sentence (L292-294) of the ``Sequence Data Processing (Bioinformatics)'' paragraph on page 12 in the Results section.
 \begin{response}
-  OurResponse\\
+  We corrected this.\\
+\end{response}
+
+2) The first sentence (L359) of the ``Communities far from one another tend to be less similar than those that are nearby'' paragraph on page 15 of the Discussion section.
+\begin{response}
+	%TODO email Steve about this
+  It is unclear what the specific error is, but we acknowledge this sentence is poorly worded.
+	We changed this to read `We demonstrate that distant locations have less-similar eDNA communities than proximate locations in Puget Sound, a dynamic marine environment. '\\
 \end{response}
 
 I was a bit confused initially over discussion of massively parallel sequencing of 16S amplicons in relation to metazoan diversity in the abstract, and it wasn’t until into the introduction (L98) that I realised it was referring to 16S sequences from the mtDNA. Perhaps some clarity on this earlier on would be helpful? Perhaps also discussing the reasoning behind the decision to use 16S rDNA from the mtDNA rather than 18S rDNA would be helpful (e.g. Tang et. al., 2012; http://www.pnas.org/content/109/40/16208)?
@@ -200,12 +267,13 @@ I couldn’t find any reference to the details of the assigned clusters in Figur
 
 I felt the label for Figure 5 needed expanding to provide more detailed information on what it represents, making it more meaningful/understandable as a stand-alone figure.
 \begin{response}
+	% TODO: edit legend for figure in `Analysis/diversity.R`
   OurResponse\\
 \end{response}
 
 The raw data is listed as available under Data Availability, though I assume this is still under embargo? The link on page 18 (L463) will need updating upon publication.
 \begin{response}
-  Yes; these links are a placeholder until the manuscript is accepted.\\
+  Yes; these links were a placeholder until the manuscript is accepted.\\
 	% TODO: include EMBL/EBI url
 \end{response}
 
@@ -218,48 +286,69 @@ A GitHub DOI can be provided by Zenodo (https://zenodo.org) and will need updati
 \subsubsection*{Experimental design}
 When detailing how samples were collected (L126-128) under the Environmental Sampling header in the Methods section, I felt that information on how sampling artefacts were mediated (e.g. from L409-414) could have been provided sooner.
 \begin{response}
-  OurResponse\\
+  Perhaps we misunderstand your comment, but in the relevant part of the methods section, we state: `Each environmental sample was collected in a clean 1 liter high-density polyethylene bottle, the opening of which was covered with 500 micrometer nylon mesh to prevent entry of larger particles.'\\
 \end{response}
 
 I felt a little more effort could have been made to facilitate the ability to replicate the analyses in this study. The methods section provided good information, but the analyses as detailed on L473 needs more clarity. An outline of the workflow steps and the input/output at each stage would be very helpful here.
 \begin{response}
+	%TODO email Steve about this
+	% TODO: Add outline of the workflow steps of banzai
   OurResponse\\
 \end{response}
 
 \subsubsection*{Validity of the findings}
 In response to the ``(3) Richness declines and evenness increases with distance from shore'' heading in the Discussion section, I felt that decline in richness and increase in evenness might be expected due to dilution and osmotic factors in the ocean. Perhaps some reference to tidal flushing and dilution might be pertinent here?
 \begin{response}
+	% TODO: Add reference to tidal flushing and dilution as a possible mechanism for diversity from shore
   OurResponse\\
 \end{response}
 
 I felt that under the remit of the Ecological Analyses headings throughout the study, there could have been some focus on reporting the alpha diversity and rarefaction analysis in relation to whether effective sequencing depth had been achieved for the samples in question.
 \begin{response}
+	% TODO: report alpha diversity and rarefaction analysis to demonstrate effective sequence depth had been achieved
   OurResponse\\
 \end{response}
 
-\subsubsection{Comments for the Author}
+\subsubsection*{Comments for the Author}
 I thought the paper was very interesting. The study was well designed, implemented, and written. It was useful to clarify the expectations and hypotheses outlined within, however, I felt more effort could have been made to provide recommendations on how some of the limitations in eDNA sampling could be overcome.
 \begin{response}
+	% TODO: provide recommendations on how some of the limitations in eDNA sampling could be overcome
   OurResponse\\
 \end{response}
 
 The bioinformatics/statistical methods seemed to be very well thought out, and consistent with current best practices in the analyses of this type of sequencing data.
 \begin{response}
-  OurResponse\\
+	Thank you; we agree.\\
 \end{response}
 
 
 %------------------------------------REVIEWER3----------------------------------
-\subsection*{Comment on the preprint (Bernd Hänfling)}
-This is well designed study and we would like to congratulate the authors to this data set and its excellent analysis. However, we feel that the authors have made an important omission in the discussion.
+\subsection*{Comment on the preprint (Bernd Hänfling, Lori Lawson Handley, Dan Read and Ian Winfield)}
+This is well designed study and we would like to congratulate the authors to this data set and its excellent analysis. However, we feel that the authors have made an important omission in the discussion.\\
 
-Given that the main focus of this paper is to explore the spatial distribution of community eDNA we feel that the authors should consider the results of our study on lake fish communities (Hänfling et al. 2016). In our paper we have used extensive spatial sampling of three transects across our main study lake with a total of 66 individual samples and to our knowledge there is no other data set on macrobial eDNA metabarcoding with a comparable extent of explicit sampling. Our paper confirms that the spatial distribution of individual species reflects their abundance but also shows that the pattern of distribution is not random and ecologically meaningful. Although there might be important differences between freshwater and marine habitats we feel that the results from our study are extremely relevant here and should not be omitted especially when claiming novelty of discussion point 2.
 
-Bernd Hänfling, Lori Lawson Handley, Dan Read and Ian Winfield
+Given that the main focus of this paper is to explore the spatial distribution of community eDNA we feel that the authors should consider the results of our study on lake fish communities (Hänfling et al. 2016). In our paper we have used extensive spatial sampling of three transects across our main study lake with a total of 66 individual samples and to our knowledge there is no other data set on macrobial eDNA metabarcoding with a comparable extent of explicit sampling. Our paper confirms that the spatial distribution of individual species reflects their abundance but also shows that the pattern of distribution is not random and ecologically meaningful. Although there might be important differences between freshwater and marine habitats we feel that the results from our study are extremely relevant here and should not be omitted especially when claiming novelty of discussion point 2.\\
+
+
 
 Hänfling B, Lawson Handley L, Read DS, Hahn C, Li J, Nichols P, Blackman RC, Oliver A, Winfield IJ (2016) Environmental DNA metabarcoding of lake fish communities reflects long-term data from established survey methods. Molecular Ecology 25, 3101-3119.
 \begin{response}
-  OurResponse\\
+	% http://onlinelibrary.wiley.com/doi/10.1111/mec.13660/full
+  Thank you for your comment and for drawing our attention to your paper. As you note therein, the rate of publication in this field can make it difficult to keep up.
+	% We acknowledge that your study took place in a spatial context becuase you analyzed samples collected from transects in a lake.
+	% Likewise, we note that you also found a non-
+	% (Note that in the site map, references to Derwent and Windermere are mistakenly switched.)
+	% Despite your admirably extensive sampling, we contest that your study explicity addresses spatial patterns in community eDNA.
+	% First,
+	% In your paper, you note that `the results regarding vertical sampling should be regarded as preliminary' and `Our site occupancy estimates should therefore be treated as preliminary'
+	% Yet these site occupancy estimates are the data on which the
+	% Note that even for the mock community, we found no formal analysis of whether read count or relative abundance was correlated with input DNA mass.
+	% Sampling design complicates the relationship between distance and community similarity because depth and distance are confounded.
+	% no true replication of PCR because PCR replicates were pooled prior to sequencing
+	% In the relevant section of this paper (`Spatial distribution of eDNA records within Windermere'), we could find no formal analysis of spatial distribution, only references to Figure 5 and S14,
+	% In figure `Fig. S15: Spatial Distribution of species recorded in Windermere North and South Basins at more than 2 sites (Site Occupancy) using 12S data',
+	% relevant section: Site occupancy data based on 12S sequences were used to investigate the spatial distribution of each species recorded at more than two sites around Windermere (Fig. S15, Supporting information). The general pattern emerging from this analysis is that species-specific eDNA was not evenly distributed around the lake. Although some species such as P. fluviatilis, R. rutilus, E. lucius and S. trutta are recorded almost ubiquitously within the lake, eDNA from other species is predominantly found in one of the two basins. S. alpinus, P. phoxinus and G. aculeatus eDNA was common in the North Basin but very rare in the South Basin, whereas A. brama and A. anguilla eDNA was more common in South Basin (Fig. S15, Supporting information). Overall, the relative proportion of sequence read counts for different species across sample sites was significantly different between Windermere North and South Basins (χ2 = 47 817; df = 13; P < 0.001 and χ2 = 134750; df = 11; P < 0.001 for 12S and CytB, respectively, Fig. 6a, b). A similar pattern was observed for the relative proportion of sites occupied (χ2 = 61.43; df = 13; P < 0.001 and χ2 = 48.65; df = 11; P < 0.001 for 12S and CytB, respectively, Fig. 6c, d). Distribution of eDNA in the two Windermere basins reflected the expected association between species and ecological condition. eDNA from species associated with eutrophic conditions (R. rutilus, T. tinca, S. erythrophthalmus, A. brama and A. anguilla) was more abundant in the South than North Basin, while eDNA from species that prefer less eutrophic conditions (S. salar, S. trutta, S. alpinus, P. phoxinus and C. gobio) was more abundant in the North than South Basin (Fig. 6).
+	\\
 \end{response}
 
 \end{document}
