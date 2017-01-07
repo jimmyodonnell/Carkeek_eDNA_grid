@@ -72,10 +72,14 @@ Both reviewers commented favourably on this manuscript and have made some useful
 
 \begin{response}
   Thank you for the positive feedback.
-	Indeed, we agree with the comment made on the preprint. Our omission was not intended as a slight, merely an oversight given the rapid pace of publication in this field.
-	We have added the appropriate citations and corrected our wording.
-	% TODO: add hanfling citation, respond to comment, update context in paper.
-	We were also curious about the effect of the data subset you mention, and conducted that analysis. Unfortunately, we found no meaningful patterns, and have made an attempt to clarify this in the text.
+	Indeed, we agree with the comment made on the preprint.
+	Our omission was not intended as a slight, merely an oversight given the rapid pace of publication in this field.
+	We have serious qualms about the quality of the data in their paper that we believe preclude us from recommending it as a study of spatial variation in eDNA.
+	However, the suggestions of reviewer 1 (Wangensteen) were justified and we have added the appropriate citations and corrected our wording.
+	% TODO:  respond to comment, update context in paper.
+	\\
+
+	Like you, we were curious about the effect of the data subset you mention, and conducted that analysis using the life history data. Unfortunately, we found no meaningful patterns, and have made an attempt to clarify this in the text.
 	% TODO: comment on effect of subsetting based on life-history strategy or taxon
 	\\
 \end{response}
@@ -220,7 +224,7 @@ L314-315. You can delete ``the probability that two reads chosen at random from 
 
 L344. ``For the first time in a marine environment, we document four key patterns''. The authors should definitely use a more modest sentence here. At least the first two patterns they claim to report ``for the first time'' have been already reported previously in several works in the marine environment. E.g.: Fonseca et al. 2014, Guardiola et al. 2015, Lallias et a. 2015, De Vargas et al. 2015, etc., although possibly never with a sampling design specifically designed to get a quantitative assessment of distance decay.
 \begin{response}
-  Our intent was to convey the novelty of the sampling design.
+  Our intent was precisely to convey the novelty of the sampling design; we failed to do that clearly.
 	We removed `For the first time in a marine environment', and we have clarified the novelty of our study in the context of recently published work in the introduction.\\
 	% TODO: Comment on the novelty of this study in the context of refs: Fonseca et al. 2014, Guardiola et al. 2015 (PLOSONE), Lallias et a. 2015, De Vargas et al. 2015, Hanfling 2016, Guardiola 2016 PeerJ
 \end{response}
@@ -310,7 +314,10 @@ The bioinformatics/statistical methods seemed to be very well thought out, and c
 
 
 %------------------------------------REVIEWER3----------------------------------
-\subsection*{Comment on the preprint (Bernd Hänfling, Lori Lawson Handley, Dan Read and Ian Winfield)}
+\subsection*{Comment on the preprint}
+
+\subsubsection*{Bernd Hänfling, Lori Lawson Handley, Dan Read and Ian Winfield}
+
 This is well designed study and we would like to congratulate the authors to this data set and its excellent analysis. However, we feel that the authors have made an important omission in the discussion.\\
 
 
@@ -321,21 +328,33 @@ Given that the main focus of this paper is to explore the spatial distribution o
 Hänfling B, Lawson Handley L, Read DS, Hahn C, Li J, Nichols P, Blackman RC, Oliver A, Winfield IJ (2016) Environmental DNA metabarcoding of lake fish communities reflects long-term data from established survey methods. Molecular Ecology 25, 3101-3119.
 \begin{response}
 	% http://onlinelibrary.wiley.com/doi/10.1111/mec.13660/full
-  Thank you for your comment and for drawing our attention to your paper. As you note therein, the rate of publication in this field can make it difficult to keep up.
+  Thank you for your comment and for drawing our attention to your paper.
+	As you note therein, the rate of publication in this field can make it difficult to keep up.
+	Our omission was not intended as a slight, merely an oversight. % given the rapid pace of publication in this field.
 	% We acknowledge that your study took place in a spatial context becuase you analyzed samples collected from transects in a lake.
-	% Likewise, we note that you also found a non-
-	% (Note that in the site map, references to Derwent and Windermere are mistakenly switched.)
-	% Despite your admirably extensive sampling, we contest that your study explicity addresses spatial patterns in community eDNA.
-	% First,
+	We commend your extensive environmental sampling; however, upon reading your paper, we have reservations about your interpretations of the results given the molecular protocols. % are reluctant to
+  \\
+
+
+	We note that you conducted replicate PCRs of each environmental sample, and pooled them prior to sequencing.
+	While this practice is not uncommon in the field, it precludes the ability to test for any effects of PCR on the communities.
+	We believe this is particularly problematic in the case of your study because, as far as we understand your methods, you used indexed ('tagged') primers in a single PCR reaction.
+	We have shown previously that this can bias datasets in such a way that completely obscures any underlying pattern (see: http://dx.doi.org/10.1371/journal.pone.0148698).
+	As we report in that study, indexed primers can bias relative read abundance by as much as 70\%.
+	That is, in one environmental sample, a species may comprise 70\% of the reads in PCR replicates amplified with one indexed primer set, while being completely absent from replicates amplified by another indexed primer set.
+	This would most certainly result in a significant difference among most any comparison, such as the Chi-squared test you conducted to compare lake basins.
+	If we have misunderstood your methodology, or if you have results of replication tests on the indexed primers in community samples, we would be happy to consider further the results of your study.
+  \\
+
+
+	Regardless, we have neutralized our statements on the novelty of our work on the basis of points brought up by one of the reviewers.
+
+
+
 	% In your paper, you note that `the results regarding vertical sampling should be regarded as preliminary' and `Our site occupancy estimates should therefore be treated as preliminary'
 	% Yet these site occupancy estimates are the data on which the
 	% Note that even for the mock community, we found no formal analysis of whether read count or relative abundance was correlated with input DNA mass.
 	% Sampling design complicates the relationship between distance and community similarity because depth and distance are confounded.
-	% no true replication of PCR because PCR replicates were pooled prior to sequencing
-	% In the relevant section of this paper (`Spatial distribution of eDNA records within Windermere'), we could find no formal analysis of spatial distribution, only references to Figure 5 and S14,
-	% In figure `Fig. S15: Spatial Distribution of species recorded in Windermere North and South Basins at more than 2 sites (Site Occupancy) using 12S data',
-	% relevant section: Site occupancy data based on 12S sequences were used to investigate the spatial distribution of each species recorded at more than two sites around Windermere (Fig. S15, Supporting information). The general pattern emerging from this analysis is that species-specific eDNA was not evenly distributed around the lake. Although some species such as P. fluviatilis, R. rutilus, E. lucius and S. trutta are recorded almost ubiquitously within the lake, eDNA from other species is predominantly found in one of the two basins. S. alpinus, P. phoxinus and G. aculeatus eDNA was common in the North Basin but very rare in the South Basin, whereas A. brama and A. anguilla eDNA was more common in South Basin (Fig. S15, Supporting information). Overall, the relative proportion of sequence read counts for different species across sample sites was significantly different between Windermere North and South Basins (χ2 = 47 817; df = 13; P < 0.001 and χ2 = 134750; df = 11; P < 0.001 for 12S and CytB, respectively, Fig. 6a, b). A similar pattern was observed for the relative proportion of sites occupied (χ2 = 61.43; df = 13; P < 0.001 and χ2 = 48.65; df = 11; P < 0.001 for 12S and CytB, respectively, Fig. 6c, d). Distribution of eDNA in the two Windermere basins reflected the expected association between species and ecological condition. eDNA from species associated with eutrophic conditions (R. rutilus, T. tinca, S. erythrophthalmus, A. brama and A. anguilla) was more abundant in the South than North Basin, while eDNA from species that prefer less eutrophic conditions (S. salar, S. trutta, S. alpinus, P. phoxinus and C. gobio) was more abundant in the North than South Basin (Fig. 6).
-	\\
 \end{response}
 
 \end{document}
