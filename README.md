@@ -1,12 +1,14 @@
 This repository contains the data (or links to data) and code used to analyze the spatial distribution of environmental DNA near Carkeek Park in Puget Sound, Washington, USA.
 
 Authors:
-James L. O'Donnell [1]
-Ryan P. Kelly [1]
-Andrew O. Shelton [2]
-Jameal F. Samhouri [3]
-Natalie C. Lowell [1,4]
-Gregory D. William [5]
+James L. O'Donnell [1]$,
+Ryan P. Kelly [1],
+Andrew O. Shelton [2],
+Jameal F. Samhouri [3],
+Natalie C. Lowell [1,4],
+Gregory D. Williams [5]
+
+$ jodonnellbio at gmail
 
 [1] School of Marine and Environmental Affairs, University of Washington, 3707 Brooklyn Ave NE, Seattle, Washington 98105, USA
 
