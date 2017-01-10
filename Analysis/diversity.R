@@ -15,7 +15,11 @@ which_data <- "mean"
 
 plot_name <- "diversity"
 if(!exists("legend_text")){legend_text <- list()}
-legend_text[plot_name] <- {"Aggregate measures of diversity at each sample site."}
+legend_text[plot_name] <- {
+"Aggregate measures of diversity at each sample site.
+Data are rarefied counts of mitochondrial 16S sequences collected from 3 parallel transects in Puget Sound, Washington, USA.
+Evenness (left) is the probability that two sequences drawn at random are identical by chance alone; richness (right) represents the total number of unique sequences from that location."
+}
 
 if(EXPORT){
   pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
