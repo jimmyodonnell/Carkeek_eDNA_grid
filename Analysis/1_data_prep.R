@@ -1,9 +1,6 @@
 
 EXPORT <- FALSE # export figures to files?
 
-R_files <- list.files(path = "functions", pattern = "\\.R$", full.names = TRUE)
-sapply(R_files, source)
-
 # calculate proportional abundance of OTUs in each sample
 # otu_table[["prop"]] <- otu_table[["raw"]]/rowSums(otu_table[["raw"]])
 # metadata[["prop"]]  <- metadata[["raw"]]

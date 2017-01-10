@@ -15,6 +15,35 @@ fig_dir <- file.path("..", "Figures")
 # 2. An OTU table (CSV) in the 'Data' folder
 # 3. A metadata file (CSV) in the 'Data' folder containing information for all and only the samples in the OTU table
 
+
+#-------------------------------------------------------------------------------
+# LOAD FUNCTIONS
+R_files <- list.files(path = "functions", pattern = "\\.R$", full.names = TRUE)
+sapply(R_files, source)
+#-------------------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------------
+# LOAD PACKAGES
+required_packages <- c(
+  'ape', 
+  'cluster', 
+  'colorspace', 
+  'dplyr', 
+  'fpc', 
+  'geoR', 
+  'geosphere', 
+  'ggplot2', 
+  'mgcv', 
+  'propagate', 
+  'raster', 
+  'rasterVis', 
+  'reshape2', 
+  'vegan'
+)
+sapply(required_packages, load_package)
+#-------------------------------------------------------------------------------
+
 #-------------------------------------------------------------------------------
 # LOAD METADATA
 # path to metadata file.
