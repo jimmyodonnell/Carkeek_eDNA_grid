@@ -2,7 +2,7 @@ library(vegan)
 
 # requires a list of OTU tables and a list of corresponding metadata
 
-EXPORT <- TRUE
+EXPORT <- FALSE
 
 div_metrics <- list()
 
@@ -18,7 +18,7 @@ if(!exists("legend_text")){legend_text <- list()}
 legend_text[plot_name] <- {
 "Aggregate measures of diversity at each sample site.
 Data are rarefied counts of mitochondrial 16S sequences collected from 3 parallel transects in Puget Sound, Washington, USA.
-Evenness (left) is the probability that two sequences drawn at random are identical by chance alone; richness (right) represents the total number of unique sequences from that location."
+Evenness (left) is the probability that two sequences drawn at random are different; richness (right) represents the total number of unique sequences from that location."
 }
 
 if(EXPORT){
