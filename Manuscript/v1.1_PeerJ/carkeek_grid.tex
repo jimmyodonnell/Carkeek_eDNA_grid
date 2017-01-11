@@ -191,6 +191,7 @@ After assigning taxon names to the abundance data, we plotted the distribution i
 \section*{Results}
 \subsection*{Sequence Data Processing (Bioinformatics)}
 Preliminary sequence analysis strongly suggested that the observed variation among environmental samples reflects true variation in the environment, rather than variability due to lab protocols, for the following reasons (note that all value ranges are reported as mean plus and minus one standard deviation). First, all libraries passed the FastQC per-base sequence quality filter, generating a total of 371,576,190 reads passing filter generated in each direction. Second, samples in this study were represented by an adequate number of reads (333,537.9 $\pm$ 112,200.5), with no individual sample receiving fewer than 130,402 reads. Third, there was a very low frequency of cross-contamination from other libraries into those reported here (5e-05$\pm$8e-05; max proportion 0.00034). Fourth, after scaling all samples to the same sequencing depth, OTUs with abundance greater than 178 reads (0.14\% of a sample's reads) experienced no turnover among PCR replicates within a sample. Fifth, sequence abundances among PCR replicates within water samples were remarkably consistent. A single sample had low similarity among PCR replicates (0.659) after removing this outlier, the lowest mean similarity among replicates within a sample was 0.966. Overall similarities among PCR replicates within a sample were extremely high (0.976 $\pm$ 0.013), and far higher than those among samples (0.3 $\pm$ 0.16).
+Across PCR replicates, each sample was represented by at least 781425 reads in the raw data and contained between 111 and 443 rarefied OTUs (Supplemental Figure \ref{rarefaction}).
 
 
 \subsection*{Ecological Analyses}
@@ -447,6 +448,13 @@ However, this model failed to converge and produced uninformative estimates of a
     \includegraphics[width=1\textwidth]{diversity_distance_all.pdf}
     \caption{\protect\input{"../../Figures/diversity_distance_all_legend.txt"}}
   \label{diversity_distance_all}
+\end{figure}
+
+\begin{figure}[H] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[height=0.6\textheight]{rarefaction.pdf}
+    \caption{\protect\input{"../../Figures/rarefaction_legend.txt"}}
+  \label{rarefaction}
 \end{figure}
 
 

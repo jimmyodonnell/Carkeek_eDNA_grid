@@ -1,0 +1,5 @@
+Accumulation of OTUs from 24 environmental samples using randomized rarefaction.
+Four replicate PCRs were conducted using DNA each environmental sample and independently sequenced, but these are collapsed here to illustrate a single representation of richness.
+Sample names indicate the position in the sampling grid: south (S), central (C), or north (N), followed by the distance along the transect, in meters (0, 75, 125, 250, 500, 1000, 2000, 4000).
+Vertical line indicates the minimum combined number of sequence reads per sample.
+Horizontal lines indicate OTU richness for each sample at the minimum combined number of sequence reads.
