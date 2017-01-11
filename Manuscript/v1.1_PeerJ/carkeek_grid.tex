@@ -85,7 +85,7 @@ metagenomics, metabarcoding, environmental monitoring, molecular ecology, marine
 In the face of increasing threats to biodiversity, the advancement of methods for surveying biological communities is a major priority for ecologists.
 Recent advances in molecular biological technologies have made it possible to detect and sequence DNA from environmental samples (environmental DNA or eDNA); however, eDNA techniques have not yet seen widespread adoption as a routine method for biological surveillance primarily due to gaps in our understanding of the dynamics of eDNA in space and time.
 In order to identify the effective spatial scale of this approach in a dynamic marine environment, we collected marine surface water samples from transects ranging from the intertidal zone to 4 kilometers from shore.
-Using massively parallel sequencing of 16S amplicons, we identified a diverse community of metazoans and quantified their spatial patterns using a variety of statistical tools.
+Using PCR primers that target a diverse assemblage of metazoans, we amplified a region of mitochondrial 16S rDNA from the samples and sequenced the products on an Illumina platform in order to detect communities and quantify their spatial patterns using a variety of statistical tools.
 We find evidence for multiple, discrete eDNA communities in this habitat, and show that these communities decrease in similarity as they become further apart.
 Offshore communities tend to be richer but less even than those inshore, though diversity was not spatially autocorrelated.
 Taxon-specific relative abundance coincided with our expectations of spatial distribution in taxa lacking a microscopic, pelagic life-history stage, though most of the taxa detected do not meet these criteria.
@@ -142,7 +142,9 @@ DNA was purified from the membrane following a phenol:chloroform:isoamyl alcohol
 
 
 \subsection*{PCR Amplification}
-From each DNA sample, we amplified an approximately 115 base pair (bp) region of the mitochondrial gene encoding 16S RNA using a two-step polymerase chain reaction (PCR) protocol described by \citet{ODonnell2016}. In the first set of reactions, primers were identical in every reaction (forward: AGTTACYYTAGGGATAACAGCG; reverse: CCGGTCTGAACTCAGATCAYGT); primers in the second set of reactions included these same sequences but with 3 variable nucleotides (NNN) and an index sequence on the 5$'$ end (see \nameref{sequencing_metadata}). We used the program OligoTag \citep{Coissac2012} to generate 30 unique 6-nucleotide index sequences differing by a minimum Hamming distance of 3 (see \nameref{sequencing_metadata}). Indexed primers were assigned to samples randomly, with the identical index sequence on the forward and reverse primer to avoid errors associated with dual-indexed multiplexing \citep{Schnell2015}. In a UV-sterilized hood, we prepared 25 microliter reactions containing 18.375 microliters ultrapure water, 2.5 microliters 10x buffer, 0.625 microliters deoxynucleotide solution (8 millimolar), 1 microliter each forward and reverse primer (10 micromolar, obtained lyophilized from Integrated DNA Technologies (Coralville, IA, USA)), 0.25 microliters Qiagen HotStar Taq polymerase, and 1.25 microliter genomic eDNA template at 1:100 dilution in ultrapure water. PCR thermal profiles began with an initialization step (95 ºC; 15 min) followed by cycles (40 and 20 for the first and second reaction, respectively) of denaturation (95 ºC; 15 sec), annealing (61 ºC; 30 sec), and extension (72 ºC; 30 sec). 20 identical PCRs were conducted from each DNA extract using non-indexed primers; these were pooled into 4 groups of 5 in order to ensure ample template for the subsequent PCR with indexed primers. In order to isolate the fragment of interest from primer dimer and other spurious fragments generated in the first PCR, we used the AxyPrep Mag FragmentSelect-I kit with solid-phase reversible immobilization (SPRI) paramagnetic beads at 2.5x the volume of PCR product (Axygen BioSciences, Corning, NY, USA). A 1:5 dilution in ultrapure water of the product was used as template for the second reaction. PCR products of the second reaction were purified using the Qiagen MinElute PCR Purification Kit (Qiagen, Hilden, Germany). Ultrapure water was used in place of template DNA and run along with each batch of PCRs to serve as a negative control for PCR; none of these produced visible bands on an agarose gel. In total, four separate replicates from each of 31 DNA samples were carried through the two-step PCR process for a total of 124 sequenced PCR products. These were combined with additional samples from other projects, totaling 345 samples for sequencing.
+We chose a primer set that amplifies an approximately 115 base pair (bp) region of the mitochondrial 16S rRNA gene in at least 10 metazoan phyla from this habitat, excludes non-metazoans, and resolves taxonomy to the family level in most cases using a public sequence database \citep{Kelly2016FMS}.
+We used a two-step polymerase chain reaction (PCR) protocol described by \citet{ODonnell2016} to generate 4 replicate products from each DNA sample.
+In the first set of reactions, primers were identical in every reaction (forward: AGTTACYYTAGGGATAACAGCG; reverse: CCGGTCTGAACTCAGATCAYGT); primers in the second set of reactions included these same sequences but with 3 variable nucleotides (NNN) and an index sequence on the 5$'$ end (see \nameref{sequencing_metadata}). We used the program OligoTag \citep{Coissac2012} to generate 30 unique 6-nucleotide index sequences differing by a minimum Hamming distance of 3 (see \nameref{sequencing_metadata}). Indexed primers were assigned to samples randomly, with the identical index sequence on the forward and reverse primer to avoid errors associated with dual-indexed multiplexing \citep{Schnell2015}. In a UV-sterilized hood, we prepared 25 microliter reactions containing 18.375 microliters ultrapure water, 2.5 microliters 10x buffer, 0.625 microliters deoxynucleotide solution (8 millimolar), 1 microliter each forward and reverse primer (10 micromolar, obtained lyophilized from Integrated DNA Technologies (Coralville, IA, USA)), 0.25 microliters Qiagen HotStar Taq polymerase, and 1.25 microliter genomic eDNA template at 1:100 dilution in ultrapure water. PCR thermal profiles began with an initialization step (95 ºC; 15 min) followed by cycles (40 and 20 for the first and second reaction, respectively) of denaturation (95 ºC; 15 sec), annealing (61 ºC; 30 sec), and extension (72 ºC; 30 sec). 20 identical PCRs were conducted from each DNA extract using non-indexed primers; these were pooled into 4 groups of 5 in order to ensure ample template for the subsequent PCR with indexed primers. In order to isolate the fragment of interest from primer dimer and other spurious fragments generated in the first PCR, we used the AxyPrep Mag FragmentSelect-I kit with solid-phase reversible immobilization (SPRI) paramagnetic beads at 2.5x the volume of PCR product (Axygen BioSciences, Corning, NY, USA). A 1:5 dilution in ultrapure water of the product was used as template for the second reaction. PCR products of the second reaction were purified using the Qiagen MinElute PCR Purification Kit (Qiagen, Hilden, Germany). Ultrapure water was used in place of template DNA and run along with each batch of PCRs to serve as a negative control for PCR; none of these produced visible bands on an agarose gel. In total, four separate replicates from each of 31 DNA samples were carried through the two-step PCR process for a total of 124 sequenced PCR products. These were combined with additional samples from other projects, totaling 345 samples for sequencing.
 
 
 \subsection*{DNA Sequencing}
@@ -215,9 +217,15 @@ We demonstrate that distant locations have less-similar eDNA communities than pr
 
 \subsubsection*{(2) Distinct eDNA communities exist and are distributed in a non-random fashion}
  We demonstrate strong evidence for distinct community types and the non-random spatial patterning of those communities. While the spatial distributions of communities is surprising if one were concerned only with the macroscopic life stages of metazoans, it indeed does align with the broader view that even offshore pelagic communities are comprised of and influenced by nearshore organisms. This result underscores the idea that areas immediately offshore act as ecotones, a mixing zone of taxa characteristic of benthic and pelagic environments. While there was no distinct break in community types between onshore and offshore sites, there was some clustering of community types that may be explained by oceanographic features such as nearshore eddies generated by strong tidal exchange in a steep bathymetric setting \citep{Yang2010}. It would be useful to better understand such features during the period of sampling, by way of oceanographic monitoring devices.
+Finally, the uncertainty in identification of the number of distinct clusters to best characterize the community underlines the difficulty of identifying community patterns with the number of taxonomic groups considered here. We suspect that the signature of eDNA from microscopic life-stages may explain our inability to easily detect spatial community level patterns that align with our initial expectations.
 
  \subsubsection*{(3) Richness declines and evenness increases with distance from shore}
-We detected a general pattern of declining richness and increasing evenness with increasing distance offshore. Such a pattern is consistent with many other ecosystems which show strong clines in diversity metrics over environmental gradients. The coastal ocean is a highly productive and diverse ecosystem \citep{Ray1988}. However, our study is novel in that it corroborates a cline well-known on macroscales for macrobiota on a much smaller spatial scale for microscopic animals, suggesting that there may be a self-similarity across scales in diversity patterning \citep{Levin1992}. Intriguingly, the cline in diversity from inshore to offshore was not determined by shared changes in communities as one moved offshore; the classification analysis suggested a fair amount of differences among communities at a given offshore distance (Figure \ref{pam_in_space}). Furthermore, the uncertainty in identification of the number of distinct clusters to best characterize the community underlines the difficulty of identifying community patterns with the number of taxonomic groups considered here. We suspect that the signature of eDNA from microscopic life-stages may explain our inability to easily detect spatial community level patterns that align with our initial expectations.
+We found that richness declined while evenness increased with distance from shore.
+Such a pattern is consistent with many other ecosystems which show strong clines in diversity metrics over environmental gradients.
+However, our study is novel in that it corroborates a cline well-known on macroscales for macrobiota on a much smaller spatial scale for microscopic animals, suggesting that there may be a self-similarity across scales in diversity patterning \citep{Levin1992}.
+The coastal ocean is a highly productive and diverse ecosystem, where biomass is concentrated most heavily along the bottom and shoreline \citep{Ray1988}.
+Our
+Intriguingly, the cline in diversity from inshore to offshore was not determined by shared changes in communities as one moved offshore; the classification analysis suggested a fair amount of differences among communities at a given offshore distance (Figure \ref{pam_in_space}).
 
 
 \subsubsection*{(4) Spatial patterning of eDNA is associated with taxon-specific life history characteristics.}
@@ -245,8 +253,8 @@ While there is much work to be done before eDNA techniques can be confidently de
 
 %-------------------------------ACKNOWLEDGEMENTS--------------------------------
 \section*{Acknowledgements}
-We wish to thank Robert Morris, E. Virginia Armbrust, and James Kralj.
-The manuscript was improved by suggestions from Magnus Johnson, Owen Wangensteen, and Stephen Moss.
+We wish to thank Linda Park, Robert Morris, E. Virginia Armbrust, and James Kralj.
+The manuscript was improved by suggestions from editor Magnus Johnson, and reviewers Owen Wangensteen and Stephen Moss.
 
 %-----------------------------------FUNDING-------------------------------------
 \section*{Funding}
@@ -275,26 +283,28 @@ Consistent with the public trust doctrine, waters of the US are public, and ther
 \section*{Data Availablity}
 \label{data}
 
-\subsection{Sequence Data}
+\subsection*{Sequence Data}
 \label{sequence_data}
-All sequence data are available from NCBI, BioProject ID PRJNA338801.\\
+All sequence data are available from NCBI under BioProject PRJNA338801.\\
+Scripts to process raw sequence data into the contingency tables used for ecological analyses can be found at: \\
+\verb!https://github.com/jimmyodonnell/banzai!\\
 
-\subsection{Project Repository}
+\subsection*{Project Repository}
 The following components are available from the project repository on GitHub: \\
 \verb!https://github.com/jimmyodonnell/Carkeek_eDNA_grid!\\
 \verb!http://dx.doi.org/FIXME!
 
-\subsubsection{Sequencing Metadata}
+\subsubsection*{Sequencing Metadata}
 \label{sequencing_metadata}
 Sequencing metadata is available in: \verb!Data/metadata_spatial.csv!
 
-\subsubsection{Life History Data}
+\subsubsection*{Life History Data}
 \label{life_history_data}
 Life history data is available in: \verb!Data/life_history.csv!
 
-\subsubsection{Analysis Scripts}
+\subsubsection*{Analysis Scripts}
 \label{analysis_scripts}
-All analyses were performed using scripts available in the Analysis subdirectory.
+All analyses were performed using scripts available in the Analysis subdirectory of the project's repository on GitHub.
 
 %----------------------------------REFERENCES-----------------------------------
 %\section*{References} % commented out because the section title is automatically inserted if using an automatically-generated bibliography

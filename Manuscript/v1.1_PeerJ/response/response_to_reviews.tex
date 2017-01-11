@@ -4,6 +4,7 @@
 \usepackage[utf8x]{inputenc} % Allow input of accented characters (and more...)
 \usepackage[usenames, dvipsnames]{xcolor} % to use color
 \usepackage[margin=1in]{geometry} % make the margins 1 inch on all sides
+\usepackage{hyperref}
 
 % Nimbus sans
 \usepackage{nimbussans}
@@ -63,7 +64,7 @@ Williams GD
 % }
 
 We are grateful to the editor and reviewers for their insightful feedback.
-Reviewer feedback is below in regular typeface, with our responses indented and colored.
+Reviewer feedback is below in regular typeface, with our responses indented and colored, including references to the line numbers in the track changes version of the manuscript.
 % Additional changes to the manuscript independent of the reviews are presented at the end of this document.
 
 %------------------------------------EDITOR-------------------------------------
@@ -75,7 +76,6 @@ Both reviewers commented favourably on this manuscript and have made some useful
 	Indeed, we agree with the comment made on the preprint that we overlooked some recently published works.
 	We have serious qualms about the quality of the data in their paper that we believe preclude us from recommending it as a study of spatial variation in eDNA.
 	However, the suggestions of reviewer 1 (Wangensteen) were justified and we have added the appropriate citations and corrected our wording.
-	% TODO:  respond to comment, update context in paper.
 	\\
 
 	Like you, we were curious about the effect of the data subset you mention, and conducted that analysis using the life history data. Unfortunately, we found no meaningful patterns, and have made an attempt to clarify this in the text.
@@ -243,14 +243,24 @@ There were a couple of minor grammatical errors in the manuscript. 1) The final 
 	We changed this to read `We demonstrate that distant locations have less-similar eDNA communities than proximate locations in Puget Sound, a dynamic marine environment. '\\
 \end{response}
 
-I was a bit confused initially over discussion of massively parallel sequencing of 16S amplicons in relation to metazoan diversity in the abstract, and it wasn’t until into the introduction (L98) that I realised it was referring to 16S sequences from the mtDNA. Perhaps some clarity on this earlier on would be helpful? Perhaps also discussing the reasoning behind the decision to use 16S rDNA from the mtDNA rather than 18S rDNA would be helpful (e.g. Tang et. al., 2012; http://www.pnas.org/content/109/40/16208)?
+I was a bit confused initially over discussion of massively parallel sequencing of 16S amplicons in relation to metazoan diversity in the abstract, and it wasn’t until into the introduction (L98) that I realised it was referring to 16S sequences from the mtDNA. Perhaps some clarity on this earlier on would be helpful?
 \begin{response}
-  OurResponse\\
+  This is a good suggestion; we have modified the abstract to clarify this as early as possible.\\
+\end{response}
+
+Perhaps also discussing the reasoning behind the decision to use 16S rDNA from the mtDNA rather than 18S rDNA would be helpful (e.g. Tang et. al., 2012; http://www.pnas.org/content/109/40/16208)?
+\begin{response}
+  We added a brief explanation of our marker choice to the section Methods:PCR Amplification, and a more general discussion of marker choice to the discussion.\\
 \end{response}
 
 I couldn’t find any reference to the details of the assigned clusters in Figure 3. I thought it might be useful to include a reference to figures or tables, perhaps as supplementary information, outlining the taxonomic composition of the clusters?
 \begin{response}
-  OurResponse\\
+	We had a similar first reaction to the results of the classification analysis: \textit{Do these correspond to known ecological communities?}
+  The utility of clustering methods is that they simplify the complexity of highly dimensional data; in our case, hundreds to thousands of OTUs, depending on the data subset.
+	While additional analyses, such as PCA on a reduced-dimensionality dataset, may help identify which OTUs driving community differentiation, this result will not necessarily correspond to the clusters reported using PAM, especially considering the uncertainty regarding the appropriate number of clusters in our data.
+	In short, we are unaware of an analytical or visual method for further simplification of the classification results.
+	If you feel this is imperative information, we could potentially modify our \href{https://github.com/jimmyodonnell/Carkeek_eDNA_grid/blob/master/Figures/stacked_bar_community.pdf}{stacked bar plot} in order to indicate the cluster to which each sample was assigned, though making sense of this result in a spatial context is not straightforward.
+	\\
 \end{response}
 
 I felt the label for Figure 5 needed expanding to provide more detailed information on what it represents, making it more meaningful/understandable as a stand-alone figure.
@@ -260,7 +270,7 @@ I felt the label for Figure 5 needed expanding to provide more detailed informat
 
 The raw data is listed as available under Data Availability, though I assume this is still under embargo? The link on page 18 (L463) will need updating upon publication.
 \begin{response}
-  Yes; these links were a placeholder until the manuscript is accepted.\\
+  Yes; these links were a placeholder until the manuscript is accepted and have now been updated.\\
 \end{response}
 
 A GitHub DOI can be provided by Zenodo (https://zenodo.org) and will need updating upon publication.
@@ -278,15 +288,18 @@ When detailing how samples were collected (L126-128) under the Environmental Sam
 I felt a little more effort could have been made to facilitate the ability to replicate the analyses in this study. The methods section provided good information, but the analyses as detailed on L473 needs more clarity. An outline of the workflow steps and the input/output at each stage would be very helpful here.
 \begin{response}
 	%TODO email Steve about this
-	% TODO: Add outline of the workflow steps of banzai
-  OurResponse\\
+  In our initial draft, we provided an outline of the bioinformatics procedures in the section Methods:Sequence Data Processing (Bioinformatics), and document the procedures in painstaking detail in the Supplemental Material section Methods:Bioinformatics.
+	However, we overlooked the inclusion of a direct link to the scripts used to process the raw sequence data, and have now added those.
+	We certainly appreciate any encouragement to move towards more reproducible research, though we are not yet where we would like to be.
+	Any specific recommendations are welcome.
+	\\
 \end{response}
 
 \subsubsection*{Validity of the findings}
 In response to the ``(3) Richness declines and evenness increases with distance from shore'' heading in the Discussion section, I felt that decline in richness and increase in evenness might be expected due to dilution and osmotic factors in the ocean. Perhaps some reference to tidal flushing and dilution might be pertinent here?
 \begin{response}
-	% TODO: Add reference to tidal flushing and dilution as a possible mechanism for diversity from shore
-  OurResponse\\
+  This is an excellent point. We have modified the relevant section to incorporate this potential mechanism.
+	\\
 \end{response}
 
 I felt that under the remit of the Ecological Analyses headings throughout the study, there could have been some focus on reporting the alpha diversity and rarefaction analysis in relation to whether effective sequencing depth had been achieved for the samples in question.
