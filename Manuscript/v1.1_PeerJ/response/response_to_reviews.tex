@@ -73,13 +73,12 @@ Both reviewers commented favourably on this manuscript and have made some useful
 
 \begin{response}
   Thank you for the positive feedback.
-	Indeed, we agree with the comment made on the preprint that we overlooked some recently published works.
-	We have serious qualms about the quality of the data in their paper that we believe preclude us from recommending it as a study of spatial variation in eDNA.
-	However, the suggestions of reviewer 1 (Wangensteen) were justified and we have added the appropriate citations and corrected our wording.
+	We thank the commenters for pointing out recent literature that we’d missed when developing the original manuscript.
+	We have now altered the language in our paper to avoid suggesting that our study is the first to do any kind of explicit spatial analysis, but (as noted below in the response to the commenter), because we have reservations about the way the referenced study was conducted, we have avoided citing it as an example.
+	However, the suggestions of reviewer 1 (Wangensteen) on this matter are well taken and we have added the appropriate citations and corrected our wording.
 	\\
 
 	Like you, we were curious about the effect of the data subset you mention, and conducted that analysis using the life history data. Unfortunately, we found no meaningful patterns, and have made an attempt to clarify this in the text.
-	% TODO: comment on effect of subsetting based on life-history strategy or taxon
 	\\
 \end{response}
 
@@ -238,7 +237,6 @@ There were a couple of minor grammatical errors in the manuscript. 1) The final 
 
 2) The first sentence (L359) of the ``Communities far from one another tend to be less similar than those that are nearby'' paragraph on page 15 of the Discussion section.
 \begin{response}
-	%TODO email Steve about this
   It is unclear what the specific error is, but we acknowledge this sentence is poorly worded.
 	We changed this to read `We demonstrate that distant locations have less-similar eDNA communities than proximate locations in Puget Sound, a dynamic marine environment. '\\
 \end{response}
@@ -287,7 +285,6 @@ When detailing how samples were collected (L126-128) under the Environmental Sam
 
 I felt a little more effort could have been made to facilitate the ability to replicate the analyses in this study. The methods section provided good information, but the analyses as detailed on L473 needs more clarity. An outline of the workflow steps and the input/output at each stage would be very helpful here.
 \begin{response}
-	%TODO email Steve about this
   In our initial draft, we provided an outline of the bioinformatics procedures in the section Methods:Sequence Data Processing (Bioinformatics), and document the procedures in painstaking detail in the Supplemental Material section Methods:Bioinformatics.
 	However, we overlooked the inclusion of a direct link to the scripts used to process the raw sequence data, and have now added those.
 	We certainly appreciate any encouragement to move towards more reproducible research, though we are not yet where we would like to be.
@@ -305,14 +302,19 @@ In response to the ``(3) Richness declines and evenness increases with distance 
 I felt that under the remit of the Ecological Analyses headings throughout the study, there could have been some focus on reporting the alpha diversity and rarefaction analysis in relation to whether effective sequencing depth had been achieved for the samples in question.
 \begin{response}
   We believe we adequately addressed alpha diversity by reporting richness and evenness both in a 2-dimensional and linear spatial context, with accompanying figures.
-	However, we have now also added an OTU accumulation figure to the supplement and commented on it in the results.\\
+	However, we have now also added an OTU accumulation figure to the supplement and commented on it in the results.
+	We note that our goal is not to recover an absolute measure of alpha diversity, but to make comparisons among sites for standardized sampling effort (i.e. sequencing depth).
+	\\
 \end{response}
 
 \subsubsection*{Comments for the Author}
 I thought the paper was very interesting. The study was well designed, implemented, and written. It was useful to clarify the expectations and hypotheses outlined within, however, I felt more effort could have been made to provide recommendations on how some of the limitations in eDNA sampling could be overcome.
 \begin{response}
-	% TODO: provide recommendations on how some of the limitations in eDNA sampling could be overcome
-  Thank you for the kind words.	\\
+  Thank you for the kind words.
+	We acknowledge there are many limitations to eDNA sampling; however, we believe that making more general recommendations than those we provide in the dicussion is beyond the scope of this study.
+	The more general limitations and recommendations can and do receive regular, detailed attention in the many reviews published on this subject.
+	Of course, if there are specific limitations you feel we have erroneously overlooked and which are within the purview of our results, we are happy to revisit this issue.
+	\\
 \end{response}
 
 The bioinformatics/statistical methods seemed to be very well thought out, and consistent with current best practices in the analyses of this type of sequencing data.
@@ -338,24 +340,23 @@ Hänfling B, Lawson Handley L, Read DS, Hahn C, Li J, Nichols P, Blackman RC, Ol
 	% http://onlinelibrary.wiley.com/doi/10.1111/mec.13660/full
   Thank you for your comment and for drawing our attention to your paper.
 	As you note therein, the rate of publication in this field can make it difficult to keep up.
-	Our omission was not intended as a slight, merely an oversight. % given the rapid pace of publication in this field.
-	% We acknowledge that your study took place in a spatial context becuase you analyzed samples collected from transects in a lake.
-	We commend your extensive environmental sampling; however, upon reading your paper, we have reservations about your interpretations of the results given the molecular protocols. % are reluctant to
+	% Our omission was not intended as a slight, merely an oversight. % given the rapid pace of publication in this field.
+	We commend your extensive environmental sampling; however, upon reading your paper, we have reservations about your interpretations of the results given the molecular protocols.
   \\
 
 
 	We note that you conducted replicate PCRs of each environmental sample, and pooled them prior to sequencing.
 	While this practice is not uncommon in the field, it precludes the ability to test for any effects of PCR on the communities.
-	We believe this is particularly problematic in the case of your study because, as far as we understand your methods, you used indexed ('tagged') primers in a single PCR reaction.
+	We believe this is particularly problematic in the case of your study because, as far as we understand your methods, you used indexed (`tagged') primers in a single PCR reaction.
 	We have shown previously that this can bias datasets in such a way that completely obscures any underlying pattern (see: http://dx.doi.org/10.1371/journal.pone.0148698).
 	As we report in that study, indexed primers can bias relative read abundance by as much as 70\%.
 	That is, in one environmental sample, a species may comprise 70\% of the reads in PCR replicates amplified with one indexed primer set, while being completely absent from replicates amplified by another indexed primer set.
 	This would most certainly result in a significant difference among most any comparison, such as the Chi-squared test you conducted to compare lake basins.
-	If we have misunderstood your methodology, or if you have results of replication tests on the indexed primers in community samples, we would be happy to consider further the results of your study.
+	% If we have misunderstood your methodology, or if you have results of replication tests on the indexed primers in community samples, we would be happy to consider further the results of your study.
   \\
 
 
-	Regardless, we have neutralized our statements on the novelty of our work on the basis of points brought up by one of the reviewers.
+	Regardless, we have neutralized our statements on the novelty of our work on the basis of the points raised by your comment and those of the reviewers.
 
 
 
