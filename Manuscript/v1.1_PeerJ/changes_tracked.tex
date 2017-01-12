@@ -1,0 +1,617 @@
+%-----------------------------------NOTES---------------------------------------
+%DIF LATEXDIFF DIFFERENCE FILE
+%DIF DEL ../v1.0_PeerJ/carkeek_grid.tex   Mon Nov 28 11:21:51 2016
+%DIF ADD carkeek_grid.tex                 Thu Jan 12 15:11:16 2017
+%DIF 2d2
+%DIF < % (TODO SUBMIT DATA AND METADATA; ADD URL)
+%DIF -------
+% (TODO INSERT DOI FROM FINAL COMMIT BEFORE PUBLICATION)
+
+% Target journal: PeerJ. Backups: Frontiers in...marine science?, BMC Ecology, BMC Genetics
+%----------------------------------REVIEWERS------------------------------------
+% A list of recommended reviewers.
+% Frédéric Mahé mahefrederic@gmail.com
+% Sophie Arnaud-Haond, sophie.arnaud@ifremer.fr
+% Dominique Cowart dcowart@illinois.edu dominique.cowart@gmail.com (Metabarcoding is powerful yet still blind)
+% Ann Bucklin, ann.bucklin@uconn.edu (Metabarcoding of marine zooplankton)
+% Naiara Rodríguez-Ezpeleta, nrodriguez@azti.es (Benchmarking DNA Metabarcoding for Biodiversity-Based Monitoring and Assessment)
+% Xavier Turon, xturon@ceab.csic.es (Metabarcoding Extracellular DNA from Sediments of Marine Canyons)
+% Andrew Mahon, mahon2a@cmich.edu
+% Eske Willerslev ewillerslev@snm.ku.dk
+% Philip Thomsen pfthomsen@snm.ku.dk
+
+
+%--------------------------------------||--------------------------------------%
+
+\documentclass[11pt,letterpaper]{article} %  font size
+
+
+%-----------------------------------PACKAGES-----------------------------------%
+
+\usepackage[T1]{fontenc} % Choose an output font encoding (T1) that has support for the accented characters used by the most widespread European languages
+\usepackage[utf8]{inputenc} % Allow input of accented characters (and more...)
+\usepackage{graphicx} %  figures
+\graphicspath{ {../../Figures/} {../Figures/} } % include images in the directory 'Figures' at the same level
+\usepackage[round]{natbib} % names in citations
+\usepackage{lineno} % line numbers
+\usepackage{authblk} % allows more intuitive formatting for multiple authors/affiliations
+\usepackage[margin=1in]{geometry} % make the margins 1 inch on all sides of the document
+%\usepackage{amsmath} % useful for formatting math stuff, especially complex equations
+%\usepackage{pdflscape} % rotate table into landscape mode
+%\usepackage{subfigure} % side by side figures
+%\usepackage{longtable} % for tables that span multiple pages.
+\usepackage{setspace} % double spacing
+\usepackage{float} % figure placement [H]
+\usepackage{nameref,hyperref} % named references (e.g. "Supplemental Material")
+
+%----------------------------------FORMATTING-----------------------------------
+
+\date{\today}
+\doublespacing % initiate double spacing (package setspace)
+%\linespread{2} % alternate method of double spacing
+
+
+%------------------------------------TITLE--------------------------------------
+
+\title{Spatial distribution of environmental DNA in a nearshore marine habitat}
+
+%-----------------------------------AUTHORS-------------------------------------
+
+% using package 'authblk':
+\author[1]{James L. O'Donnell\thanks{jodonnellbio@gmail.com}}
+\author[1]{Ryan P. Kelly} % rpkelly@uw.edu
+\author[2]{Andrew O. Shelton} % ole.shelton@noaa.gov
+%DIF 59-61c58-60
+%DIF < \author[2]{Jameal F. Samhouri} % jameal.samhouri@noaa.gov
+%DIF < \author[1,3]{Natalie C. Lowell} % nclowell@uw.edu
+%DIF < \author[4]{Gregory D. Williams} % greg.williams@noaa.gov
+%DIF -------
+\author[3]{Jameal F. Samhouri} % jameal.samhouri@noaa.gov %DIF > 
+\author[1,4]{Natalie C. Lowell} % nclowell@uw.edu %DIF > 
+\author[5]{Gregory D. Williams} % greg.williams@noaa.gov %DIF > 
+%DIF -------
+
+% Make sure authors specify department, institution, and address.
+\affil[1]{School of Marine and Environmental Affairs, University of Washington, 3707 Brooklyn Ave NE, Seattle, Washington 98105, USA}
+%DIF 65-67c64-67
+%DIF < \affil[2]{Northwest Fisheries Science Center, NOAA Fisheries, 2725 Montlake Blvd E, Seattle, Washington 98112, USA}
+%DIF < \affil[3]{School of Aquatic and Fishery Sciences, University of Washington, 1122 NE Boat St, Seattle, Washington 98105, USA}
+%DIF < \affil[4]{Pacific States Marine Fisheries Commission, Under contract to the Northwest Fisheries Science Center, NOAA Fisheries, 2725 Montlake Blvd E, Seattle, WA 98112}
+%DIF -------
+\affil[2]{Earth Resource Technology, Inc., Under contract to the Northwest Fisheries Science Center, National Marine Fisheries Service, National Oceanic and Atmospheric Administration, 2725 Montlake Blvd E, Seattle, WA 98112, USA} %DIF > 
+\affil[3]{Conservation Biology Division, Northwest Fisheries Science Center, National Marine Fisheries Service, National Oceanic and Atmospheric Administration, 2725 Montlake Blvd E, Seattle, Washington 98112, USA} %DIF > 
+\affil[4]{School of Aquatic and Fishery Sciences, University of Washington, 1122 NE Boat St, Seattle, Washington 98105, USA} %DIF > 
+\affil[5]{Pacific States Marine Fisheries Commission, Under contract to the Northwest Fisheries Science Center, National Marine Fisheries Service, National Oceanic and Atmospheric Administration, 2725 Montlake Blvd E, Seattle, WA 98112, USA} %DIF > 
+%DIF -------
+
+
+%----------------------------------FORMATTING-----------------------------------
+%DIF PREAMBLE EXTENSION ADDED BY LATEXDIFF
+%DIF UNDERLINE PREAMBLE %DIF PREAMBLE
+\RequirePackage[normalem]{ulem} %DIF PREAMBLE
+\RequirePackage{color}\definecolor{RED}{rgb}{1,0,0}\definecolor{BLUE}{rgb}{0,0,1} %DIF PREAMBLE
+\providecommand{\DIFaddtex}[1]{{\protect\color{blue}\uwave{#1}}} %DIF PREAMBLE
+\providecommand{\DIFdeltex}[1]{{\protect\color{red}\sout{#1}}}                      %DIF PREAMBLE
+%DIF SAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddbegin}{} %DIF PREAMBLE
+\providecommand{\DIFaddend}{} %DIF PREAMBLE
+\providecommand{\DIFdelbegin}{} %DIF PREAMBLE
+\providecommand{\DIFdelend}{} %DIF PREAMBLE
+%DIF FLOATSAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddFL}[1]{\DIFadd{#1}} %DIF PREAMBLE
+\providecommand{\DIFdelFL}[1]{\DIFdel{#1}} %DIF PREAMBLE
+\providecommand{\DIFaddbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFaddendFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelendFL}{} %DIF PREAMBLE
+%DIF HYPERREF PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFadd}[1]{\texorpdfstring{\DIFaddtex{#1}}{#1}} %DIF PREAMBLE
+\providecommand{\DIFdel}[1]{\texorpdfstring{\DIFdeltex{#1}}{}} %DIF PREAMBLE
+\newcommand{\DIFscaledelfig}{0.5}
+%DIF HIGHLIGHTGRAPHICS PREAMBLE %DIF PREAMBLE
+\RequirePackage{settobox} %DIF PREAMBLE
+\RequirePackage{letltxmacro} %DIF PREAMBLE
+\newsavebox{\DIFdelgraphicsbox} %DIF PREAMBLE
+\newlength{\DIFdelgraphicswidth} %DIF PREAMBLE
+\newlength{\DIFdelgraphicsheight} %DIF PREAMBLE
+% store original definition of \includegraphics %DIF PREAMBLE
+\LetLtxMacro{\DIFOincludegraphics}{\includegraphics} %DIF PREAMBLE
+\newcommand{\DIFaddincludegraphics}[2][]{{\color{blue}\fbox{\DIFOincludegraphics[#1]{#2}}}} %DIF PREAMBLE
+\newcommand{\DIFdelincludegraphics}[2][]{% %DIF PREAMBLE
+\sbox{\DIFdelgraphicsbox}{\DIFOincludegraphics[#1]{#2}}% %DIF PREAMBLE
+\settoboxwidth{\DIFdelgraphicswidth}{\DIFdelgraphicsbox} %DIF PREAMBLE
+\settoboxtotalheight{\DIFdelgraphicsheight}{\DIFdelgraphicsbox} %DIF PREAMBLE
+\scalebox{\DIFscaledelfig}{% %DIF PREAMBLE
+\parbox[b]{\DIFdelgraphicswidth}{\usebox{\DIFdelgraphicsbox}\\[-\baselineskip] \rule{\DIFdelgraphicswidth}{0em}}\llap{\resizebox{\DIFdelgraphicswidth}{\DIFdelgraphicsheight}{% %DIF PREAMBLE
+\setlength{\unitlength}{\DIFdelgraphicswidth}% %DIF PREAMBLE
+\begin{picture}(1,1)% %DIF PREAMBLE
+\thicklines\linethickness{2pt} %DIF PREAMBLE
+{\color[rgb]{1,0,0}\put(0,0){\framebox(1,1){}}}% %DIF PREAMBLE
+{\color[rgb]{1,0,0}\put(0,0){\line( 1,1){1}}}% %DIF PREAMBLE
+{\color[rgb]{1,0,0}\put(0,1){\line(1,-1){1}}}% %DIF PREAMBLE
+\end{picture}% %DIF PREAMBLE
+}\hspace*{3pt}}} %DIF PREAMBLE
+} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddbegin}{\DIFaddbegin} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddend}{\DIFaddend} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelbegin}{\DIFdelbegin} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelend}{\DIFdelend} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddbegin}{\DIFOaddbegin \let\includegraphics\DIFaddincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddend}{\DIFOaddend \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelbegin}{\DIFOdelbegin \let\includegraphics\DIFdelincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelend}{\DIFOaddend \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddbeginFL}{\DIFaddbeginFL} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddendFL}{\DIFaddendFL} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelbeginFL}{\DIFdelbeginFL} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelendFL}{\DIFdelendFL} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddbeginFL}{\DIFOaddbeginFL \let\includegraphics\DIFaddincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddendFL}{\DIFOaddendFL \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelbeginFL}{\DIFOdelbeginFL \let\includegraphics\DIFdelincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelendFL}{\DIFOaddendFL \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+%DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
+
+\begin{document}
+\maketitle
+
+%----------------------------------KEYWORDS-------------------------------------
+\section*{Keywords}
+
+metagenomics, metabarcoding, environmental monitoring, molecular ecology, marine, estuarine
+
+\pagebreak
+\linenumbers % start line numbers
+\def\linenumberfont{\normalfont\small\rmfamily} % change line number font
+%----------------------------------ABSTRACT-------------------------------------
+\section*{Abstract}
+In the face of increasing threats to biodiversity, the advancement of methods for surveying biological communities is a major priority for ecologists.
+Recent advances in molecular biological technologies have made it possible to detect and sequence DNA from environmental samples (environmental DNA or eDNA); however, eDNA techniques have not yet seen widespread adoption as a routine method for biological surveillance primarily due to gaps in our understanding of the dynamics of eDNA in space and time.
+In order to identify the effective spatial scale of this approach in a dynamic marine environment, we collected marine surface water samples from transects ranging from the intertidal zone to 4 kilometers from shore.
+Using \DIFdelbegin \DIFdel{massively parallel sequencing of }\DIFdelend \DIFaddbegin \DIFadd{PCR primers that target a diverse assemblage of metazoans, we amplified a region of mitochondrial }\DIFaddend 16S \DIFdelbegin \DIFdel{amplicons, we identified a diverse community of metazoans and quantified }\DIFdelend \DIFaddbegin \DIFadd{rDNA from the samples and sequenced the products on an Illumina platform in order to detect communities and quantify }\DIFaddend their spatial patterns using a variety of statistical tools.
+We find evidence for multiple, discrete eDNA communities in this habitat, and show that these communities decrease in similarity as they become further apart.
+Offshore communities tend to be richer but less even than those inshore, though diversity was not spatially autocorrelated.
+Taxon-specific relative abundance coincided with our expectations of spatial distribution in taxa lacking a microscopic, pelagic life-history stage, though most of the taxa detected do not meet these criteria.
+Finally, we use carefully replicated laboratory procedures to show that laboratory treatments were remarkably similar in most cases, while allowing us to detect a faulty replicate, emphasizing the importance of replication to metabarcoding studies.
+While there is much work to be done before eDNA techniques can be confidently deployed as a standard method for ecological monitoring, this study serves as a first analysis of diversity at the fine spatial scales relevant to marine ecologists and confirms the promise of eDNA in dynamic environments.
+
+
+%---------------------------------INTRODUCTION----------------------------------
+\section*{Introduction}
+
+The patterns and causes of variability in ecological communities across space are both seminal and contentious areas of study in ecology \citep{Hubbell2001, Anderson2011}. One consistently observed pattern of community spatial heterogeneity is that communities close to one another tend to be more similar than those that are farther apart \citep{Nekola1999}. This decrease in community similarity with increasing spatial separation is called distance decay and has been reported from communities of tropical trees \citep{Condit2002, Chust2006}, ectomycorrhizal fungi \citep{Bahram2013}, salt marsh plants \citep{Guo2015}, and microorganisms \citep{Martiny2011, Chust2013, Wetzel2012, Bell2010}. Typically, this relationship is assessed by regressing a measure of community similarity against a measure of spatial separation for a set of sites at which a set of species' abundances (or presences) is calculated. Yet no existing biodiversity survey method completely censuses all of the organisms in a given area. The lack of a single `silver bullet' method of sampling contributes inconclusiveness to the study of spatial patterning in ecology \citep{Levin1992}, and leaves open the possibility of new and more comprehensive methods.
+
+From a boat or aircraft, scientists can count whales by sight, but not the krill on which they feed. For example, towed fishing nets can efficiently sample organisms larger than the mesh and slower than the boat, but overlook viruses and have undesirable effects on charismatic air-breathing species. However, DNA-based surveys show great promise as an efficient technique for detecting a previously unthinkable breadth of organisms from a single sample.
+
+
+Microbiologists have used nucleic acid sequencing to quantify the composition and function of microbial communities in a wide variety of habitats \citep{Handelsman1998, Tyson2004, Venter2004, Iverson2012}. To do so, microorganisms are collected in a sample of environmental medium (e.g. water), their DNA or RNA is isolated and sequenced, and the identity and abundance of sequences is considered to reflect the community of  organisms contained in the sample, which indirectly estimates the quantity of organisms in an area.
+
+
+Macroorganisms shed DNA-containing cells into the environment (environmental DNA or eDNA) that can be sampled in the same way  \citep{Ficetola2008,Thomsen2012}. Potentially, eDNA methods allow a broad swath of macroorganisms to be surveyed from basic environmental samples. However, the accuracy and reliability of indirect estimates of macroorganismal abundance has been debated because the entire organisms are not contained within the sample \citep{Cowart2015}. Concern surrounding eDNA methods is rooted in uncertainty about the attributes of eDNA in the environment relative to actual organisms \citep{Shelton2016, Evans2016}. Basic questions such as how long DNA can persist in that environment and how far DNA can travel remain largely unknown (but see \cite{Klymus2015,Turner2015,Strickler2015,Deiner2014}) and impede inference about local organismal presence from an environmental sample. As a result, estimating the spatial and temporal resolution of eDNA studies in the field is a key step in making these methods practical.
+
+
+The relationship between local organismal abundance and eDNA is further complicated in habitats where the environmental medium itself may transport eDNA away from its source. We know that genetic material can move away from its source precisely because organisms can be detected indirectly without being present in the sample \citep{Kelly2016}. One might reasonably expect eDNA to travel farther in a highly dynamic fluid such as the open ocean or flowing river than it would through the sediment at the bottom of a stagnant pond \citep{Deiner2014, Shogren2016}. Yet even studies of extremely dynamic habitats such as coastlines with high wave energy have found remarkable evidence that eDNA transport is limited enough that DNA methods can detect differences among communities separated by less than 100 meters \citep{Port2016}.
+
+
+While rigorous laboratory studies have investigated the effects of some environmental factors on eDNA persistence \citep{Klymus2015, Barnes2014, Sassoubre2016} and the transport of eDNA in specific contexts \citep{Deiner2014}, we suggest that field studies comparing the spatial distribution of communities of eDNA with expectations based on prior knowledge of organisms' distributions are also critical to developing a working understanding of eDNA in the real world.
+\DIFaddbegin \DIFadd{Research to date has documented the non-random spatial distribution of %DIF >  spatial variation of
+meiofaunal \mbox{%DIFAUXCMD
+\citep{Fonseca2014,Guardiola2016}}%DIFAUXCMD
+, microbial \mbox{%DIFAUXCMD
+\citep{Lallias2015}}%DIFAUXCMD
+, and extracellular \mbox{%DIFAUXCMD
+\citep{Guardiola2015} }%DIFAUXCMD
+eDNA of marine and estuarine sediments, and of microscopic plankton in open ocean waters \mbox{%DIFAUXCMD
+\citep{DeVargas2015}}%DIFAUXCMD
+.
+These studies conducted targeted sampling at intermediate (thousands of meters) to global (thousands of kilometers) scales.
+Here, we use a grid-based environmental sampling strategy to assess spatial variability of eDNA in a coastal marine environment at a fine scale (tens to thousands of meters), using molecular methods that focus on macrobial metazoans.
+}\DIFaddend 
+
+
+We apply methods derived from community ecology to understand spatial patterns and patchiness of eDNA. The underlying mechanism thought to drive the slope of the distance decay relationship in ecological communities is the rate of movement of individuals among sites, which may be driven by underlying processes such as habitat suitability. Because eDNA is shed and transported away from its source, the increased movement of eDNA particles should homogenize community similarity, and thus erode the distance decay relationship of eDNA communities.
+
+
+Puget Sound is a deep, narrow fjord in Washington, USA, where a narrow band of shallow bottom hugs the shoreline and abruptly gives way to a central depth of up to 300 meters. This form allows the juxtaposition of communities associated with distinctly different habitats: shallow, intertidal benthos, and euphotic pelagic \citep{Burns1985}. At the upper reaches of the intertidal, the shoreline substrate varies from soft, fine sediment to cobble and boulder rubble. Soft intertidal sediments are inhabited by burrowing bivalves (Bivalvia), segmented worms (Annelida), and acorn worms (Enteropneusta), and in some lower intertidal and high subtidal ranges by eelgrass (\textit{Zostera marina}) \citep{Kozloff1973, Dethier2010} . Eelgrass meadows harbor epifaunal and infaunal biota, and attract transient species which use the meadows for shelter and to feed on resident organisms. Hard intertidal surfaces support a well-documented biota including barnacles (Sessilia) \DIFaddbegin \DIFadd{and other crustaceans}\DIFaddend , mussels (Bivalvia:Mytilidae), anemones (\DIFdelbegin \DIFdel{Actinaria}\DIFdelend \DIFaddbegin \DIFadd{Actiniaria}\DIFaddend ), sea stars (Asteroidea), urchins (Echinoidea), \DIFdelbegin \DIFdel{Bryzoans }\DIFdelend \DIFaddbegin \DIFadd{Bryozoans }\DIFaddend (Ectoprocta), crustaceans (Decapoda), and a variety of algae \citep{Dethier2010}. Hard bottoms of the lower intertidal and high subtidal are home to macroalgae such as Laminariales and Desmarestiales which \DIFdelbegin \DIFdel{provides }\DIFdelend \DIFaddbegin \DIFadd{provide }\DIFaddend habitat for a distinct community of fish and invertebrates. The upper pelagic is home to a diverse assemblage of microscopic plankton including diatoms and larvae \citep{Strickland1983}, as well as transitory fish and marine mammals.
+
+
+We took advantage of this setting to explore the spatial variation and distribution of marine eDNA communities. Using PCR-based methods and massively parallel sequencing, we surveyed mitochondrial 16S sequences from a suite of marine animals in water samples collected over a grid of sites extending from the shoreline out to 4 kilometers offshore in Puget Sound, Washington, USA. We leverage this sampling design to perform \DIFdelbegin \DIFdel{the first }\DIFdelend \DIFaddbegin \DIFadd{an }\DIFaddend explicitly spatial analysis of eDNA-derived community similarity. We investigate two primary objectives. First we examine the spatial patterning of eDNA and determine the degree to which eDNA community similarity can be predicted by physical proximity. We expect that physical proximity will be a strong predictor of community similarity, and that community differences can be detected over small distances. Second, we examine the distribution of diversity from eDNA data, and compare it to our expectations based on distributions of macrobial communities. We expect that distinct eDNA communities exist in this setting, and that their spatial distribution coincides with that of adult macrobial organisms. Because of the vastly different communities of benthic macrobial metazoans as a function of distance from shore, we expect that more than one eDNA community is present across our 4 kilometer sampling grid, and that communities change as a function of distance from shore. For this reason, we examine two diversity measures of eDNA communities that have been widely used to reveal broad scale patterns based on macrobiota in many ecological systems. Finally, we identify the taxa represented in the eDNA communities, which span a range of life-history characteristics, and we expect that the spatial distribution of eDNA will most closely resemble the distribution of adults in taxa with low dispersal potential.
+
+
+%-----------------------------------METHODS-------------------------------------
+\section*{Methods}
+There are seven discrete steps to our methodology: (1) Environmental sample collection, (2) isolation of particulates from water via filtration, (3) isolation of DNA from filter membrane, (4) amplification of target locus via PCR, (5) sequencing of amplicons, (6) bioinformatic translation of raw sequence data into tables of sequence abundance among samples, and (7) community ecological analyses of eDNA. We provide brief overviews of these steps here, and encourage the reader to review the fully detailed methods presented in the supplementary material (\nameref{supplement}).
+
+\subsection*{Environmental Sampling}
+Starting from lower-intertidal patches of \textit{Zostera marina}, we collected water samples at 1 meter depth from 8 points (0, 75, 125, 250, 500, 1000, 2000, and 4000 meters) along three parallel transects separated by 1000 meters (24 sample locations total; Figure \ref{site_map}). Samples were collected by attaching bottles to a PVC pole and lowering it over the side of a boat over the span of one hour on 27 June 2014. To destroy residual DNA on equipment used for field sampling and filtration, we washed with a 1:10 solution of household bleach (8.25\% sodium hypochlorite; 7.25\% available chlorine) and deionized water, followed by thorough rinsing with deionized water. Each environmental sample was collected in a clean 1 liter high-density polyethylene bottle, the opening of which was covered with 500 micrometer nylon mesh to prevent entry of larger particles. Immediately after collecting the sample, the mesh was replaced with a clean lid and the sample was held on ice until filtering.
+
+\subsection*{Filtration}
+One liter from each water sample was filtered in the lab on a clean polysulfone vacuum filter holder fitted with a 47 millimeter diameter cellulose acetate membrane with 0.45 micrometer pores. Filter membranes were moved into 900 microliters of Longmire buffer \citep{Longmire1997} using clean forceps and stored at room temperature \DIFdelbegin \DIFdel{\mbox{%DIFAUXCMD
+\citep{Renshaw2014}}%DIFAUXCMD
+}\DIFdelend \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
+\citep{Renshaw2015}}%DIFAUXCMD
+}\DIFaddend . To test for the extent of contamination attributable to laboratory procedures, we filtered three replicate 1 liter samples of deionized water. These samples were treated identically to the environmental samples throughout the remaining protocols.
+
+
+\subsection*{DNA Purification}
+DNA was purified from the membrane following a phenol:chloroform:isoamyl alcohol protocol following Renshaw \DIFdelbegin \DIFdel{\mbox{%DIFAUXCMD
+\citep{Renshaw2014}}%DIFAUXCMD
+}\DIFdelend \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
+\citep{Renshaw2015}}%DIFAUXCMD
+}\DIFaddend . Preserved membranes were incubated at \DIFdelbegin \DIFdel{65C }\DIFdelend \DIFaddbegin \DIFadd{65 ºC }\DIFaddend for 30 minutes before adding 900 microliters of phenol:chloroform:isoamyl alcohol and shaking vigorously for 60 seconds. We conducted two consecutive chloroform washes by centrifuging at 14,000 rpm for 5 minutes, transferring the aqueous layer to 700 microliters chloroform, and shaking vigorously for 60 seconds. After a third centrifugation, 500 microliters of the aqueous layer was transferred to tubes containing 20 microliters 5 molar NaCl and 500 microliters 100\% isopropanol, and frozen at \DIFdelbegin \DIFdel{-20C }\DIFdelend \DIFaddbegin \DIFadd{-20 ºC }\DIFaddend for approximately 15 hours. Finally, all liquid was removed by centrifuging at 14000 rpm for 10 minutes, pouring off or pipetting out any remaining liquid, and drying in a vacuum centrifuge at \DIFdelbegin \DIFdel{45C }\DIFdelend \DIFaddbegin \DIFadd{45 ºC }\DIFaddend for 15 minutes. DNA was resuspended in 200 microliters of ultrapure water. Four replicates of genomic DNA extracted from tissue of a species absent from the sampled environment (\textit{Oreochromis niloticus}) served as positive control for the remaining protocols.
+
+
+\subsection*{PCR Amplification}
+\DIFdelbegin \DIFdel{From each DNA sample, we amplified }\DIFdelend \DIFaddbegin \DIFadd{We chose a primer set that amplifies }\DIFaddend an approximately 115 base pair (bp) region of the mitochondrial \DIFdelbegin \DIFdel{gene encoding }\DIFdelend 16S \DIFdelbegin \DIFdel{RNA using a }\DIFdelend \DIFaddbegin \DIFadd{rRNA gene in at least 10 metazoan phyla from this habitat, excludes non-metazoans, and resolves taxonomy to the family level in most cases using a public sequence database \mbox{%DIFAUXCMD
+\citep{Kelly2016FMS}}%DIFAUXCMD
+.
+We used a }\DIFaddend two-step polymerase chain reaction (PCR) protocol described by \citet{ODonnell2016} \DIFaddbegin \DIFadd{to generate 4 replicate products from each DNA sample}\DIFaddend .
+In the first set of reactions, primers were identical in every reaction (forward: AGTTACYYTAGGGATAACAGCG; reverse: CCGGTCTGAACTCAGATCAYGT); primers in the second set of reactions included these same sequences but with 3 variable nucleotides (NNN) and an index sequence on the 5$'$ end (see \nameref{sequencing_metadata}). We used the program OligoTag \citep{Coissac2012} to generate 30 unique 6-nucleotide index sequences differing by a minimum Hamming distance of 3 (see \nameref{sequencing_metadata}). Indexed primers were assigned to samples randomly, with the identical index sequence on the forward and reverse primer to avoid errors associated with dual-indexed multiplexing \citep{Schnell2015}. In a UV-sterilized hood, we prepared 25 microliter reactions containing 18.375 microliters ultrapure water, 2.5 microliters 10x buffer, 0.625 microliters deoxynucleotide solution (8 millimolar), 1 microliter each forward and reverse primer (10 micromolar, obtained lyophilized from Integrated DNA Technologies (Coralville, IA, USA)), 0.25 microliters Qiagen HotStar Taq polymerase, and 1.25 microliter genomic eDNA template at 1:100 dilution in ultrapure water. PCR thermal profiles began with an initialization step (\DIFdelbegin \DIFdel{95C}\DIFdelend \DIFaddbegin \DIFadd{95 ºC}\DIFaddend ; 15 min) followed by cycles (40 and 20 for the first and second reaction, respectively) of denaturation (\DIFdelbegin \DIFdel{95C}\DIFdelend \DIFaddbegin \DIFadd{95 ºC}\DIFaddend ; 15 sec), annealing (\DIFdelbegin \DIFdel{61C}\DIFdelend \DIFaddbegin \DIFadd{61 ºC}\DIFaddend ; 30 sec), and extension (\DIFdelbegin \DIFdel{72C}\DIFdelend \DIFaddbegin \DIFadd{72 ºC}\DIFaddend ; 30 sec). 20 identical PCRs were conducted from each DNA extract using non-indexed primers; these were pooled into 4 groups of 5 in order to ensure ample template for the subsequent PCR with indexed primers. In order to isolate the fragment of interest from primer dimer and other spurious fragments generated in the first PCR, we used the AxyPrep Mag FragmentSelect-I kit with solid-phase reversible immobilization (SPRI) paramagnetic beads at 2.5x the volume of PCR product (Axygen BioSciences, Corning, NY, USA). A 1:5 dilution in ultrapure water of the product was used as template for the second reaction. PCR products of the second reaction were purified using the Qiagen MinElute PCR Purification Kit (Qiagen, Hilden, Germany). Ultrapure water was used in place of template DNA and run along with each batch of PCRs to serve as a negative control for PCR; none of these produced visible bands on an agarose gel. In total, four separate replicates from each of 31 DNA samples were carried through the two-step PCR process for a total of 124 sequenced PCR products. These were combined with additional samples from other projects, totaling 345 samples for sequencing.
+
+
+\subsection*{DNA Sequencing}
+Up to 30 PCR products were combined according to their primer index in equal concentration into one of 14 pools, and 150 nanograms from each were prepared for library sequencing using the KAPA high-throughput library prep kit with real-time library amplification protocol (KAPA Biosystems, Wilmington, MA, USA). Each of these ligated sequencing adapters included an additional 6 base pair index sequence (NEXTflex DNA barcodes; BIOO Scientific, Austin, TX, USA). Thus, each PCR product was identifiable via its unique combination of index sequences in the sequencing adapters and primers. Fragment size distribution and concentration of each library was quantified using an Agilent 2100 BioAnalyzer. Libraries were pooled in equal concentrations and sequenced for 150 base pairs in both directions (PE150) using an Illumina NextSeq at the Stanford Functional Genomics Facility\DIFdelbegin \DIFdel{(machine NS500615, run 115, flowcell H3LFLAFXX), }\DIFdelend \DIFaddbegin \DIFadd{, }\DIFaddend where 20\% PhiX Control v3 was added to act as a sequencing control and to enhance sequencing depth \DIFaddbegin \DIFadd{by increasing sequence diversity}\DIFaddend . Raw sequence data in fastq format is publicly available (see Data Availability).
+
+
+\subsection*{Sequence Data Processing (Bioinformatics)}
+Detailed bioinformatic methods are provided in the supplemental material, and analysis scripts used from raw sequencer output onward can be found in the public project directory (see \nameref{analysis_scripts}). Briefly, we performed five steps to process the sequence data: (1) Merge paired-end reads, (2) eliminate low-quality reads, (3) eliminate PCR artifacts (chimeras), (4) cluster reads by similarity into operational taxonomic units (OTUs), and (5) match observed sequences to taxon names. Additionally, we checked for consistency among PCR replicates, excluded extremely rare sequences, and rescaled (rarefied) the data to account for differences in sequencing depth. The data for input to further analyses are a contingency table of the mean count of unique sequences, OTUs, or taxa present in each environmental sample.
+
+
+\subsection*{Ecological Analyses}
+After gathering the data, we use the eDNA community observed at each location to make inferences about the spatial patterning of eDNA communities. We use statistical tools from community ecology to assess the spatial structure of eDNA communities. We report similarity (1- dissimilarity) rather than dissimilarity in all cases for ease of interpretation.
+
+
+\subsection*{Objective 1: Community similarity as a function of distance}
+\subsubsection*{Distance Decay}
+To address our first objective and determine whether or not nearby samples are more similar than distant ones, we fit a nonlinear model to represent decreasing community similarity with distance. We calculated the pairwise Bray-Curtis similarity (1 - Bray-Curtis dissimilarity) between eDNA communities using the R package vegan \citep{vegan} and the great circle distance between sampling points using the Haversine method as implemented by the R package geosphere \citep{geosphere}. This model is similar to the Michaelis-Menten function, but with an asymptote fixed at 0:
+
+\begin{equation}\label{MM_asy0}
+	y_{ij} = \frac{AB}{B + x_{ij}}
+\end{equation}
+
+
+Where the relationship between community similarity ($y_{ij}$) and spatial distance ($x_{ij}$) between observations $i$ and $j$ is determined by the similarity of samples at distance 0 ($A$), and the distance at which half the total change in similarity is achieved ($B$). This allows for \DIFdelbegin \DIFdel{a }\DIFdelend samples collected very close together (near 0) to have similarity significantly less than one. We assessed model fit using the R function nls \citep{R}, using the nl2sol algorithm from the Port library to solve separable nonlinear least squares using analytically computed derivatives (http://netlib.org/port/nsg.f). We set bounds of 0 and 1 for the intercept parameter and a lower bound of 0 for the distance at half similarity; starting values of these parameters were 0.5 and $x_{max}/2$, respectively. We calculated a 95\% confidence interval for the parameters and the predicted values using a first-order Taylor expansion approach implemented by the function predictNLS in the R package propagate \citep{propagate}.
+
+
+There are other conceptually reasonable forms to expect the space-by-similarlity relationship to take; we present these in the supplemental material along with alternative data subsets and similarity indices (see \nameref{supplement}).
+
+\subsection*{Objective 2: Spatial distribution of diversity}
+\subsubsection*{Community Classification}
+To determine the spatial distribution and variation of eDNA communities (objective 2), we used multivariate classification algorithms. We simultaneously assessed the existence of distinct community types and the membership of samples to those community types using an unsupervised classification algorithm known as partitioning around medoids (PAM; sometimes referred to as k-medoids clustering) \citep{Kaufman1990}, as implemented in the R package cluster \citep{cluster}. The classification of samples to communities was made on the basis of their pairwise Bray-Curtis similarity, calculated using the function vegdist in the R package vegan \citep{vegan}. Other distance metrics were evaluated but had no appreciable effect on the outcome of the analysis (Figure \ref{distance_decay_multi}). In order to chose an optimal number of clusters ($K$), we evaluated the distribution of silhouette widths, a measure of the similarity between each sample and its cluster compared to its similarity to other clusters. We repeated the analysis using fuzzy clustering (FANNY, \citep{Kaufman1990}; however, the results were qualitatively similar to the results using PAM so we omit them here.
+
+
+\subsubsection*{Aggregate Measures of Diversity}
+We calculated two measures of diversity, richness and evenness, to ask if aggregate metrics of the eDNA community showed evidence of spatial patterning. Richness is a measure of the number of distinct types of organisms present and so ranges from 1 (only one taxon observed) to $S$, the number of taxa observed across all samples. To calculate the evenness of the distribution of abundance of taxa in a sample, we used the complement of the \citet{Simpson1949} index ($1 - \Sigma{p_{i}^2}$, where $p_i$ is the proportional abundance of taxon $i$). The values of this index ranges from 0 to 1, with the value interpreted as the probability that two sequences randomly selected from the sample will belong to different taxa; thus, larger values of the index indicate more evenly divided communities \citep{Magurran2004}. We calculated Moran's I for both diversity metrics to test for spatial autocorrelation. We also tested for a linear effect of log-transformed distance from shore on each measure of diversity to ask how diversity changes over this strong environmental gradient.
+
+
+\subsubsection*{Taxon and Life History Patterns}
+After assigning taxon names to the abundance data, we plotted the distribution in space of a selection of taxa to compare with our expectations on the basis of adult distributions (objective 2). Our aim was to understand where each taxon occurred in the greatest proportional abundance, and its distribution in space relative to that maximum. Thus, we rescaled each sample to proportional abundance, extracted the data from a single taxon, and scaled those values between 0 and 1. We collated life history characteristics for each of the major taxonomic groups recovered, including dispersal range of the gametes, larvae, and adults, adult habitat type and selectivity, and adult body size. \DIFdelbegin \DIFdel{Dispersal range was given as }\DIFdelend \DIFaddbegin \DIFadd{For each life history stage of each taxon group, we made }\DIFaddend an order-of-magnitude approximation of the scale of dispersal\DIFdelbegin \DIFdel{: for }\DIFdelend \DIFaddbegin \DIFadd{. For }\DIFaddend example, internally fertilized species were assigned a gamete range of 0 km, while broadcast spawners were assigned a gamete range of 10 km. Similarly, adult range size was approximated as 0 km (sessile), 1 km (motile but not pelagic), or 10 km (highly mobile, pelagic). Variables were specified as 'multiple' for \DIFdelbegin \DIFdel{groups }\DIFdelend \DIFaddbegin \DIFadd{life history stages }\DIFaddend known to span more than 1 magnitude of range size. For groups to which sequences were annotated with high confidence, but for which life history strategy is diverse or poorly known (e.g. families in the phylum Nemertea), we used conservative, coarse approximations at a higher taxonomic rank (see \nameref{life_history_data}). \DIFaddbegin \DIFadd{These data were used to contextualize group-specific spatial distributions and inform expectations based on known adult distributions.
+}\DIFaddend 
+
+
+
+%-----------------------------------RESULTS-------------------------------------
+\section*{Results}
+\subsection*{Sequence Data Processing (Bioinformatics)}
+Preliminary sequence analysis strongly suggested that the observed variation among environmental samples reflects true variation in the environment, rather than variability due to lab protocols, for the following reasons (note that all value ranges are reported as mean plus and minus one standard deviation). First, all libraries passed the FastQC per-base sequence quality filter, generating a total of 371,576,190 reads passing filter generated in each direction. Second, samples in this study were represented by an adequate number of reads (333,537.9 $\pm$ 112,200.5), with no individual sample receiving fewer than 130,402 reads. Third, there was a very low frequency of cross-contamination from other libraries into those reported here (5e-05$\pm$8e-05; max proportion 0.00034). Fourth, after scaling all samples to the same sequencing depth, OTUs with abundance greater than 178 reads (0.14\% of a sample's reads) experienced no turnover among PCR replicates within a sample. Fifth, sequence abundances among PCR replicates within water samples were remarkably consistent. A single sample had low similarity among PCR replicates (0.659) after removing this outlier, the lowest mean similarity among replicates within a sample was 0.966. Overall similarities among PCR replicates within a sample were extremely high (0.976 $\pm$ 0.013), and far higher than \DIFdelbegin \DIFdel{that of than }\DIFdelend \DIFaddbegin \DIFadd{those }\DIFaddend among samples (0.3 $\pm$ 0.16).
+\DIFaddbegin \DIFadd{Across PCR replicates, each sample was represented by at least 781425 reads in the raw data and contained between 111 and 443 rarefied OTUs (Supplemental Figure \ref{rarefaction}).
+}\DIFaddend 
+
+
+\subsection*{Ecological Analyses}
+\subsubsection*{Distance Decay}
+Physical proximity is a good predictor of eDNA community similarity: Similarity decreased from 0.40 (95\%CI = 0.36, 0.45) to half that amount at 4500 meters (95\%CI = 2900, 7500) (Figure \ref{distance_decay}).
+
+\subsubsection*{Community Classification}
+Despite a clear trend in community similarity as a function of spatial separation, the results from our classification analysis are difficult to interpret. The silhouette analysis indicated the presence of 8 distinct communities; however, the gain in mean silhouette width from 2 was small (0.1), and lacked a distinctive peak (Figure \ref{pam_sil}), indicating substantial uncertainty in the clustering algorithm. Thus, we present the results of cluster assignment for both $K$ = 2 and $K$ = 8 to illustrate the range of results (Figure \ref{pam_in_space}). Excluding taxa which occur in only one site had no discernible effect on the outcome of the PAM analysis (number of clusters, assignment to clusters). While there was no distinct spatial divide indicating the presence of an inshore versus an offshore community, one of the two communities (at $K$ = 2) occurred in only 2 out of 18 samples inside 1000 meters from shore, and never occurred within 125 meters of shore, suggesting the presence of an inshore and offshore community.
+
+\subsubsection*{Diversity in Space}
+Sites offshore tend to be less rich and more even than those inshore (Figure \ref{diversity_distance}). Mean OTU richness declined by 1.42 per 1000 meters from a mean of 17.6 taxa (95\%CI = 2.15) inshore to 11.9 taxa (95\%CI = 4.31) at offshore locations (p = 0.0415; Figure \ref{diversity_distance}). Evenness \DIFdelbegin \DIFdel{, the probability that two reads chosen at random from a sample belong to different species, }\DIFdelend increased by .0666 per 1000 meters from 0.225 (95\%CI = 0.0558) to 0.491 (95\%CI = $\pm$ 0.112), indicating that sequence reads were less evenly distributed among taxa in offshore samples (p $\ll$ 0.05; Figure \ref{diversity_distance}). There was no evidence for spatial autocorrelation for any of the diversity metrics (Moran's I, p > 0.05; Figure \ref{diversity}).
+
+\subsubsection*{Taxon and Life History Patterns}
+We were able to assign a taxon name with confidence to 136 of 146 OTU sequences. The vast majority of sequences (97.6\%) and OTUs (96.9\%) were matched to organisms that have high potential for dispersal at either the gamete, larval, or adult stage, making it impossible to determine whether the source of that DNA was adults with well-documented spatial patterns (e.g. sessile nearshore specialists) or highly mobile early life history stages. Of the 6 OTUs for which dispersal is limited during all life history stages, only 2 occurred in more than two samples, precluding a quantitative comparison of spatial dispersion based on life history characteristics. These were assigned to \textit{Cymatogaster aggregata}, a viviparous nearshore fish with internal fertilization, and \textit{Cupolaconcha meroclista}, a sessile Vermetid gastropod with presumed internal fertilization and short larval dispersal \citep{Strathmann2006, Phillips2010, Calvo2004}. \textit{Cymatogaster aggregata} was distinctly more abundant close to shore, with no sequences occurring in any sample beyond 250 meters (Figure \ref{otu_in_space_select}). \textit{Cupolaconcha meroclista} showed no such distinct spatial trend, occurring in nearly equal abundance at three sites, 75, 500, and 2000 meters from shore.
+An additional species that was highly abundant in the sequence data, the krill \textit{Thysanoessa raschii}, has pelagic adults, highly seasonal reproduction, and sinking eggs; their distribution was consistent with our expectations based on a tendency of adults to aggregate offshore.
+Finally, the two most abundant taxa in the dataset were the mussel genus \textit{Mytilus} and the Barnacle order Sessilia; the adults of both taxa are sessile and occur exclusively on hard intertidal substrata but have highly motile larvae.
+\DIFaddbegin \DIFadd{Because large-scale dispersal could not be ruled out for the vast majority of taxa, subsetting the community data by taxonomic group had no qualitative effect on the spatial patterning or diversity metrics, and we omit those results here.
+}\DIFaddend 
+
+
+%----------------------------------DISCUSSION-----------------------------------
+\section*{Discussion}
+Indirect surveys of organismal presence are a key development in ecosystem monitoring in the face of increased anthropogenic pressure and dwindling resources for ecological research. Monitoring of organisms using environmental DNA is an especially promising method, given the rapid pace of advancement in technological innovation and cost efficiency in the field of DNA sequencing and quantification. \DIFdelbegin \DIFdel{For the first time in a marine environment, we }\DIFdelend \DIFaddbegin \DIFadd{We }\DIFaddend document four key patterns: (1) eDNA communities far from one another tend to be less similar than those that are nearby, (2) distinct eDNA communities exist and are distributed in a non-random fashion, (3) diversity declines with distance from shore, and (4) spatial patterning of eDNA is associated with taxon-specific life history characteristics.
+
+\subsubsection*{(1) Communities far from one another tend to be less similar than those that are nearby}
+We demonstrate that \DIFdelbegin \DIFdel{more }\DIFdelend distant locations have \DIFdelbegin \DIFdel{less similar }\DIFdelend \DIFaddbegin \DIFadd{less-similar }\DIFaddend eDNA communities than \DIFdelbegin \DIFdel{more }\DIFdelend proximate locations in Puget Sound, a dynamic marine environment. Our finding is in line with observations based on traditional surveys of terrestrial plants and fungi \citep{Nekola1999, Bahram2013, Condit2002, Chust2006} and of microorganisms in freshwater \citep{Wetzel2012}, marine \citep{Chust2013}, and estuarine \citep{Martiny2011} environments. To our knowledge, it is the first to report such a pattern using massively parallel sequencing of environmental DNA in the marine environment, and the first using any technique to describe this pattern from macrobial metazoans. We note that the theoretical expectation is that samples at very close distance be nearly completely similar, while our samples separated by the 50 meters were only 40\% similar. We interpret this to reflect the highly dynamic nature of this environment, which could cause DNA to be distributed quickly from its source, eroding the rise in similarity at small distances. At the same time, community similarity decreased to very low levels at larger scales, indicating that DNA distribution is not completely unpredictable. This finding implies that the effectively sampled area of individual water samples for eDNA analysis is likely to be quite small (<100m) in this nearshore environment. Our estimated distance-decay relationship does indicate that proximate samples are more similar than distant samples, but we suggest this pattern is partially obscured by other factors, including signal from mobile, microscopic life-stages.
+
+
+\subsubsection*{(2) Distinct eDNA communities exist and are distributed in a non-random fashion}
+ We demonstrate strong evidence for distinct community types and the non-random spatial patterning of those communities. While the spatial distributions of communities is surprising if one were concerned only with the macroscopic life stages of metazoans, it indeed does align with the broader view that even offshore pelagic communities are comprised of and influenced by nearshore organisms. This result underscores the idea that areas immediately offshore act as ecotones, a mixing zone of taxa characteristic of benthic and pelagic environments. While there was no distinct break in community types between onshore and offshore sites, there was some clustering of community types that may be explained by oceanographic features such as nearshore eddies generated by strong tidal exchange in a steep bathymetric setting \citep{Yang2010}. It would be useful to better understand such features during the period of sampling, by way of oceanographic monitoring devices.
+\DIFaddbegin \DIFadd{Finally, the uncertainty in identification of the number of distinct clusters to best characterize the community underlines the difficulty of identifying community patterns with the number of taxonomic groups considered here. We suspect that the signature of eDNA from microscopic life-stages may explain our inability to easily detect spatial community level patterns that align with our initial expectations.
+}\DIFaddend 
+
+ \subsubsection*{(3) Richness declines and evenness increases with distance from shore}
+We \DIFdelbegin \DIFdel{detected a general pattern of declining richness and increasing evenness with increasing distance offshore}\DIFdelend \DIFaddbegin \DIFadd{found that richness declined while evenness increased with distance from shore}\DIFaddend .
+Such a pattern is consistent with many other ecosystems which show strong clines in diversity metrics over environmental gradients.
+\DIFdelbegin \DIFdel{The coastal ocean is a highly productive and diverse ecosystem \mbox{%DIFAUXCMD
+\citep{Ray1988}}%DIFAUXCMD
+. }\DIFdelend However, our study is novel in that it corroborates a cline well-known on macroscales for macrobiota on a much smaller spatial scale for microscopic animals, suggesting that there may be a self-similarity across scales in diversity patterning \citep{Levin1992}.
+\DIFaddbegin \DIFadd{The coastal ocean is a highly productive and diverse ecosystem, where biomass is concentrated most heavily along the bottom and shoreline \mbox{%DIFAUXCMD
+\citep{Ray1988}}%DIFAUXCMD
+.
+This differential in biomass concentration from the shoreline to open waters may contribute to the opposing trends we detected.
+Where particles (organisms, tissues, and cells) are sparse, fewer would be collected per sample of constant volume, thus decreasing the probability of drawing as many types (richness) and increasing the probability that any two particles originate from the same type (evenness).
+}\DIFaddend Intriguingly, the cline in diversity from inshore to offshore was not determined by shared changes in communities as one moved offshore; the classification analysis suggested a fair amount of differences among communities at a given offshore distance (Figure \ref{pam_in_space}).
+\DIFdelbegin \DIFdel{Furthermore, the uncertainty in identification of the number of distinct clusters to best characterize the community underlines the difficulty of identifying community patterns with the number of taxonomic groups considered here. We suspect that the signature of eDNA from microscopic life-stages may explain our inability to easily detect spatial community level patterns that align with our initial expectations.
+}\DIFdelend 
+
+
+\subsubsection*{(4) Spatial patterning of eDNA is associated with taxon-specific life history\DIFdelbegin \DIFdel{characteristics.}\DIFdelend }
+In contrast to our expectations, other taxa including species with sessile adult stages restricted to benthic hard substrates (e.g. barnacles, mussels) are among the most abundant taxa at sites furthest from shore. However, the larvae and gametes of these taxa are abundant, pelagic, and can be transported long distances by water movement \citep{Strathmann1987}. This indicates that we likely detected DNA of their pelagic phase gametes and larvae. It is always possible that DNA of adults was advected over long distances and detected offshore but in light of our results with krill and surfperch, we view this as unlikely. We interpret our results as evidence that the chaotic spatial distribution of eDNA communities (Figure \ref{pam_in_space}) results from our primers' affinity for many species which at some point exist as microscopic pelagic gametes or larvae. Our results emphasize that expected results based on easily visually observed individuals or detectable with traditional sampling gear such as nets may be very different from results using eDNA. This does caution that eDNA surveys may have different purposes and may not be directly comparable to existing surveys \citep{Shelton2016}.
+
+
+We acknowledge that sampling artifacts may have affected our results. For example if entire multicellular individuals were captured in our samples, their DNA could be in much greater density than eDNA, affecting the observed community. Our sampling bottles excluded particles larger than 500 micrometers, but gametes and very small larvae could have gained entry. It is possible that even a single small individual, containing many thousand mitochondria, would overwhelm the signal of another species from which hundreds of cells had been sloughed from many, larger individuals. Data on larval size distribution at the time of sampling from each species in our data set would allow us to estimate the frequency of such events. Nevertheless, it is precisely the sensitivity to small particles that makes the eDNA approach powerful, so we are reluctant to recommend that aquatic eDNA sampling use finer pre-filtering. Instead, we emphasize the importance of designing and selecting primer sets that selectively amplify target organisms. In the case of the present study, in order to recover patterns matching our expectations, this would be non-transient, benthic marine organisms lacking any pelagic life stage.
+
+\DIFaddbegin \DIFadd{The marker we chose for this study detects a wide variety of metazoans while excluding other more common taxa; however, it does not effectively discriminate among species within a higher group in all cases.
+Other markers, such as mitochondrial cytochrome c oxidase subunit 1 (COX1, CO1, or COI) may provide adequate species-level resolution in some metazoan groups, but have other shortcomings including taxon dropout \mbox{%DIFAUXCMD
+\citep{Deagle2014} }%DIFAUXCMD
+and amplification of more abundant non-metazoans, as we discovered in an accompanying study \mbox{%DIFAUXCMD
+\citep{Kelly2016FMS}}%DIFAUXCMD
+.
+Both have undesirable effects of biasing estimates of diversity.
+In our case, it is possible that the lumping of multiple species into one group underestimates the true richness of the group and of the entire sample, in turn obscuring true underlying patterns of diversity.
+In the case of COX1, well-documented primer biases cause failure to amplify some taxa, particularly in mixed samples, with the same result \mbox{%DIFAUXCMD
+\citep{Deagle2014}}%DIFAUXCMD
+.
+In fact, even surveys relying on traditional capture techniques (e.g. seine nets) and morphological characteristics are subject to biases imposed by the sampling gear (e.g. mesh size), the observer (e.g. taxonomic expertise), and organisms (e.g. morphologically cryptic species).
+Similarly, no single molecular marker adequately and effectively samples all taxa without bias  \mbox{%DIFAUXCMD
+\citep{Drummond2015}}%DIFAUXCMD
+, and thus the choice of marker is an important and context-dependent one.
+Until whole-genome sequencing of individual cells is a reality, the tradeoffs between taxonomic breadth and resolution will continue to be problematic for metabarcoding studies, just as they are for more traditional ecological survey methods \mbox{%DIFAUXCMD
+\citep{Kelly2016FMS}}%DIFAUXCMD
+.
+}
+
+\DIFaddend Our results also highlight the need for curated life-history databases. As technological advances increase the speed and throughput of DNA sequencing and sequence processing, making sense of these data in a timely manner requires that natural history data be stored in standard formats in centralized repositories. The rate at which we can make sense of high-throughput survey methods will be limited by our ability to collate auxiliary data. Databases such as Global Biodiversity Information Facility (GBIF), Encyclopedia of Life (EOL), and FishBase \citep{eol,  fishbase} contain records of taxonomy, occurrence, and other rudimentary data types, but there is no centralized, standardized repository for even basic natural history data such as body size. As NCBI's nucleotide and protein sequence database (GenBank) has facilitated transformative studies in diverse fields, an ecological analog would be a boon for biodiversity science.
+
+
+Surveys based on eDNA are intensely scrutinized because of the danger that the final data are subject to complicated laboratory and bioinformatic procedures. Finding virtually no variability among lab and bioinformatic treatments from the point of PCR onward, we were confident our results represented actual field-based differences among samples. However, we note that one PCR replicate had a clear signal of contamination in that the sequence community was extremely similar to those from a different environmental sample. The source of this error is difficult to identify, but seems most likely to be an error during PCR preparation, either in assignment or pipetting during preparation of indexed primers. While the remainder of our results would be largely unchanged had we sequenced a single replicate per environmental sample, we believe the sequencing of PCR replicates is critical for ensuring data quality in eDNA sequencing studies.
+
+
+While there is much work to be done before eDNA techniques can be confidently deployed as a standard method for ecological monitoring, this study serves as a first analysis of diversity at the fine spatial scales that are likely to be relevant to eDNA work in the field across a range of study systems.
+
+%-------------------------------ACKNOWLEDGEMENTS--------------------------------
+\section*{Acknowledgements}
+We wish to thank \DIFaddbegin \DIFadd{Linda Park, }\DIFaddend Robert Morris, E. Virginia Armbrust, and James Kralj.
+\DIFaddbegin \DIFadd{The manuscript was improved by suggestions from editor Magnus Johnson, and reviewers Owen Wangensteen and Stephen Moss.
+}\DIFaddend 
+
+%-----------------------------------FUNDING-------------------------------------
+\section*{Funding}
+This work was supported by a grant from the David and Lucile Packard Foundation to RPK (grant 2014-39827). The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.
+
+%--------------------------------CONTRIBUTIONS----------------------------------
+\section*{Author Contributions}
+Conceived and designed the experiments:
+JL O'Donnell, RP Kelly, AO Shelton;
+Collected the data:
+JL O'Donnell, NC Lowell, GD Williams, RP Kelly, AO Shelton, JF Samhouri;
+Conducted the analyses:
+JL O'Donnell;
+Wrote the first draft:
+JL O'Donnell;
+Edited the manuscript:
+JL O'Donnell, AO Shelton, RP Kelly, JF Samhouri, GD Williams, NC Lowell
+
+
+%-----------------------------------ETHICS--------------------------------------
+\section*{Ethics Statement}
+The authors declare no conflict of interest.
+Consistent with the public trust doctrine, waters of the US are public, and therefore no permit was necessary to conduct this research (see Illinois Central Railroad v. Illinois, 146 U.S. 387 (1892)).
+
+%-------------------------------------DATA-------------------------------------%
+\section*{Data Availablity}
+\label{data}
+
+\DIFdelbegin \subsection{\DIFdel{Sequence Data}}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \subsection*{\DIFadd{Sequence Data}}
+\DIFaddend \label{sequence_data}
+All sequence \DIFdelbegin \DIFdel{files and metadata }\DIFdelend \DIFaddbegin \DIFadd{data }\DIFaddend are available from \DIFdelbegin \DIFdel{EMBL}\DIFdelend \DIFaddbegin \DIFadd{NCBI under BioProject PRJNA338801.}\\
+\DIFadd{Scripts to process raw sequence data into the contingency tables used for ecological analyses can be found at}\DIFaddend : \\
+\DIFdelbegin %DIFDELCMD < \verb!http://www.ebi.ac.uk/ena/data/view/FIXME!
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \verb!https://github.com/jimmyodonnell/banzai!\\
+\DIFaddend 
+
+\DIFdelbegin \subsection{\DIFdel{Project Repository}}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \subsection*{\DIFadd{Project Repository}}
+\DIFaddend The following components are available from the project repository on GitHub: \\
+\verb!https://github.com/jimmyodonnell/Carkeek_eDNA_grid!\\
+\verb!http://dx.doi.org/FIXME!
+
+\DIFdelbegin \subsubsection{\DIFdel{Sequencing Metadata}}
+%DIFAUXCMD
+\addtocounter{subsubsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \subsubsection*{\DIFadd{Sequencing Metadata}}
+\DIFaddend \label{sequencing_metadata}
+Sequencing metadata is available in: \verb!Data/metadata_spatial.csv!
+
+\DIFdelbegin \subsubsection{\DIFdel{Life History Data}}
+%DIFAUXCMD
+\addtocounter{subsubsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \subsubsection*{\DIFadd{Life History Data}}
+\DIFaddend \label{life_history_data}
+Life history data is available in: \verb!Data/life_history.csv!
+
+\DIFdelbegin \subsubsection{\DIFdel{Analysis Scripts}}
+%DIFAUXCMD
+\addtocounter{subsubsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \subsubsection*{\DIFadd{Analysis Scripts}}
+\DIFaddend \label{analysis_scripts}
+All analyses were performed using scripts available in the Analysis subdirectory \DIFaddbegin \DIFadd{of the project's repository on GitHub}\DIFaddend .
+
+%----------------------------------REFERENCES-----------------------------------
+%\section*{References} % commented out because the section title is automatically inserted if using an automatically-generated bibliography
+
+\bibliographystyle{apalike} % or: plain,unsrt,alpha,abbrv,acm,apalike,ieeetr
+\bibliography{carkeek_grid} % path to your .bib file excluding .bib extension
+
+
+%-----------------------------------FIGURES-------------------------------------
+\pagebreak
+\section*{Figures}
+
+\begin{figure}[H] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{site_map.pdf}
+    \caption{\protect\input{"../../Figures/site_map_legend.txt"}}
+  \label{site_map}
+\end{figure}
+
+
+\begin{figure}[H] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{distance_decay.pdf}
+    \caption{\protect\input{"../../Figures/distance_decay_legend.txt"}}
+  \label{distance_decay}
+\end{figure}
+
+\begin{figure}[H] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{pam_in_space.pdf}
+    \caption{\protect\input{"../../Figures/pam_in_space_legend.txt"}}
+  \label{pam_in_space}
+\end{figure}
+
+
+\begin{figure}[H] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{pam_sil.pdf}
+    \caption{\protect\input{"../../Figures/pam_sil_legend.txt"}}
+  \label{pam_sil}
+\end{figure}
+
+\begin{figure}[H] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{diversity.pdf}
+    \caption{\protect\input{"../../Figures/diversity_legend.txt"}}
+  \label{diversity}
+\end{figure}
+
+\begin{figure}[H] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{diversity_distance.pdf}
+    \caption{\protect\input{"../../Figures/diversity_distance_legend.txt"}}
+  \label{diversity_distance}
+\end{figure}
+\pagebreak
+
+\begin{figure}[H] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{otu_in_space_select.pdf}
+    \caption{\protect\input{"../../Figures/otu_in_space_select_legend.txt"}}
+  \label{otu_in_space_select}
+\end{figure}
+
+
+%----------------------------------SUPPLEMENT-----------------------------------
+\pagebreak
+\section*{Supplemental Material}
+\label{supplement}
+
+
+\subsection*{Methods}
+\subsubsection*{Bioinformatics}
+Reads passing the preliminary Illumina quality filter were demultiplexed on the basis of the adapter index sequence by the sequencing facility. We used fastqc to assess the fastq files output from the sequencer for low-quality indications of a problematic run. Forward and reverse reads were merged using PEAR v0.9.6 \cite{Zhang2014} and discarded if more than 0.01 of the bases were uncalled. If a read contained two consecutive base calls with quality scores less than 15 (i.e. probability of incorrect base call = 0.0316), these bases and all subsequent bases were removed from the read. Paired reads for which the probability of matching by chance alone exceeded 0.01 were not assembled and omitted from the analysis. Assembled reads were discarded if assembled sequences were not between 50 and 168 bp long, or if reads did not overlap by at least 100 bp.
+
+
+We used vsearch v2.1.1 \citep{vsearch} to discard any merged reads for which the sum of the per-base error probabilities was greater than 0.5 (``expected errors'') \cite{Edgar2010}. Sequences were demultiplexed on the basis of the primer index sequence at base positions 4-9 at both ends using the programming language AWK. Primer sequences were removed using cutadapt v1.7.1 \cite{Martin2011}, allowing for 2 mismatches in the primer sequence. Identical duplicate sequences were identified, counted, and removed in python to speed up subsequent steps by eliminating redundancy, and sequences occurring only once were removed. We checked for and removed any sequence likely to be a PCR artifact due to incomplete extension and subsequent mis-priming using a method described by \citet{Edgar2010} and implemented in vsearch v2.0.2. Sequences were clustered into operational taxonomic units (OTUs) using the single-linkage clustering method implemented by swarm version 2.1.1 with a local clustering threshold (d) of 1 and fastidious processing \citep{swarm}.
+
+
+Cross-contamination of environmental, DNA, or PCR samples can result in erroneous inference about the presence of a given DNA sequence in a sample. However, other processes can contribute to the same signature of contamination. For example, errors during oligonucleotide synthesis or sequencing of the indexes could cause reads to be erroneously assigned to samples. The frequency of such errors can be estimated by counting the occurrence of sequences known to be absent from a given sample, and of reads that do not contain primer index sequences in the expected position or combinations. These occurrences indicate an error in the preparation or sequencing procedures. We estimated a rate of incorrect sample assignment by calculating the maximum rate of occurrence of index sequences combinations we did not actually use, as well as the rates of cross-library contamination by counting occurrences of primer sequences from 12S amplicons prepared in a lab more than 1000 kilometers away, but pooled and sequenced alongside our samples. This represents a general minimum rate at which we can expect that sequences from one environmental sample could be erroneously assigned to another, and so we considered for further analysis only those reads occurring with greater frequency than this across the entire dataset.
+
+
+We checked for experimental error by evaluating the Bray-Curtis similarity (1 - Bray-Curtis dissimilarity) among replicate PCRs from the same DNA sample. We calculated the mean and standard deviation across the dataset, and excluded any PCR replicates for which the similarity between itself and the other replicates was less than 1.5 standard deviations from the mean.
+
+
+To account for variation in the number of sequencing reads (sequencing depth) recovered per sample, we rarefied the within-sample abundance of each OTU by the minimum sequencing depth \citep{vegan}.
+
+
+Because each step in this workflow is sensitive to contamination, it is possible that some sequences are not truly derived from the environmental sample, and instead represent contamination during field sampling, filtration, DNA extraction, PCR, fragment size selection, quantitation, sequencing adapter ligation, or the sequencing process itself. We take the view that contaminants are unlikely to manifest as sequences in the final dataset in consistent abundance across replicates; indeed, our data show that the process from PCR onward is remarkably consistent. Thus, after scaling to correct for sequencing depth variation, we calculated from our data the maximum number of sequence counts for which there is turnover in presence-absence among PCR replicates within an environmental sample. We use this number to determine a conservative minimum threshold above which we can be confident that counts are consistent among replicates and not of spurious origin, and exclude from further analysis observations where the mean abundance across PCR replicates within samples does not reach this threshold. For further analyses we use the mean abundance across PCR replicates for each of the 24 environmental samples.
+
+
+In order to determine the most likely taxon from which each sequence originated, the representative sequence from each OTU was then queried against the NCBI nucleotide collection (GenBank; version October 7, 2015; 32,827,936 sequences) using the blastn command line utility \citep{Camacho2009}. In order to maximize the accuracy of this computationally intensive step, we implemented a nested approach whereby each sequence was first queried using strict parameters (e-value = 5e-52), and if no match was found, the query was repeated with decreasingly strict e-values (5e-48 5e-44 5e-40 5e-36 5e-33 5e-29 5e-25 5e-21 5e-17 5e-13). Other parameters were unchanged among repetitions (word size: 7; maximum matches: 1000; culling limit: 100; minimum percent identity: 0). Each query sequence can be an equally good match to multiple taxa either because of invariability among taxa or errors in the database (e.g. human sequences are commonly attributed to other organisms when they in fact represent lab contamination). In order to guard against these spurious results, we used an algorithm to find the lowest common taxon for at least 80\% of the matched taxa, implemented in the R package taxize 0.7.8 \citep{Chamberlain2013, Chamberlain2016}. Similarly, we repeated analyses using the dataset consolidated at the same taxonomic rank across all queries, for the rank of both family and order.
+
+
+\subsubsection*{Alternative distance decay model formulations}
+
+\paragraph{Linear:} We fit a straight line through the points after log-transforming the spatial distances to estimate the intercept and slope. This model ignores the bounds of our response variable of community similarity.
+
+
+\paragraph{Michaelis-Menten:} We fit a Michaelis-Menten-like curve to our data.
+Our formulation can be thought of as a modification of the Michaelis-Menten equation, but with the addition of a parameter in the numerator which modifies the intercept.
+
+\begin{equation}\label{MM_full}
+	y = \frac{AB + Cx}{B+x}
+\end{equation}
+
+
+Where $C$ is the asymptote of minimum similarity. This formulation allows us to estimate the maximum similarity in the system, and the rate at which it is achieved. If the value of the parameter ($AB$) is 0 (i.e. if the intercept is 0), the form is identical to the Michaelis-Menten equation:
+
+
+\begin{equation}\label{MichaelisMenten}
+	y = \frac{Cx}{B + x}
+\end{equation}
+
+
+This is conceptually satisfying in that a fit through [0,1] reflects the theoretical expectation that samples at zero distance from one another are necessarily identical. Given an efficient sampling technique, replicate samples taken at the same position in space should be identical, and thus the intercept of the regression of similarity against distance should be 1, and deviation from 1 is an indicator of the efficiency of the sampling method. % NOTE: We did not take multiple environmental samples from the same position in space, but conducted multiple PCRs from each environmental sample.
+
+
+Finally, we considered a model which estimates an asymptote as the total change in similarity ($D$):
+
+\begin{equation}\label{Harold}
+	y = \frac{A + Dx}{B + x}
+\end{equation}
+
+However, this model failed to converge and produced uninformative estimates of all parameters.
+
+
+\subsection*{Supplemental Figures}
+
+\begin{figure}[H] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[height=0.6\textheight]{distance_decay_multi.pdf}
+    \caption{\protect\input{"../../Figures/distance_decay_multi_legend.txt"}}
+  \label{distance_decay_multi}
+\end{figure}
+
+\begin{figure}[H] % [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[width=1\textwidth]{diversity_distance_all.pdf}
+    \caption{\protect\input{"../../Figures/diversity_distance_all_legend.txt"}}
+  \label{diversity_distance_all}
+\DIFaddbeginFL \end{figure}
+
+\begin{figure}[H] %DIF >  [h!] forces the figure to be placed roughly here
+  \centering
+    \includegraphics[height=0.6\textheight]{rarefaction.pdf}
+    \caption{\protect\input{"../../Figures/rarefaction_legend.txt"}}
+  \label{rarefaction}
+\DIFaddendFL \end{figure}
+
+
+
+% \pagebreak
+% \section*{Orphaned Text}
+% Samples collected of ecological communities may vary in dissimilarity from 0 (completely identical) to 1 (completely different). For samples collected from multiple locations, the relationship between their spatial distance and community dissimilarity is of interest because it reflects the amount of community heterogeneity---changes in abundance and composition---over the spatial scale sampled.
+% In general, the relationship between community dissimilarity (0 = identical; 1 = completely different) and spatial distance is expected to be asymptotic, because communities nearer to each other tend to be more similar than those farther apart. The intercept is expected to be 0, because only within-sample comparisons can have 0 spatial separation, and communities have no dissimilarity within a sample if sampling method is repeatable.
+% (technically impossible for samples to be taken at exactly 0; they are actually immediately adjacent.)
+% Deviation from 0 indicates heterogeneous community composition/structure over fine scales. Likewise, dissimilarity cannot exceed 1, and reaches 1 only when multiple discrete community types are sampled. The trend is expected to be asymptotic if communities within a habitat are spatially structured, where the value of the asymptote and the rate of increase provide insight about community turnover. A flat relationship indicates that heterogeneity is not assorted spatially, and can be interpreted in different ways, depending on the asymptote. % ?or no relationship both
+% If the asymptote is close to 1, there is high spatial heterogeneity over the spatial scale of sampling. If the asymptote is close 0, all samples are similar, and we infer there is complete community homogeneity over the scale sampled. The rate at which community dissimilarity approaches the mean gives an indication of the rate of community turnover.
+%
+% In theory, given enough data from manipulative experiments, it is possible that one could measure environmental variables--temperature, UV intensity, flow, etc--at the time of eDNA sample collection in order to more precisely estimate the origin of eDNA. In practice, this approach is unlikely to yield appreciable gains in accuracy because even the most advanced sensors (ADCPs) and analytical techniques available cannot determine the origin of particles in highly dynamic fluid environments at scales relevant to most ecological questions \citep{Piterbarg2001}. %http://www.rsmas.miami.edu/LAPCOD/research/prediction/
+% Further, collecting and analyzing these data would severely limit the scalability of eDNA methods. A more practical approach is to compare the spatial distribution of communities of eDNA with expectations based on prior knowledge of the spatial distribution of communities of organisms.
+
+
+\end{document}
