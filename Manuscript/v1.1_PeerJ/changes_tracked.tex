@@ -1,7 +1,7 @@
 %-----------------------------------NOTES---------------------------------------
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL ../v1.0_PeerJ/carkeek_grid.tex   Mon Nov 28 11:21:51 2016
-%DIF ADD carkeek_grid.tex                 Thu Jan 12 16:49:44 2017
+%DIF ADD carkeek_grid.tex                 Fri Jan 13 10:58:33 2017
 %DIF 2d2
 %DIF < % (TODO SUBMIT DATA AND METADATA; ADD URL)
 %DIF -------
@@ -42,7 +42,13 @@
 %\usepackage{longtable} % for tables that span multiple pages.
 \usepackage{setspace} % double spacing
 \usepackage{float} % figure placement [H]
-\usepackage{nameref,hyperref} % named references (e.g. "Supplemental Material")
+%DIF 40c39-41
+%DIF < \usepackage{nameref,hyperref} % named references (e.g. "Supplemental Material")
+%DIF -------
+\usepackage{nameref} % named references (e.g. "Supplemental Material") %DIF >
+\usepackage{breakcites} % add line breaks in citations where necessary %DIF >
+\usepackage[breaklinks=true]{hyperref} %DIF >
+%DIF -------
 
 %----------------------------------FORMATTING-----------------------------------
 
@@ -61,27 +67,27 @@
 \author[1]{James L. O'Donnell\thanks{jodonnellbio@gmail.com}}
 \author[1]{Ryan P. Kelly} % rpkelly@uw.edu
 \author[2]{Andrew O. Shelton} % ole.shelton@noaa.gov
-%DIF 59-61c58-60
+%DIF 59-61c60-62
 %DIF < \author[2]{Jameal F. Samhouri} % jameal.samhouri@noaa.gov
 %DIF < \author[1,3]{Natalie C. Lowell} % nclowell@uw.edu
 %DIF < \author[4]{Gregory D. Williams} % greg.williams@noaa.gov
 %DIF -------
-\author[3]{Jameal F. Samhouri} % jameal.samhouri@noaa.gov %DIF > 
-\author[1,4]{Natalie C. Lowell} % nclowell@uw.edu %DIF > 
-\author[5]{Gregory D. Williams} % greg.williams@noaa.gov %DIF > 
+\author[3]{Jameal F. Samhouri} % jameal.samhouri@noaa.gov %DIF >
+\author[1,4]{Natalie C. Lowell} % nclowell@uw.edu %DIF >
+\author[5]{Gregory D. Williams} % greg.williams@noaa.gov %DIF >
 %DIF -------
 
 % Make sure authors specify department, institution, and address.
 \affil[1]{School of Marine and Environmental Affairs, University of Washington, 3707 Brooklyn Ave NE, Seattle, Washington 98105, USA}
-%DIF 65-67c64-67
+%DIF 65-67c66-69
 %DIF < \affil[2]{Northwest Fisheries Science Center, NOAA Fisheries, 2725 Montlake Blvd E, Seattle, Washington 98112, USA}
 %DIF < \affil[3]{School of Aquatic and Fishery Sciences, University of Washington, 1122 NE Boat St, Seattle, Washington 98105, USA}
 %DIF < \affil[4]{Pacific States Marine Fisheries Commission, Under contract to the Northwest Fisheries Science Center, NOAA Fisheries, 2725 Montlake Blvd E, Seattle, WA 98112}
 %DIF -------
-\affil[2]{Earth Resource Technology, Inc., Under contract to the Northwest Fisheries Science Center, National Marine Fisheries Service, National Oceanic and Atmospheric Administration, 2725 Montlake Blvd E, Seattle, WA 98112, USA} %DIF > 
-\affil[3]{Conservation Biology Division, Northwest Fisheries Science Center, National Marine Fisheries Service, National Oceanic and Atmospheric Administration, 2725 Montlake Blvd E, Seattle, Washington 98112, USA} %DIF > 
-\affil[4]{School of Aquatic and Fishery Sciences, University of Washington, 1122 NE Boat St, Seattle, Washington 98105, USA} %DIF > 
-\affil[5]{Pacific States Marine Fisheries Commission, Under contract to the Northwest Fisheries Science Center, National Marine Fisheries Service, National Oceanic and Atmospheric Administration, 2725 Montlake Blvd E, Seattle, WA 98112, USA} %DIF > 
+\affil[2]{Earth Resource Technology, Inc., Under contract to the Northwest Fisheries Science Center, National Marine Fisheries Service, National Oceanic and Atmospheric Administration, 2725 Montlake Blvd E, Seattle, WA 98112, USA} %DIF >
+\affil[3]{Conservation Biology Division, Northwest Fisheries Science Center, National Marine Fisheries Service, National Oceanic and Atmospheric Administration, 2725 Montlake Blvd E, Seattle, Washington 98112, USA} %DIF >
+\affil[4]{School of Aquatic and Fishery Sciences, University of Washington, 1122 NE Boat St, Seattle, Washington 98105, USA} %DIF >
+\affil[5]{Pacific States Marine Fisheries Commission, Under contract to the Northwest Fisheries Science Center, National Marine Fisheries Service, National Oceanic and Atmospheric Administration, 2725 Montlake Blvd E, Seattle, WA 98112, USA} %DIF >
 %DIF -------
 
 
@@ -197,14 +203,16 @@ meiofaunal \mbox{%DIFAUXCMD
 \citep{Fonseca2014,Guardiola2016}}%DIFAUXCMD
 , microbial \mbox{%DIFAUXCMD
 \citep{Lallias2015}}%DIFAUXCMD
-, and extracellular \mbox{%DIFAUXCMD
+,
+and extracellular \\
+\mbox{%DIFAUXCMD
 \citep{Guardiola2015} }%DIFAUXCMD
 eDNA of marine and estuarine sediments, and of microscopic plankton in open ocean waters \mbox{%DIFAUXCMD
 \citep{DeVargas2015}}%DIFAUXCMD
 .
 These studies conducted targeted sampling at intermediate (thousands of meters) to global (thousands of kilometers) scales.
 Here, we use a grid-based environmental sampling strategy to assess spatial variability of eDNA in a coastal marine environment at a fine scale (tens to thousands of meters), using molecular methods that focus on macrobial metazoans.
-}\DIFaddend 
+}\DIFaddend
 
 
 We apply methods derived from community ecology to understand spatial patterns and patchiness of eDNA. The underlying mechanism thought to drive the slope of the distance decay relationship in ecological communities is the rate of movement of individuals among sites, which may be driven by underlying processes such as habitat suitability. Because eDNA is shed and transported away from its source, the increased movement of eDNA particles should homogenize community similarity, and thus erode the distance decay relationship of eDNA communities.
@@ -244,7 +252,7 @@ DNA was purified from the membrane following a phenol:chloroform:isoamyl alcohol
 \citep{Kelly2016FMS}}%DIFAUXCMD
 .
 We used a }\DIFaddend two-step polymerase chain reaction (PCR) protocol described by \citet{ODonnell2016} \DIFaddbegin \DIFadd{to generate 4 replicate products from each DNA sample}\DIFaddend .
-In the first set of reactions, primers were identical in every reaction (forward: AGTTACYYTAGGGATAACAGCG; reverse: CCGGTCTGAACTCAGATCAYGT); primers in the second set of reactions included these same sequences but with 3 variable nucleotides (NNN) and an index sequence on the 5$'$ end (see \nameref{sequencing_metadata}). We used the program OligoTag \citep{Coissac2012} to generate 30 unique 6-nucleotide index sequences differing by a minimum Hamming distance of 3 (see \nameref{sequencing_metadata}). Indexed primers were assigned to samples randomly, with the identical index sequence on the forward and reverse primer to avoid errors associated with dual-indexed multiplexing \citep{Schnell2015}. In a UV-sterilized hood, we prepared 25 microliter reactions containing 18.375 microliters ultrapure water, 2.5 microliters 10x buffer, 0.625 microliters deoxynucleotide solution (8 millimolar), 1 microliter each forward and reverse primer (10 micromolar, obtained lyophilized from Integrated DNA Technologies (Coralville, IA, USA)), 0.25 microliters Qiagen HotStar Taq polymerase, and 1.25 microliter genomic eDNA template at 1:100 dilution in ultrapure water. PCR thermal profiles began with an initialization step (\DIFdelbegin \DIFdel{95C}\DIFdelend \DIFaddbegin \DIFadd{95 ºC}\DIFaddend ; 15 min) followed by cycles (40 and 20 for the first and second reaction, respectively) of denaturation (\DIFdelbegin \DIFdel{95C}\DIFdelend \DIFaddbegin \DIFadd{95 ºC}\DIFaddend ; 15 sec), annealing (\DIFdelbegin \DIFdel{61C}\DIFdelend \DIFaddbegin \DIFadd{61 ºC}\DIFaddend ; 30 sec), and extension (\DIFdelbegin \DIFdel{72C}\DIFdelend \DIFaddbegin \DIFadd{72 ºC}\DIFaddend ; 30 sec). 20 identical PCRs were conducted from each DNA extract using non-indexed primers; these were pooled into 4 groups of 5 in order to ensure ample template for the subsequent PCR with indexed primers. In order to isolate the fragment of interest from primer dimer and other spurious fragments generated in the first PCR, we used the AxyPrep Mag FragmentSelect-I kit with solid-phase reversible immobilization (SPRI) paramagnetic beads at 2.5x the volume of PCR product (Axygen BioSciences, Corning, NY, USA). A 1:5 dilution in ultrapure water of the product was used as template for the second reaction. PCR products of the second reaction were purified using the Qiagen MinElute PCR Purification Kit (Qiagen, Hilden, Germany). Ultrapure water was used in place of template DNA and run along with each batch of PCRs to serve as a negative control for PCR; none of these produced visible bands on an agarose gel. In total, four separate replicates from each of 31 DNA samples were carried through the two-step PCR process for a total of 124 sequenced PCR products. These were combined with additional samples from other projects, totaling 345 samples for sequencing.
+In the first set of reactions, primers were identical in every reaction (forward: AGTTACYYTAGGGATAACAGCG; reverse: CCGGTCTGAACTCAGATCAYGT); primers in the second set of reactions included these same sequences but with 3 variable nucleotides (NNN) and an index sequence on the 5$'$ end (see \nameref{sequencing_metadata}). We used the program OligoTag \citep{Coissac2012} to generate 30 unique 6-nucleotide index sequences differing by a minimum Hamming distance of 3 (see \nameref{sequencing_metadata}). Indexed primers were assigned to samples randomly, with the identical index sequence on the forward and reverse primer to avoid errors associated with dual-indexed multiplexing \citep{Schnell2015}. In a UV-sterilized hood, we prepared 25 microliter reactions containing 18.375 microliters ultrapure water, 2.5 microliters 10x buffer, 0.625 microliters deoxynucleotide solution (8 millimolar), 1 microliter each forward and reverse primer (10 micromolar, obtained lyophilized from Integrated DNA Technologies (Coralville, IA, USA)), 0.25 microliters Qiagen HotStar Taq polymerase, and 1.25 microliter genomic \DIFaddbegin \DIFadd{or }\DIFaddend eDNA template at 1:100 dilution in ultrapure water. PCR thermal profiles began with an initialization step (\DIFdelbegin \DIFdel{95C}\DIFdelend \DIFaddbegin \DIFadd{95 ºC}\DIFaddend ; 15 min) followed by cycles (40 and 20 for the first and second reaction, respectively) of denaturation (\DIFdelbegin \DIFdel{95C}\DIFdelend \DIFaddbegin \DIFadd{95 ºC}\DIFaddend ; 15 sec), annealing (\DIFdelbegin \DIFdel{61C}\DIFdelend \DIFaddbegin \DIFadd{61 ºC}\DIFaddend ; 30 sec), and extension (\DIFdelbegin \DIFdel{72C}\DIFdelend \DIFaddbegin \DIFadd{72 ºC}\DIFaddend ; 30 sec). 20 identical PCRs were conducted from each DNA extract using non-indexed primers; these were pooled into 4 groups of 5 in order to ensure ample template for the subsequent PCR with indexed primers. In order to isolate the fragment of interest from primer dimer and other spurious fragments generated in the first PCR, we used the AxyPrep Mag FragmentSelect-I kit with solid-phase reversible immobilization (SPRI) paramagnetic beads at 2.5x the volume of PCR product (Axygen BioSciences, Corning, NY, USA). A 1:5 dilution in ultrapure water of the product was used as template for the second reaction. PCR products of the second reaction were purified using the Qiagen MinElute PCR Purification Kit (Qiagen, Hilden, Germany). Ultrapure water was used in place of template DNA and run along with each batch of PCRs to serve as a negative control for PCR; none of these produced visible bands on an agarose gel. In total, four separate replicates from each of 31 DNA samples were carried through the two-step PCR process for a total of 124 sequenced PCR products. These were combined with additional samples from other projects, totaling 345 samples for sequencing.
 
 
 \subsection*{DNA Sequencing}
@@ -284,7 +292,7 @@ We calculated two measures of diversity, richness and evenness, to ask if aggreg
 
 \subsubsection*{Taxon and Life History Patterns}
 After assigning taxon names to the abundance data, we plotted the distribution in space of a selection of taxa to compare with our expectations on the basis of adult distributions (objective 2). Our aim was to understand where each taxon occurred in the greatest proportional abundance, and its distribution in space relative to that maximum. Thus, we rescaled each sample to proportional abundance, extracted the data from a single taxon, and scaled those values between 0 and 1. We collated life history characteristics for each of the major taxonomic groups recovered, including dispersal range of the gametes, larvae, and adults, adult habitat type and selectivity, and adult body size. \DIFdelbegin \DIFdel{Dispersal range was given as }\DIFdelend \DIFaddbegin \DIFadd{For each life history stage of each taxon group, we made }\DIFaddend an order-of-magnitude approximation of the scale of dispersal\DIFdelbegin \DIFdel{: for }\DIFdelend \DIFaddbegin \DIFadd{. For }\DIFaddend example, internally fertilized species were assigned a gamete range of 0 km, while broadcast spawners were assigned a gamete range of 10 km. Similarly, adult range size was approximated as 0 km (sessile), 1 km (motile but not pelagic), or 10 km (highly mobile, pelagic). Variables were specified as 'multiple' for \DIFdelbegin \DIFdel{groups }\DIFdelend \DIFaddbegin \DIFadd{life history stages }\DIFaddend known to span more than 1 magnitude of range size. For groups to which sequences were annotated with high confidence, but for which life history strategy is diverse or poorly known (e.g. families in the phylum Nemertea), we used conservative, coarse approximations at a higher taxonomic rank (see \nameref{life_history_data}). \DIFaddbegin \DIFadd{These data were used to contextualize group-specific spatial distributions and inform expectations based on known adult distributions.
-}\DIFaddend 
+}\DIFaddend
 
 
 
@@ -293,7 +301,7 @@ After assigning taxon names to the abundance data, we plotted the distribution i
 \subsection*{Sequence Data Processing (Bioinformatics)}
 Preliminary sequence analysis strongly suggested that the observed variation among environmental samples reflects true variation in the environment, rather than variability due to lab protocols, for the following reasons (note that all value ranges are reported as mean plus and minus one standard deviation). First, all libraries passed the FastQC per-base sequence quality filter, generating a total of 371,576,190 reads passing filter generated in each direction. Second, samples in this study were represented by an adequate number of reads (333,537.9 $\pm$ 112,200.5), with no individual sample receiving fewer than 130,402 reads. Third, there was a very low frequency of cross-contamination from other libraries into those reported here (5e-05$\pm$8e-05; max proportion 0.00034). Fourth, after scaling all samples to the same sequencing depth, OTUs with abundance greater than 178 reads (0.14\% of a sample's reads) experienced no turnover among PCR replicates within a sample. Fifth, sequence abundances among PCR replicates within water samples were remarkably consistent. A single sample had low similarity among PCR replicates (0.659) after removing this outlier, the lowest mean similarity among replicates within a sample was 0.966. Overall similarities among PCR replicates within a sample were extremely high (0.976 $\pm$ 0.013), and far higher than \DIFdelbegin \DIFdel{that of than }\DIFdelend \DIFaddbegin \DIFadd{those }\DIFaddend among samples (0.3 $\pm$ 0.16).
 \DIFaddbegin \DIFadd{Across PCR replicates, each sample was represented by at least 781425 reads in the raw data and contained between 111 and 443 rarefied OTUs (Supplemental Figure \ref{rarefaction}).
-}\DIFaddend 
+}\DIFaddend
 
 
 \subsection*{Ecological Analyses}
@@ -311,7 +319,7 @@ We were able to assign a taxon name with confidence to 136 of 146 OTU sequences.
 An additional species that was highly abundant in the sequence data, the krill \textit{Thysanoessa raschii}, has pelagic adults, highly seasonal reproduction, and sinking eggs; their distribution was consistent with our expectations based on a tendency of adults to aggregate offshore.
 Finally, the two most abundant taxa in the dataset were the mussel genus \textit{Mytilus} and the Barnacle order Sessilia; the adults of both taxa are sessile and occur exclusively on hard intertidal substrata but have highly motile larvae.
 \DIFaddbegin \DIFadd{Because large-scale dispersal could not be ruled out for the vast majority of taxa, subsetting the community data by taxonomic group had no qualitative effect on the spatial patterning or diversity metrics, and we omit those results here.
-}\DIFaddend 
+}\DIFaddend
 
 
 %----------------------------------DISCUSSION-----------------------------------
@@ -325,7 +333,7 @@ We demonstrate that \DIFdelbegin \DIFdel{more }\DIFdelend distant locations have
 \subsubsection*{(2) Distinct eDNA communities exist and are distributed in a non-random fashion}
  We demonstrate strong evidence for distinct community types and the non-random spatial patterning of those communities. While the spatial distributions of communities is surprising if one were concerned only with the macroscopic life stages of metazoans, it indeed does align with the broader view that even offshore pelagic communities are comprised of and influenced by nearshore organisms. This result underscores the idea that areas immediately offshore act as ecotones, a mixing zone of taxa characteristic of benthic and pelagic environments. While there was no distinct break in community types between onshore and offshore sites, there was some clustering of community types that may be explained by oceanographic features such as nearshore eddies generated by strong tidal exchange in a steep bathymetric setting \citep{Yang2010}. It would be useful to better understand such features during the period of sampling, by way of oceanographic monitoring devices.
 \DIFaddbegin \DIFadd{Finally, the uncertainty in identification of the number of distinct clusters to best characterize the community underlines the difficulty of identifying community patterns with the number of taxonomic groups considered here. We suspect that the signature of eDNA from microscopic life-stages may explain our inability to easily detect spatial community level patterns that align with our initial expectations.
-}\DIFaddend 
+}\DIFaddend
 
  \subsubsection*{(3) Richness declines and evenness increases with distance from shore}
 We \DIFdelbegin \DIFdel{detected a general pattern of declining richness and increasing evenness with increasing distance offshore}\DIFdelend \DIFaddbegin \DIFadd{found that richness declined while evenness increased with distance from shore}\DIFaddend .
@@ -340,7 +348,7 @@ This differential in biomass concentration from the shoreline to open waters may
 Where particles (organisms, tissues, and cells) are sparse, fewer would be collected per sample of constant volume, thus decreasing the probability of drawing as many types (richness) and increasing the probability that any two particles originate from the same type (evenness).
 }\DIFaddend Intriguingly, the cline in diversity from inshore to offshore was not determined by shared changes in communities as one moved offshore; the classification analysis suggested a fair amount of differences among communities at a given offshore distance (Figure \ref{pam_in_space}).
 \DIFdelbegin \DIFdel{Furthermore, the uncertainty in identification of the number of distinct clusters to best characterize the community underlines the difficulty of identifying community patterns with the number of taxonomic groups considered here. We suspect that the signature of eDNA from microscopic life-stages may explain our inability to easily detect spatial community level patterns that align with our initial expectations.
-}\DIFdelend 
+}\DIFdelend
 
 
 \subsubsection*{(4) Spatial patterning of eDNA is associated with taxon-specific life history\DIFdelbegin \DIFdel{characteristics.}\DIFdelend }
@@ -381,7 +389,7 @@ While there is much work to be done before eDNA techniques can be confidently de
 \section*{Acknowledgements}
 We wish to thank \DIFaddbegin \DIFadd{Linda Park, }\DIFaddend Robert Morris, E. Virginia Armbrust, and James Kralj.
 \DIFaddbegin \DIFadd{The manuscript was improved by suggestions from editor Magnus Johnson, and reviewers Owen Wangensteen and Stephen Moss.
-}\DIFaddend 
+}\DIFaddend
 
 %-----------------------------------FUNDING-------------------------------------
 \section*{Funding}
@@ -420,7 +428,7 @@ All sequence \DIFdelbegin \DIFdel{files and metadata }\DIFdelend \DIFaddbegin \D
 \DIFdelbegin %DIFDELCMD < \verb!http://www.ebi.ac.uk/ena/data/view/FIXME!
 %DIFDELCMD < %%%
 \DIFdelend \DIFaddbegin \verb!https://github.com/jimmyodonnell/banzai!\\
-\DIFaddend 
+\DIFaddend
 
 \DIFdelbegin \subsection{\DIFdel{Project Repository}}
 %DIFAUXCMD
