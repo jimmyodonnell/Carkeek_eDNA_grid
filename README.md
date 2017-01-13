@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.242976.svg)](https://doi.org/10.5281/zenodo.242976)
+
 This repository contains the data (or links to data) and code used to analyze the spatial distribution of environmental DNA near Carkeek Park in Puget Sound, Washington, USA.
 
 Authors:
