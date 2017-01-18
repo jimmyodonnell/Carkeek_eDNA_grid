@@ -188,9 +188,9 @@ if(EXPORT){
 }
 
 #-------------------------------------------------------------------------------
-## Plot the sites in space, colored by cluster, for ALL levels of K
+## Plot the sites in space, colored by cluster, for two levels of K
 plot_name <- "pam_in_space"
-legend_text[plot_name] <- "Cluster membership of sampled sites. Distance from onshore starting point is log scaled. Sites are colored and labeled by their assignment to a cluster by PAM analysis for number of clusters (K) chosen based on a priori expectations (2) and mean silhouette width (8)."
+legend_text[plot_name] <- "Cluster membership of sampled sites. Distance from onshore starting point is log scaled. Sites are colored and labeled by their assignment to a cluster by PAM analysis for number of clusters (K) chosen based on a priori expectations (A; 2) and mean silhouette width (B; 8)."
 
 if(EXPORT){
   pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
@@ -246,7 +246,18 @@ axis(side = 1,
 	at = unique(my_metadata[,colname_xcoord]), 
 	labels = unique(my_metadata[,colname_xcoord]), 
 	line = 0, lwd = 0, lwd.ticks = 1, las = 1)
+
+# add letter label
+mtext(
+  LETTERS[which(K_plot == i)],
+  side = 1, 
+  line = 1, 
+  adj = 0, 
+  cex = 3
+)
+
 }
+
 if(EXPORT){
   dev.off()
 }
