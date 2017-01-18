@@ -1,3 +1,3 @@
 Aggregate measures of diversity at each sample site.
 Data are rarefied counts of mitochondrial 16S sequences collected from 3 parallel transects in Puget Sound, Washington, USA.
-Evenness (left) is the probability that two sequences drawn at random are different; richness (right) represents the total number of unique sequences from that location.
+Evenness (A) is the probability that two sequences drawn at random are different; richness (B) represents the total number of unique sequences from that location.

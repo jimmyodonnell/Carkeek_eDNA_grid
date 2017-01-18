@@ -2,7 +2,7 @@ library(vegan)
 
 # requires a list of OTU tables and a list of corresponding metadata
 
-EXPORT <- FALSE
+EXPORT <- TRUE
 
 div_metrics <- list()
 
@@ -18,7 +18,7 @@ if(!exists("legend_text")){legend_text <- list()}
 legend_text[plot_name] <- {
 "Aggregate measures of diversity at each sample site.
 Data are rarefied counts of mitochondrial 16S sequences collected from 3 parallel transects in Puget Sound, Washington, USA.
-Evenness (left) is the probability that two sequences drawn at random are different; richness (right) represents the total number of unique sequences from that location."
+Evenness (A) is the probability that two sequences drawn at random are different; richness (B) represents the total number of unique sequences from that location."
 }
 
 if(EXPORT){
@@ -69,7 +69,15 @@ if(i == 1){
   title(ylab = "Distance from 0 (meters)")
 }
 
-title(main = names(div_metrics[i]))
+# add letter for legend
+mtext(
+  text = LETTERS[i], 
+  side = 1, 
+  adj = 1.3, 
+  # at = c(max(metadata[[which_data]][,colname_xcoord])*1.2, 0), 
+  line = 1, 
+  cex = 2 )
+
 title(xlab = "Transect", line = 1)
 
 # add color legend
