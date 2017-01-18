@@ -5,6 +5,7 @@
 tif_file <- file.path(data_dir, "ngdc_pug_snd_dm_subset.tif")
 
 library(raster)
+library(grid) #grid.text()
 data_raster <- raster(tif_file)
 
 ignore_above_0 <- function(x){
@@ -66,7 +67,7 @@ if(EXPORT){
   writeLines(legend_text[[plot_name]], con = legend_file)
   pdf(file = pdf_file, width = 6, height = 5)
 }
-par(mar = c(5,6,1,4))
+par(mar = c(5,6,1,5))
 
 library(rasterVis)
 myTheme <- rasterTheme(region = col_depth)
@@ -77,6 +78,11 @@ levelplot(
   par.settings = myTheme
 ) + 
 layer(sp.points(mypoints, col = "orangered", pch = 4))
+
+# add label to depth color (zcale) legend
+trellis.focus("legend", side="right", clipp.off=TRUE, highlight=FALSE)
+grid.text(label = "Depth (m)", x = 0.2, y = -0.025, hjust = 0.5, vjust = 1)
+trellis.unfocus()
 
 if(EXPORT){
   dev.off()
