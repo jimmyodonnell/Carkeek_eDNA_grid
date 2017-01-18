@@ -2,7 +2,7 @@ library(vegan)
 
 # requires a list of OTU tables and a list of corresponding metadata
 
-EXPORT <- TRUE
+EXPORT <- FALSE
 
 div_metrics <- list()
 
@@ -30,7 +30,7 @@ if(EXPORT){
 
 the_layout <- layout(mat = matrix(c(1,2), nrow = 1), widths = c(11,6))
 
-margins_subplot <- list(c(4,5,3,5), c(4,0,3,3), c(4,0,3,3))
+margins_subplot <- list(c(3,5,1,5), c(3,0,1,3))
 
 for(i in 1:length(div_metrics)){
 
@@ -73,7 +73,7 @@ if(i == 1){
 mtext(
   text = LETTERS[i], 
   side = 1, 
-  adj = 1.3, 
+  adj = 1.4, 
   # at = c(max(metadata[[which_data]][,colname_xcoord])*1.2, 0), 
   line = 1, 
   cex = 2 )
