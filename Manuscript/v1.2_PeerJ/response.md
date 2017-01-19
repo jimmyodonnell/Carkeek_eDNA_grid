@@ -6,22 +6,40 @@ Action these changes and resubmit
 # Remove Figure Legends from Figure Files
 Please remove the titles and the legends from the figure files. This information should not be contained in the figure file.
 
+  Response: All titles (i.e. expanded labels) were replaced with letters and referenced as such in the legends. If there were legends in the figure files, I am unaware of it -- could you direct me to a specific example?
+
 # Figure Citations
 Citations must be organized, and cited for the first time, in ascending numerical order, meaning Figure 1 must always be cited first, Figure 2 must always be cited second, and so on. Please can you edit your citations and re-upload the document here <https://peerj.com/manuscripts/14649/files/>.
+
+  Response: We made this change.
 
 # Funding Statement
 Please remove all financial and grant disclosure information from the manuscript. This information should only be provided in the Funding Statement here: <https://peerj.com/manuscripts/14649/declarations/#question_18>.
 
+  Response: We made this change.
+
 # Author Contributions
 Please remove all author contributions information from the source file manuscript and make sure it is included in your Authorship Statement instead here <https://peerj.com/manuscripts/14649/declarations/#authorship>.
+
+  Response: We made this change.
+
 
 # Competing Interests
 Please remove all competing interests information from the source file manuscript and make sure it is included in your Competing Interest Statement instead here <https://peerj.com/manuscripts/14649/declarations/#question_17>.
 
+  Response: We made this change.
+
+
 # Affiliations
 1) We notice that you've some of your affiliations include "under contract to the Northwest Fisheries Science Center". Can you clarify whether this line in the affiliations is required by contract? If not, please state this connection in the acknowledgements instead.
 
+  Response: This is required by the contract.
+
+
 2) Please edit the author affiliations using the 'Edit' button to the right of the names here <https://peerj.com/manuscripts/14649/authors>, or edit your manuscript source file and upload it here <https://peerj.com/manuscripts/14649/files>.
+
+  Response: We did not make edits because this format is required by the contract.
+
 
 # Figures
 1) Figures 5, 6, 7 and 9 (if it is a primary file) have multiple parts. Each part needs to be labeled alphabetically to use (A, B, C, D, etc) instead of directions (left, right, upper, lower, etc). Please upload your figures in either EPS, PNG, JPG (photographs only) or PDF (vector PDFs only), measuring at least 900 by 900 pixels and eliminating excess white space around the images, as primary files here <https://peerj.com/manuscripts/14649/files>.
