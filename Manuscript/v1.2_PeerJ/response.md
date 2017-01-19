@@ -43,7 +43,12 @@ Please remove all competing interests information from the source file manuscrip
 
 # Figures
 1) Figures 5, 6, 7 and 9 (if it is a primary file) have multiple parts. Each part needs to be labeled alphabetically to use (A, B, C, D, etc) instead of directions (left, right, upper, lower, etc). Please upload your figures in either EPS, PNG, JPG (photographs only) or PDF (vector PDFs only), measuring at least 900 by 900 pixels and eliminating excess white space around the images, as primary files here <https://peerj.com/manuscripts/14649/files>.
+
+  Response: We modified all figures to use letter labels.
+
 2) Please make sure you are selecting the correct file type when uploading your files here: <https://peerj.com/manuscripts/14649/files> (figure, table, etc.)
+
+  Response: All of our figures are PDFs. Is there a specific problem?
 
 # Figure Permissions
 Could you please confirm that Figure 1 is not copyrighted, or if it is, you have permission to publish it under our CC BY 4.0 license? Please leave a note to staff at <https://peerj.com/manuscripts/14649/declarations/#other>. If it is taken from copyrighted material, we will need a copy of the written permission for our records uploaded as a Supplemental File here: <https://peerj.com/manuscripts/14649/files/>. A sample permission letter can be found here: <https://peerj.com/about/author-instructions/#figure-referencing>

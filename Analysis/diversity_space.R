@@ -122,7 +122,7 @@ plot_name <- "diversity_distance_all"
 if(!exists("legend_text")){ legend_text <- list()}
 legend_text[plot_name] <- {
 "Aggregate diversity metrics of each site plotted against distance from shore.
-Both Simpson's Index (top) and richness (bottom) are shown for a variety of data subsets and transformations (left to right: mean, unfiltered mean, log(x + 1), transformed, scaled, spatially variable, and taxon clustered). 
+Both Simpson's Index (top; A-F) and richness (bottom; G-L) are shown for a variety of data subsets and transformations (left to right: mean (A,G), unfiltered mean (B,H), log(x + 1) transformed (C,I), scaled (D,J), spatially variable (E,K), and taxon clustered (F,L)). 
 Lines and bands illustrate the fit and 95% confidence interval of a linear model.
 See methods text for detailed data descriptions."
 
