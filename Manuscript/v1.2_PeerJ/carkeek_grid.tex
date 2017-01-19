@@ -153,7 +153,7 @@ Up to 30 PCR products were combined according to their primer index in equal con
 
 
 \subsection*{Sequence Data Processing (Bioinformatics)}
-Detailed bioinformatic methods are provided in the supplemental material, and analysis scripts used from raw sequencer output onward can be found in the public project directory (see \nameref{analysis_scripts}). Briefly, we performed five steps to process the sequence data: (1) Merge paired-end reads, (2) eliminate low-quality reads, (3) eliminate PCR artifacts (chimeras), (4) cluster reads by similarity into operational taxonomic units (OTUs), and (5) match observed sequences to taxon names. Additionally, we checked for consistency among PCR replicates, excluded extremely rare sequences, and rescaled (rarefied) the data to account for differences in sequencing depth. The data for input to further analyses are a contingency table of the mean count of unique sequences, OTUs, or taxa present in each environmental sample.
+Detailed bioinformatic methods are provided in the supplemental material, and analysis scripts used from raw sequencer output onward can be found in the public project directory (see \nameref{analysis_scripts}). Briefly, we performed five steps to process the sequence data: (1) Merge paired-end reads \citep{Zhang2014}, (2) eliminate low-quality reads \citep{Edgar2010,vsearch}, (3) eliminate PCR artifacts (chimeras) \citep{Edgar2010,vsearch,Martin2011}, (4) cluster reads by similarity into operational taxonomic units (OTUs) \citep{swarm}, and (5) match observed sequences to taxon names \citep{Camacho2009, Chamberlain2013, Chamberlain2016}. Additionally, we checked for consistency among PCR replicates, excluded extremely rare sequences, and rescaled (rarefied) the data to account for differences in sequencing depth. The data for input to further analyses are a contingency table of the mean count of unique sequences, OTUs, or taxa present in each environmental sample.
 
 
 \subsection*{Ecological Analyses}
@@ -172,11 +172,11 @@ To address our first objective and determine whether or not nearby samples are m
 Where the relationship between community similarity ($y_{ij}$) and spatial distance ($x_{ij}$) between observations $i$ and $j$ is determined by the similarity of samples at distance 0 ($A$), and the distance at which half the total change in similarity is achieved ($B$). This allows for samples collected very close together (near 0) to have similarity significantly less than one. We assessed model fit using the R function nls \citep{R}, using the nl2sol algorithm from the Port library to solve separable nonlinear least squares using analytically computed derivatives (http://netlib.org/port/nsg.f). We set bounds of 0 and 1 for the intercept parameter and a lower bound of 0 for the distance at half similarity; starting values of these parameters were 0.5 and $x_{max}/2$, respectively. We calculated a 95\% confidence interval for the parameters and the predicted values using a first-order Taylor expansion approach implemented by the function predictNLS in the R package propagate \citep{propagate}.
 
 
-There are other conceptually reasonable forms to expect the space-by-similarlity relationship to take; we present these in the supplemental material along with alternative data subsets and similarity indices (see \nameref{supplement}).
+There are other conceptually reasonable forms to expect the space-by-similarlity relationship to take; we present these in the supplemental material along with alternative data subsets and similarity indices.
 
 \subsection*{Objective 2: Spatial distribution of diversity}
 \subsubsection*{Community Classification}
-To determine the spatial distribution and variation of eDNA communities (objective 2), we used multivariate classification algorithms. We simultaneously assessed the existence of distinct community types and the membership of samples to those community types using an unsupervised classification algorithm known as partitioning around medoids (PAM; sometimes referred to as k-medoids clustering) \citep{Kaufman1990}, as implemented in the R package cluster \citep{cluster}. The classification of samples to communities was made on the basis of their pairwise Bray-Curtis similarity, calculated using the function vegdist in the R package vegan \citep{vegan}. Other distance metrics were evaluated but had no appreciable effect on the outcome of the analysis (Supplemental Figure \ref{distance_decay_multi}). In order to chose an optimal number of clusters ($K$), we evaluated the distribution of silhouette widths, a measure of the similarity between each sample and its cluster compared to its similarity to other clusters. We repeated the analysis using fuzzy clustering (FANNY, \citep{Kaufman1990}; however, the results were qualitatively similar to the results using PAM so we omit them here.
+To determine the spatial distribution and variation of eDNA communities (objective 2), we used multivariate classification algorithms. We simultaneously assessed the existence of distinct community types and the membership of samples to those community types using an unsupervised classification algorithm known as partitioning around medoids (PAM; sometimes referred to as k-medoids clustering) \citep{Kaufman1990}, as implemented in the R package cluster \citep{cluster}. The classification of samples to communities was made on the basis of their pairwise Bray-Curtis similarity, calculated using the function vegdist in the R package vegan \citep{vegan}. Other distance metrics were evaluated but had no appreciable effect on the outcome of the analysis (Supplemental Figure 1). In order to chose an optimal number of clusters ($K$), we evaluated the distribution of silhouette widths, a measure of the similarity between each sample and its cluster compared to its similarity to other clusters. We repeated the analysis using fuzzy clustering (FANNY, \citep{Kaufman1990}; however, the results were qualitatively similar to the results using PAM so we omit them here.
 
 
 \subsubsection*{Aggregate Measures of Diversity}
@@ -192,7 +192,7 @@ After assigning taxon names to the abundance data, we plotted the distribution i
 \section*{Results}
 \subsection*{Sequence Data Processing (Bioinformatics)}
 Preliminary sequence analysis strongly suggested that the observed variation among environmental samples reflects true variation in the environment, rather than variability due to lab protocols, for the following reasons (note that all value ranges are reported as mean plus and minus one standard deviation). First, all libraries passed the FastQC per-base sequence quality filter, generating a total of 371,576,190 reads passing filter generated in each direction. Second, samples in this study were represented by an adequate number of reads (333,537.9 $\pm$ 112,200.5), with no individual sample receiving fewer than 130,402 reads. Third, there was a very low frequency of cross-contamination from other libraries into those reported here (5e-05$\pm$8e-05; max proportion 0.00034). Fourth, after scaling all samples to the same sequencing depth, OTUs with abundance greater than 178 reads (0.14\% of a sample's reads) experienced no turnover among PCR replicates within a sample. Fifth, sequence abundances among PCR replicates within water samples were remarkably consistent. A single sample had low similarity among PCR replicates (0.659) after removing this outlier, the lowest mean similarity among replicates within a sample was 0.966. Overall similarities among PCR replicates within a sample were extremely high (0.976 $\pm$ 0.013), and far higher than those among samples (0.3 $\pm$ 0.16).
-Across PCR replicates, each sample was represented by at least 781425 reads in the raw data and contained between 111 and 443 rarefied OTUs (Supplemental Figure \ref{rarefaction}).
+Across PCR replicates, each sample was represented by at least 781425 reads in the raw data and contained between 111 and 443 rarefied OTUs (Supplemental Figure 2).
 
 
 \subsection*{Ecological Analyses}
@@ -203,7 +203,9 @@ Physical proximity is a good predictor of eDNA community similarity: Similarity 
 Despite a clear trend in community similarity as a function of spatial separation, the results from our classification analysis are difficult to interpret. The silhouette analysis indicated the presence of 8 distinct communities; however, the gain in mean silhouette width from 2 was small (0.1), and lacked a distinctive peak (Figure \ref{pam_sil}), indicating substantial uncertainty in the clustering algorithm. Thus, we present the results of cluster assignment for both $K$ = 2 and $K$ = 8 to illustrate the range of results (Figure \ref{pam_in_space}). Excluding taxa which occur in only one site had no discernible effect on the outcome of the PAM analysis (number of clusters, assignment to clusters). While there was no distinct spatial divide indicating the presence of an inshore versus an offshore community, one of the two communities (at $K$ = 2) occurred in only 2 out of 18 samples inside 1000 meters from shore, and never occurred within 125 meters of shore, suggesting the presence of an inshore and offshore community.
 
 \subsubsection*{Diversity in Space}
-Sites offshore tend to be less rich and more even than those inshore (Figure \ref{diversity_distance}). Mean OTU richness declined by 1.42 per 1000 meters from a mean of 17.6 taxa (95\%CI = 2.15) inshore to 11.9 taxa (95\%CI = 4.31) at offshore locations (p = 0.0415; Figure \ref{diversity_distance}). Evenness increased by .0666 per 1000 meters from 0.225 (95\%CI = 0.0558) to 0.491 (95\%CI = $\pm$ 0.112), indicating that sequence reads were less evenly distributed among taxa in offshore samples (p $\ll$ 0.05; Figure \ref{diversity_distance}). There was no evidence for spatial autocorrelation for any of the diversity metrics (Moran's I, p > 0.05; Figure \ref{diversity}).
+Sites offshore tend to be less rich and more even than those inshore (Figure \ref{diversity_distance}). Mean OTU richness declined by 1.42 per 1000 meters from a mean of 17.6 taxa (95\%CI = 2.15) inshore to 11.9 taxa (95\%CI = 4.31) at offshore locations (p = 0.0415; Figure \ref{diversity_distance}). Evenness increased by .0666 per 1000 meters from 0.225 (95\%CI = 0.0558) to 0.491 (95\%CI = $\pm$ 0.112), indicating that sequence reads were less evenly distributed among taxa in offshore samples (p $\ll$ 0.05; Figure \ref{diversity_distance}).
+The subset of data used for this analysis had no qualitative effect on the outcome of this analysis (Supplemental Figure 3).
+There was no evidence for spatial autocorrelation for any of the diversity metrics (Moran's I, p > 0.05; Figure \ref{diversity}).
 
 \subsubsection*{Taxon and Life History Patterns}
 We were able to assign a taxon name with confidence to 136 of 146 OTU sequences. The vast majority of sequences (97.6\%) and OTUs (96.9\%) were matched to organisms that have high potential for dispersal at either the gamete, larval, or adult stage, making it impossible to determine whether the source of that DNA was adults with well-documented spatial patterns (e.g. sessile nearshore specialists) or highly mobile early life history stages. Of the 6 OTUs for which dispersal is limited during all life history stages, only 2 occurred in more than two samples, precluding a quantitative comparison of spatial dispersion based on life history characteristics. These were assigned to \textit{Cymatogaster aggregata}, a viviparous nearshore fish with internal fertilization, and \textit{Cupolaconcha meroclista}, a sessile Vermetid gastropod with presumed internal fertilization and short larval dispersal \citep{Strathmann2006, Phillips2010, Calvo2004}. \textit{Cymatogaster aggregata} was distinctly more abundant close to shore, with no sequences occurring in any sample beyond 250 meters (Figure \ref{otu_in_space_select}). \textit{Cupolaconcha meroclista} showed no such distinct spatial trend, occurring in nearly equal abundance at three sites, 75, 500, and 2000 meters from shore.
@@ -375,105 +377,6 @@ All analyses were performed using scripts available in the Analysis subdirectory
     \caption{\protect\input{"../../Figures/otu_in_space_select_legend.txt"}}
   \label{otu_in_space_select}
 \end{figure}
-
-
-%----------------------------------SUPPLEMENT-----------------------------------
-\pagebreak
-\section*{Supplemental Material}
-\label{supplement}
-
-
-\subsection*{Methods}
-\subsubsection*{Bioinformatics}
-Reads passing the preliminary Illumina quality filter were demultiplexed on the basis of the adapter index sequence by the sequencing facility. We used fastqc to assess the fastq files output from the sequencer for low-quality indications of a problematic run. Forward and reverse reads were merged using PEAR v0.9.6 \cite{Zhang2014} and discarded if more than 0.01 of the bases were uncalled. If a read contained two consecutive base calls with quality scores less than 15 (i.e. probability of incorrect base call = 0.0316), these bases and all subsequent bases were removed from the read. Paired reads for which the probability of matching by chance alone exceeded 0.01 were not assembled and omitted from the analysis. Assembled reads were discarded if assembled sequences were not between 50 and 168 bp long, or if reads did not overlap by at least 100 bp.
-
-
-We used vsearch v2.1.1 \citep{vsearch} to discard any merged reads for which the sum of the per-base error probabilities was greater than 0.5 (``expected errors'') \cite{Edgar2010}. Sequences were demultiplexed on the basis of the primer index sequence at base positions 4-9 at both ends using the programming language AWK. Primer sequences were removed using cutadapt v1.7.1 \cite{Martin2011}, allowing for 2 mismatches in the primer sequence. Identical duplicate sequences were identified, counted, and removed in python to speed up subsequent steps by eliminating redundancy, and sequences occurring only once were removed. We checked for and removed any sequence likely to be a PCR artifact due to incomplete extension and subsequent mis-priming using a method described by \citet{Edgar2010} and implemented in vsearch v2.0.2. Sequences were clustered into operational taxonomic units (OTUs) using the single-linkage clustering method implemented by swarm version 2.1.1 with a local clustering threshold (d) of 1 and fastidious processing \citep{swarm}.
-
-
-Cross-contamination of environmental, DNA, or PCR samples can result in erroneous inference about the presence of a given DNA sequence in a sample. However, other processes can contribute to the same signature of contamination. For example, errors during oligonucleotide synthesis or sequencing of the indexes could cause reads to be erroneously assigned to samples. The frequency of such errors can be estimated by counting the occurrence of sequences known to be absent from a given sample, and of reads that do not contain primer index sequences in the expected position or combinations. These occurrences indicate an error in the preparation or sequencing procedures. We estimated a rate of incorrect sample assignment by calculating the maximum rate of occurrence of index sequences combinations we did not actually use, as well as the rates of cross-library contamination by counting occurrences of primer sequences from 12S amplicons prepared in a lab more than 1000 kilometers away, but pooled and sequenced alongside our samples. This represents a general minimum rate at which we can expect that sequences from one environmental sample could be erroneously assigned to another, and so we considered for further analysis only those reads occurring with greater frequency than this across the entire dataset.
-
-
-We checked for experimental error by evaluating the Bray-Curtis similarity (1 - Bray-Curtis dissimilarity) among replicate PCRs from the same DNA sample. We calculated the mean and standard deviation across the dataset, and excluded any PCR replicates for which the similarity between itself and the other replicates was less than 1.5 standard deviations from the mean.
-
-
-To account for variation in the number of sequencing reads (sequencing depth) recovered per sample, we rarefied the within-sample abundance of each OTU by the minimum sequencing depth \citep{vegan}.
-
-
-Because each step in this workflow is sensitive to contamination, it is possible that some sequences are not truly derived from the environmental sample, and instead represent contamination during field sampling, filtration, DNA extraction, PCR, fragment size selection, quantitation, sequencing adapter ligation, or the sequencing process itself. We take the view that contaminants are unlikely to manifest as sequences in the final dataset in consistent abundance across replicates; indeed, our data show that the process from PCR onward is remarkably consistent. Thus, after scaling to correct for sequencing depth variation, we calculated from our data the maximum number of sequence counts for which there is turnover in presence-absence among PCR replicates within an environmental sample. We use this number to determine a conservative minimum threshold above which we can be confident that counts are consistent among replicates and not of spurious origin, and exclude from further analysis observations where the mean abundance across PCR replicates within samples does not reach this threshold. For further analyses we use the mean abundance across PCR replicates for each of the 24 environmental samples.
-
-
-In order to determine the most likely taxon from which each sequence originated, the representative sequence from each OTU was then queried against the NCBI nucleotide collection (GenBank; version October 7, 2015; 32,827,936 sequences) using the blastn command line utility \citep{Camacho2009}. In order to maximize the accuracy of this computationally intensive step, we implemented a nested approach whereby each sequence was first queried using strict parameters (e-value = 5e-52), and if no match was found, the query was repeated with decreasingly strict e-values (5e-48 5e-44 5e-40 5e-36 5e-33 5e-29 5e-25 5e-21 5e-17 5e-13). Other parameters were unchanged among repetitions (word size: 7; maximum matches: 1000; culling limit: 100; minimum percent identity: 0). Each query sequence can be an equally good match to multiple taxa either because of invariability among taxa or errors in the database (e.g. human sequences are commonly attributed to other organisms when they in fact represent lab contamination). In order to guard against these spurious results, we used an algorithm to find the lowest common taxon for at least 80\% of the matched taxa, implemented in the R package taxize 0.7.8 \citep{Chamberlain2013, Chamberlain2016}. Similarly, we repeated analyses using the dataset consolidated at the same taxonomic rank across all queries, for the rank of both family and order.
-
-
-\subsubsection*{Alternative distance decay model formulations}
-
-\paragraph{Linear:} We fit a straight line through the points after log-transforming the spatial distances to estimate the intercept and slope. This model ignores the bounds of our response variable of community similarity.
-
-
-\paragraph{Michaelis-Menten:} We fit a Michaelis-Menten-like curve to our data.
-Our formulation can be thought of as a modification of the Michaelis-Menten equation, but with the addition of a parameter in the numerator which modifies the intercept.
-
-\begin{equation}\label{MM_full}
-	y = \frac{AB + Cx}{B+x}
-\end{equation}
-
-
-Where $C$ is the asymptote of minimum similarity. This formulation allows us to estimate the maximum similarity in the system, and the rate at which it is achieved. If the value of the parameter ($AB$) is 0 (i.e. if the intercept is 0), the form is identical to the Michaelis-Menten equation:
-
-
-\begin{equation}\label{MichaelisMenten}
-	y = \frac{Cx}{B + x}
-\end{equation}
-
-
-This is conceptually satisfying in that a fit through [0,1] reflects the theoretical expectation that samples at zero distance from one another are necessarily identical. Given an efficient sampling technique, replicate samples taken at the same position in space should be identical, and thus the intercept of the regression of similarity against distance should be 1, and deviation from 1 is an indicator of the efficiency of the sampling method. % NOTE: We did not take multiple environmental samples from the same position in space, but conducted multiple PCRs from each environmental sample.
-
-
-Finally, we considered a model which estimates an asymptote as the total change in similarity ($D$):
-
-\begin{equation}\label{Harold}
-	y = \frac{A + Dx}{B + x}
-\end{equation}
-
-However, this model failed to converge and produced uninformative estimates of all parameters.
-
-
-\subsection*{Supplemental Figures}
-
-\begin{figure}[H] % [h!] forces the figure to be placed roughly here
-  \centering
-    \includegraphics[height=0.6\textheight]{distance_decay_multi.pdf}
-    \caption{\protect\input{"../../Figures/distance_decay_multi_legend.txt"}}
-  \label{distance_decay_multi}
-\end{figure}
-
-\begin{figure}[H] % [h!] forces the figure to be placed roughly here
-  \centering
-    \includegraphics[width=1\textwidth]{diversity_distance_all.pdf}
-    \caption{\protect\input{"../../Figures/diversity_distance_all_legend.txt"}}
-  \label{diversity_distance_all}
-\end{figure}
-
-\begin{figure}[H] % [h!] forces the figure to be placed roughly here
-  \centering
-    \includegraphics[height=0.6\textheight]{rarefaction.pdf}
-    \caption{\protect\input{"../../Figures/rarefaction_legend.txt"}}
-  \label{rarefaction}
-\end{figure}
-
-
-
-% \pagebreak
-% \section*{Orphaned Text}
-% Samples collected of ecological communities may vary in dissimilarity from 0 (completely identical) to 1 (completely different). For samples collected from multiple locations, the relationship between their spatial distance and community dissimilarity is of interest because it reflects the amount of community heterogeneity---changes in abundance and composition---over the spatial scale sampled.
-% In general, the relationship between community dissimilarity (0 = identical; 1 = completely different) and spatial distance is expected to be asymptotic, because communities nearer to each other tend to be more similar than those farther apart. The intercept is expected to be 0, because only within-sample comparisons can have 0 spatial separation, and communities have no dissimilarity within a sample if sampling method is repeatable.
-% (technically impossible for samples to be taken at exactly 0; they are actually immediately adjacent.)
-% Deviation from 0 indicates heterogeneous community composition/structure over fine scales. Likewise, dissimilarity cannot exceed 1, and reaches 1 only when multiple discrete community types are sampled. The trend is expected to be asymptotic if communities within a habitat are spatially structured, where the value of the asymptote and the rate of increase provide insight about community turnover. A flat relationship indicates that heterogeneity is not assorted spatially, and can be interpreted in different ways, depending on the asymptote. % ?or no relationship both
-% If the asymptote is close to 1, there is high spatial heterogeneity over the spatial scale of sampling. If the asymptote is close 0, all samples are similar, and we infer there is complete community homogeneity over the scale sampled. The rate at which community dissimilarity approaches the mean gives an indication of the rate of community turnover.
-%
-% In theory, given enough data from manipulative experiments, it is possible that one could measure environmental variables--temperature, UV intensity, flow, etc--at the time of eDNA sample collection in order to more precisely estimate the origin of eDNA. In practice, this approach is unlikely to yield appreciable gains in accuracy because even the most advanced sensors (ADCPs) and analytical techniques available cannot determine the origin of particles in highly dynamic fluid environments at scales relevant to most ecological questions \citep{Piterbarg2001}. %http://www.rsmas.miami.edu/LAPCOD/research/prediction/
-% Further, collecting and analyzing these data would severely limit the scalability of eDNA methods. A more practical approach is to compare the spatial distribution of communities of eDNA with expectations based on prior knowledge of the spatial distribution of communities of organisms.
 
 
 \end{document}

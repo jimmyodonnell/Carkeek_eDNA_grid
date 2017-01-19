@@ -6,7 +6,7 @@ Action these changes and resubmit
 # Remove Figure Legends from Figure Files
 Please remove the titles and the legends from the figure files. This information should not be contained in the figure file.
 
-  Response: All titles (i.e. expanded labels) were replaced with letters and referenced as such in the legends. If there were legends in the figure files, I am unaware of it -- could you direct me to a specific example?
+  Response: All titles (i.e. expanded labels on subplots) were replaced with letters and referenced as such in the legends. If there were legends in the figure files, I am unaware of it -- could you direct me to a specific example?
 
 # Figure Citations
 Citations must be organized, and cited for the first time, in ascending numerical order, meaning Figure 1 must always be cited first, Figure 2 must always be cited second, and so on. Please can you edit your citations and re-upload the document here <https://peerj.com/manuscripts/14649/files/>.
@@ -58,3 +58,5 @@ Could you please confirm that Figure 1 is not copyrighted, or if it is, you have
 
 # Remove Supplemental Files from Manuscript Source File
 You reference Figures 8, 9, and 10 as supplemental figures in your manuscript, but have placed them in the Primary Files section. The supplemental files should only be supplied as separate files in the Supplemental Files section and should not appear in the manuscript source document. If they are Supplemental files, please remove them from the manuscript document and re-upload the manuscript here: <https://peerj.com/manuscripts/14649/files>, upload the Supplemental Files separately in the appropriate section, and rename them as Supplemental Files 1, 2, and 3. Supplemental Files are not typeset, they are published as downloadable files with the titles and legends exactly as they are entered into the system, so please ensure the titles and legends are complete.
+
+  Response: We have removed the supplemental material from the main manuscript, and updated the figure references. Please let us know if we need to reference this material in any specific way.
