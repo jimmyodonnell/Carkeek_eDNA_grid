@@ -1,4 +1,4 @@
 Aggregate diversity metrics of each site plotted against distance from shore.
 Both Simpson's Index (top) and richness (bottom) are shown for a variety of data subsets and transformations (left to right: mean, unfiltered mean, log(x + 1), transformed, scaled, spatially variable, and taxon clustered). 
-Lines and bands illustrate the fit and 95\% confidence interval of a linear model.
+Lines and bands illustrate the fit and 95% confidence interval of a linear model.
 See methods text for detailed data descriptions.

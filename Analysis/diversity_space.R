@@ -123,7 +123,7 @@ if(!exists("legend_text")){ legend_text <- list()}
 legend_text[plot_name] <- {
 "Aggregate diversity metrics of each site plotted against distance from shore.
 Both Simpson's Index (top) and richness (bottom) are shown for a variety of data subsets and transformations (left to right: mean, unfiltered mean, log(x + 1), transformed, scaled, spatially variable, and taxon clustered). 
-Lines and bands illustrate the fit and 95\% confidence interval of a linear model.
+Lines and bands illustrate the fit and 95% confidence interval of a linear model.
 See methods text for detailed data descriptions."
 
 }
@@ -143,6 +143,7 @@ for(i in 1:length(div_dist)){
 	)
 	plot_model(div_dist[[i]]$conf, x_pred, line_type = 2)
 	# abline(div_dist[[i]]$out, col = "red")
+	mtext(LETTERS[i], side = 1, line = 2, adj = -0.2, cex = 2)
 }
 if(EXPORT){
   dev.off()
