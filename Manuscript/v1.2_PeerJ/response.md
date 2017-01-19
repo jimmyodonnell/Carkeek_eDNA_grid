@@ -53,5 +53,8 @@ Please remove all competing interests information from the source file manuscrip
 # Figure Permissions
 Could you please confirm that Figure 1 is not copyrighted, or if it is, you have permission to publish it under our CC BY 4.0 license? Please leave a note to staff at <https://peerj.com/manuscripts/14649/declarations/#other>. If it is taken from copyrighted material, we will need a copy of the written permission for our records uploaded as a Supplemental File here: <https://peerj.com/manuscripts/14649/files/>. A sample permission letter can be found here: <https://peerj.com/about/author-instructions/#figure-referencing>
 
+  Response: Figure 1 is not copyrighted, nor is the data used to create it.
+
+
 # Remove Supplemental Files from Manuscript Source File
 You reference Figures 8, 9, and 10 as supplemental figures in your manuscript, but have placed them in the Primary Files section. The supplemental files should only be supplied as separate files in the Supplemental Files section and should not appear in the manuscript source document. If they are Supplemental files, please remove them from the manuscript document and re-upload the manuscript here: <https://peerj.com/manuscripts/14649/files>, upload the Supplemental Files separately in the appropriate section, and rename them as Supplemental Files 1, 2, and 3. Supplemental Files are not typeset, they are published as downloadable files with the titles and legends exactly as they are entered into the system, so please ensure the titles and legends are complete.
