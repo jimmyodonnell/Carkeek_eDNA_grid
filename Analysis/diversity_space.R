@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 # Diversity in Space
 #-------------------------------------------------------------------------------
-EXPORT <- TRUE
+EXPORT <- FALSE
 
 dataset <- "mean"
 
@@ -164,7 +164,7 @@ plot_name <- "diversity_distance"
 if(!exists("legend_text")){ legend_text <- list()}
 legend_text[plot_name] <- {
 "Aggregate diversity metrics of each site plotted against distance from shore.
-Both Simpson's Index (left) and richness (right) are shown, and have been computed from the mean abundance of unique DNA sequences found across 4 PCR replicates at each of 24 sites.
+Both Simpson's Index of evenness (A) and richness (B) are shown, and have been computed from the mean abundance of unique DNA sequences found across 4 PCR replicates at each of 24 sites.
 Lines and bands illustrate the fit and 95% confidence interval of a linear model.
 "
 }
@@ -185,7 +185,12 @@ for(i in 1:length(col_sub)){
 	
 	# ylims <- range(c(range(div_dist[[metric_name]]$conf), range(temp_dat$y)))
 
-	plot(x = div_dist[[col_sub[i]]]$dat$x, y = div_dist[[col_sub[i]]]$dat$y,
+	plot_dat <- data.frame(
+		x = div_dist[[col_sub[i]]]$dat$x, 
+		y = div_dist[[col_sub[i]]]$dat$y
+	)
+
+	plot(x = plot_dat$x, y = plot_dat$y,
 	  # log = "x", 
 	  # axes = FALSE,
 	  xlab = "Distance from shore (meters)", 
@@ -194,14 +199,24 @@ for(i in 1:length(col_sub)){
 
 	# tick_x <- c(0,50,250,500,1000,2000,4000)
 	# axis(1, at = log(tick_x + 1), labels = tick_x)
-	
 	# axis(2)
-	
 	# box()
 
 	plot_model(div_dist[[col_sub[i]]]$conf, x_pred, line_type = 2)
+	
+	legend_x <- ifelse(i == 1, min(plot_dat$x), max(plot_dat$x))
+    
+	legend_adj <- ifelse(i == 1, c(0, -1), c(1, 0.5) )
+	
+	text(
+		x = legend_x, 
+		y = max(plot_dat$y)*0.95, 
+		adj = legend_adj,
+		label = LETTERS[i], 
+		cex = 3)
 
 }
+
 if(EXPORT){
   dev.off()
 }

@@ -1,4 +1,4 @@
 Aggregate diversity metrics of each site plotted against distance from shore.
-Both Simpson's Index (left) and richness (right) are shown, and have been computed from the mean abundance of unique DNA sequences found across 4 PCR replicates at each of 24 sites.
+Both Simpson's Index of evenness (A) and richness (B) are shown, and have been computed from the mean abundance of unique DNA sequences found across 4 PCR replicates at each of 24 sites.
 Lines and bands illustrate the fit and 95% confidence interval of a linear model.
 
