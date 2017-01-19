@@ -43,7 +43,7 @@ if(EXPORT){
 }
 
 par(mar = c(4,4,1,1))
-rarecurve(dat, step = 10000, sample = min_reads, 
+rarecurve(dat, step = 10000, sample = min_reads, las = 1, 
   xlab = "Number of sequences", ylab = "OTUs", col = "orchid")
 
 if(EXPORT){
