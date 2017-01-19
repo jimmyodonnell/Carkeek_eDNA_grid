@@ -96,11 +96,19 @@ y_for_plotting <- as.numeric(as.factor(my_metadata[ , colname_ycoord]))
 
 if(!exists("legend_text")){legend_text <- list()}
 
-legend_text[plot_name] <- {
-"Distribution of eDNA from select taxa.
-Circles are colored and scaled by the proportion of that taxon's maximum proportional abundance.
-That is, the largest circle is the same size in each of the panels, and occurs where that taxon contributed the greatest proportional abundance of reads to that sample."
+select_taxa_legend <- vector()
+for(i in 1:length(select_taxa)){
+  select_taxa_legend[i] <- paste0(select_taxa[i], " (", LETTERS[i], ")" )
 }
+select_taxa_legend0 <- paste(select_taxa_legend, collapse = ", ")
+
+select_taxa[i]
+legend_text[plot_name] <- {paste0(
+"Distribution of eDNA from select taxa.
+Taxa represented are: ", select_taxa_legend0,  
+". Circles are colored and scaled by the proportion of that taxon's maximum proportional abundance.
+That is, the largest circle is the same size in each of the panels, and occurs where that taxon contributed the greatest proportional abundance of reads to that sample."
+)}
 
 if(EXPORT){
   pdf_file    <- file.path(fig_dir, paste(plot_name, ".pdf", sep = ""))
@@ -109,7 +117,7 @@ if(EXPORT){
   pdf(file = pdf_file, width = 10, height = 4)
 }
 
-par(mfrow = c(1,length(select_taxa)))
+par(mfrow = c(1,length(select_taxa)), mar = c(4, 4, 1, 1))
 
 for(i in 1:length(select_taxa)){
 	point_data  <- scale01(my_table[, select_taxa[i]])
@@ -125,7 +133,7 @@ for(i in 1:length(select_taxa)){
 		pch = 21,
 		bg = point_color,
 		cex = point_size,
-		main = select_taxa[i],
+		# main = select_taxa[i],
 		las = 1,
 		xlab = "Distance along shore (meters)",
 		ylab = "Distance from 0 (meters)"
@@ -139,10 +147,14 @@ for(i in 1:length(select_taxa)){
 			point_data == 0,
 			4, NA_integer_)
 	)
+	
+	# add letter label
+	mtext(LETTERS[i], side = 1, line = 2, adj = -0.2, cex = 2)
     
 	axis(side = 2, at = unique(y_for_plotting), labels = unique(my_metadata[,colname_ycoord]), las = 1)
 	axis(side = 1, at = unique(my_metadata[,colname_xcoord]), labels = unique(my_metadata[,colname_xcoord]), las = 1)
 }
+
 if(EXPORT){
   dev.off()
 }

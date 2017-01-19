@@ -1,3 +1,3 @@
 Distribution of eDNA from select taxa.
-Circles are colored and scaled by the proportion of that taxon's maximum proportional abundance.
+Taxa represented are: Embiotocidae (A), Cupolaconcha meroclista (B), Thysanoessa raschii (C), Mytilus (D), Sessilia (E). Circles are colored and scaled by the proportion of that taxon's maximum proportional abundance.
 That is, the largest circle is the same size in each of the panels, and occurs where that taxon contributed the greatest proportional abundance of reads to that sample.
