@@ -131,14 +131,27 @@ However, this model failed to converge and produced uninformative estimates of a
 \begin{figure}[H] % [h!] forces the figure to be placed roughly here
   \centering
     \includegraphics[height=0.6\textheight]{distance_decay_multi.pdf}
-    \caption{\protect\input{"../../Figures/distance_decay_multi_legend.txt"}}
-  \label{distance_decay_multi}
+    \caption{
+		Distance decay relationship of environmental DNA communities using a variety of models, metrics, and data subsets.
+		Each point represents the similarity of a site sampled along three parallel transects comprising a 3000 by 4000 meter grid.
+		Each row of plots represents a different data subset indicated in the right margin, including	the final filtered data reported in the main text (a-d), the unfiltered data including all rare OTUs (e-h), log-transformed (log(x+1)) data (i-l),	OTU abundance scaled relative to within-taxon maximum (m-p), and exclusion of OTUs found at only one site (q-t).
+		Columns indicate the similarity index used (Bray Curtis or Morisita-Horn) and whether the input was full abundance data or binary (0,1) transformed data.
+		Lines and bands illustrate the fit and 95\% confidence interval of both the	main nonlinear model (red, dashed line) and a simple linear model (blue, solid line).
+		Results using the Jaccard distance are omitted because of its similarity to Bray-Curtis.
+		}
+		\label{distance_decay_multi}
 \end{figure}
 
 \begin{figure}[H] % [h!] forces the figure to be placed roughly here
   \centering
     \includegraphics[height=0.6\textheight]{rarefaction.pdf}
-    \caption{\protect\input{"../../Figures/rarefaction_legend.txt"}}
+    \caption{
+		Accumulation of OTUs from 24 environmental samples using randomized rarefaction.
+		Four replicate PCRs were conducted using DNA each environmental sample and independently sequenced, but these are collapsed here to illustrate a single representation of richness.
+		Sample names indicate the position in the sampling grid: south (S), central (C), or north (N), followed by the distance along the transect, in meters (0, 75, 125, 250, 500, 1000, 2000, 4000).
+		Vertical line indicates the minimum combined number of sequence reads per sample.
+		Horizontal lines indicate OTU richness for each sample at the minimum combined number of sequence reads.
+		}
   \label{rarefaction}
 \end{figure}
 
@@ -146,7 +159,12 @@ However, this model failed to converge and produced uninformative estimates of a
 \begin{figure}[H] % [h!] forces the figure to be placed roughly here
   \centering
     \includegraphics[width=1\textwidth]{diversity_distance_all.pdf}
-    \caption{\protect\input{"../../Figures/diversity_distance_all_legend.txt"}}
+    \caption[]{
+		Aggregate diversity metrics of each site plotted against distance from shore.
+		Both Simpson's Index (top; A-F) and richness (bottom; G-L) are shown for a variety of data subsets and transformations (left to right: mean (A,G), unfiltered mean (B,H), log(x + 1) transformed (C,I), scaled (D,J), spatially variable (E,K), and taxon clustered (F,L)).
+		Lines and bands illustrate the fit and 95\% confidence interval of a linear model.
+		See methods text for detailed data descriptions.
+		}
   \label{diversity_distance_all}
 \end{figure}
 
