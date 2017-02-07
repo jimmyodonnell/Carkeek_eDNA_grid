@@ -1,14 +1,13 @@
 Author Queries
-Journal: Article id: Author: Title:
-PEERJ
-3044
-O’Donnell et al.
-Spatial distribution of environmental DNA in a nearshore marine habitat
+Journal: PEERJ
+Article id: 3044
+Author: O’Donnell et al.
+Title: Spatial distribution of environmental DNA in a nearshore marine habitat
 
-￼Q1: (Page 1)
+Q1: (Page 1)
 Please check the author affiliations to confirm they are accurate.
 
-Response: The author affiliations are accurate. We realize they look silly, but they are required to be written this way by the government agency contract.
+Response: The author affiliations are accurate. We realize they look silly, but this is the way they are required to be written by the government agency contract.
 
 
 Q2: (Page 9)
@@ -21,17 +20,114 @@ Q3 (Page 19)
 References Chamberlain & Szöcs (2013), Drummond et al. (2015), Hubbell (2001), Kelly et al. (2016a), Martin (2011) appear with one page number instead of a page range. If these are not single page references, please provide the page ranges. If the journal only uses article numbers for citations instead of page ranges, please provide that article number. If any of these are abstracts, please confirm which are single page abstracts and we will insert ‘‘[Abstract]" in the reference(s).
 
 Response: 
+Chamberlain & Szöcs (2013): The referenced page number is actually the article number.
+Drummond et al. (2015): The referenced page number is actually the article number.
+Hubbell (2001): This is a book, and the referenced page number is the total number of pages.
+Kelly et al. (2016a): The referenced page number is actually the article number.
+Martin (2011): The correct page range is 10–12
 
 
 Q4 (Page 19)
 References Coissac (2012), Deagle et al. (2014), Deiner & Altermatt (2014), De Vargas et al. (2015), Kaufman & Rousseeuw (1990), Longmireet al. (1997), Maechler et al. (2016), Magurran (2003), Schnell et al. (2015), Simpson (1949) are incomplete. Please provide any of the relevant missing information: author list with initials, title, publication year, volume, page range, website, location of publisher, publisher name.
 
 Coissac (2012): 
+To be honest, I’m not entirely sure how to reference this, it appears to be a chapter of a book in a series — http://link.springer.com/protocol/10.1007%2F978-1-61779-870-2_2
 
-De Vargas et al. (2015): This appears to be an abstract only in the print journal and a full article online.
-Response: 
+Deagle et al. (2014): 
+@article{Deagle2014,
+author = {Deagle, Bruce E and Jarman, Simon N and Coissac, Eric and Pompanon, Fran{\c{c}}ois and Taberlet, Pierre},
+doi = {10.1098/rsbl.2014.0562},
+isbn = {1744-9561},
+issn = {1744-957X},
+journal = {Biology letters},
+number = {9},
+pages = {1789--1793},
+pmid = {25209199},
+title = {{DNA metabarcoding and the cytochrome c oxidase subunit I marker: not a perfect match.}},
+url = {http://www.ncbi.nlm.nih.gov/pubmed/25209199{\%}5Cnhttp://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=PMC4190964},
+volume = {10},
+year = {2014}
+}
+
+Deiner & Altermatt (2014):
+@article{Deiner2014,
+author = {Deiner, Kristy and Altermatt, Florian},
+doi = {10.1371/journal.pone.0088786},
+issn = {19326203},
+journal = {PLoS ONE},
+number = {2},
+pages = {e88786},
+pmid = {24523940},
+title = {{Transport distance of invertebrate environmental DNA in a natural river}},
+volume = {9},
+year = {2014}
+}
+
+De Vargas et al. (2015):
+This appears to be an article that is online only but with a print abstract? http://science.sciencemag.org/content/348/6237/1261605
+
+Kaufman & Rousseeuw (1990):
+@book{Kaufman1990,
+author = {Kaufman, Leonard and Rousseeuw, Peter J.},
+isbn = {0471735787},
+pages = {342},
+title = {{Finding Groups in Data: An Introduction to Cluster Analysis}},
+url = {http://www.eepe.ethz.ch/cepe/cepe/publications/Muller{\_}ClusterVorlesung{\_}28{\_}1{\_}04.pdf{\%}5Cnhttp://books.google.com/books?hl=en{\&}lr={\&}id=YeFQHiikNo0C{\&}oi=fnd{\&}pg=PR11{\&}dq=Finding+Groups+in+Data+-+An+introduction+to+Cluster+Analysis{\&}ots=5zp9F4PGxF{\&}sig=SeUYzccb34LjgB8z8},
+year = {1990}
+}
+
+Longmireet al. (1997):
+@article{Longmire1997,
+author = {Longmire, Jonathan L. and Maltbie, Mary and Baker, Robert J.},
+journal = {Museum of Texas Tech University},
+title = {{Use of lysis buffer in DNA isolation and its implication for museum collections}},
+volume = {163},
+year = {1997}
+}
 
 
+Maechler et al. (2016):
+@misc{cluster,
+author = {Maechler, Martin and Rousseeuw, Peter and Struyf, Anja and Hubert, Mia and Hornik, Kurt},
+title = {{cluster: Cluster Analysis Basics and Extensions}},
+year = {2016}
+}
+
+Magurran (2003): * CORRECT YEAR IS 2004 *
+@book{Magurran2004,
+address = {Malden},
+author = {Magurran, Anne E.},
+isbn = {978-0-632-05633-0},
+pages = {264},
+publisher = {Blackwell Science Ltd},
+title = {{Measuring Biological Diversity}},
+year = {2004}
+}
+
+Schnell et al. (2015):
+@article{Schnell2015,
+author = {Schnell, Ida B{\ae}rholm and Bohmann, Kristine and Gilbert, M. Thomas P},
+doi = {10.1111/1755-0998.12402},
+issn = {17550998},
+journal = {Molecular Ecology Resources},
+number = {6},
+pages = {1289--1303},
+pmid = {25740652},
+title = {{Tag jumps illuminated - reducing sequence-to-sample misidentifications in metabarcoding studies}},
+volume = {15},
+year = {2015}
+}
+
+Simpson (1949):
+@article{Simpson1949,
+author = {Simpson, E. H.},
+journal = {Nature},
+mendeley-groups = {{\_}MS-active/ms{\_}carkeek{\_}grid},
+pages = {688},
+title = {{Measurement of diversity}},
+volume = {163},
+year = {1949}
+}
 
 Other issues:
 1. A dot has been added after equation 1.
