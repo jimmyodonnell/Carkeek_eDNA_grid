@@ -1,0 +1,34 @@
+Author Queries
+Journal: Article id: Author: Title:
+PEERJ
+3044
+O’Donnell et al.
+Spatial distribution of environmental DNA in a nearshore marine habitat
+
+￼Q1: (Page 1)
+Please check the author affiliations to confirm they are accurate.
+
+Response: The author affiliations are accurate. We realize they look silly, but they are required to be written this way by the government agency contract.
+
+
+Q2: (Page 9)
+A closing parenthesis has been inserted here: [(FANNY, (Kaufman & Rousseeuw, 1990))]. Please check, and correct if necessary.
+
+Response: This is correct; thanks for catching it.
+
+
+Q3 (Page 19)
+References Chamberlain & Szöcs (2013), Drummond et al. (2015), Hubbell (2001), Kelly et al. (2016a), Martin (2011) appear with one page number instead of a page range. If these are not single page references, please provide the page ranges. If the journal only uses article numbers for citations instead of page ranges, please provide that article number. If any of these are abstracts, please confirm which are single page abstracts and we will insert ‘‘[Abstract]" in the reference(s).
+
+Response: 
+
+
+Q4 (Page 19)
+References Coissac (2012), Deagle et al. (2014), Deiner & Altermatt (2014), De Vargas et al. (2015), Kaufman & Rousseeuw (1990), Longmireet al. (1997), Maechler et al. (2016), Magurran (2003), Schnell et al. (2015), Simpson (1949) are incomplete. Please provide any of the relevant missing information: author list with initials, title, publication year, volume, page range, website, location of publisher, publisher name.
+
+Response: 
+
+
+
+Other issues:
+1. A dot has been added after equation 1.
