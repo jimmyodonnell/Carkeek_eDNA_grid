@@ -26,6 +26,9 @@ Response:
 Q4 (Page 19)
 References Coissac (2012), Deagle et al. (2014), Deiner & Altermatt (2014), De Vargas et al. (2015), Kaufman & Rousseeuw (1990), Longmireet al. (1997), Maechler et al. (2016), Magurran (2003), Schnell et al. (2015), Simpson (1949) are incomplete. Please provide any of the relevant missing information: author list with initials, title, publication year, volume, page range, website, location of publisher, publisher name.
 
+Coissac (2012): 
+
+De Vargas et al. (2015): This appears to be an abstract only in the print journal and a full article online.
 Response: 
 
 
